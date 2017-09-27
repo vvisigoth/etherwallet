@@ -1,3 +1,20 @@
+### Urbit fork development
+
+The only interesting files so far are `/app/includes/urbit.tpl` and `/app/scripts/controllers/urbitCtrl.js`. Everything else is equivalent to MEW.
+
+Addresses in this fork have been hard-coded to work with a specific testnet configuration. To get set up:
+
+1. Get [the constitution](https://github.com/urbit/constitution)
+2. Run a local `testrpc` node, boot using the following command to ensure a matching seed:  
+   `testrpc --mnemonic "benefit crew supreme gesture quantum web media hazard theory mercy wing kitten"`
+3. Run `truffle deploy` from the constitution's directory to deploy to your local node.
+4. Compile this repository as described below (`npm install` once, then `npm run dev` forever).
+5. Open the `/dist/index.html` in your browser.
+6. Using the node selector (dropdown, top-right), add a custom node. The placeholder text should match your `testrpc` node's config by default.
+7. For wallet access, enter the mnemonic phrase described in step 2, and unlock your wallet.
+8. You are now authenticated and can perform operations that require that. By default, your address is `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`. Go give yourself a galaxy.
+
+
 ### [https://www.MyEtherWallet.com](https://www.MyEtherWallet.com)
 
 ### [Chrome Extension](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
