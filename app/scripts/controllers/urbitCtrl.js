@@ -6,6 +6,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.sendContractModal = new Modal(document.getElementById('sendContract'));
     $scope.showReadWrite = false;
     $scope.Validator = Validator;
+    $scope.oneSpark = 1000000000000000000;
     $scope.tx = {
         gasLimit: '',
         data: '',
@@ -485,7 +486,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         callback
       );
     }
-    $scope.getBalance = function(callback) {
+    $scope.getSparkBalance = function(callback) {
       $scope.readContractData($scope.contracts.spark,
         "balanceOf(address)",
         [$scope.wallet.getAddressString()],
@@ -637,13 +638,13 @@ var urbitCtrl = function($scope, $sce, walletService) {
       }
     }
     $scope.readBalance = function() {
-      $scope.getBalance(function(data) {
-        document.getElementById("balance").value = data[0];
+      $scope.getSparkBalance(function(data) {
+        document.getElementById("balance").value = data[0] / $scope.oneSpark;
       });
     }
     $scope.readAllowance = function() {
       $scope.getAllowance(function(data) {
-        document.getElementById("allowance").value = data[0];
+        document.getElementById("allowance").value = data[0] / $scope.oneSpark;
       })
     }
     //
@@ -676,6 +677,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
       $scope.getAllowance(function(data) {
         if (amount == 0 || data[0] == 0) return transact();
         $scope.notifier.danger("To change allowance, set to 0 first.");
+        //TODO we can use increaseApproval and decreaseApproval
       });
       function transact() {
         $scope.doTransaction($scope.contracts.spark,
@@ -716,10 +718,10 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doClaimStar = function() {
       var star = document.getElementById("claim_star").value;
       $scope.validateStar(star, function() {
-        $scope.getBalance(checkBalance);
+        $scope.getSparkBalance(checkBalance);
       });
       function checkBalance(data) {
-        if (data[0] < 1)
+        if (data[0] < $scope.oneSpark)
           return $scope.notifier.danger("Insufficient Sparks.");
         //TODO state enum (liquid)
         $scope.checkState(star, 1, function() {
@@ -727,7 +729,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         });
       }
       function transact(data) {
-        if (data[0] < 1) {
+        if (data[0] < $scope.oneSpark) {
           return $scope.notifier.danger("Insufficient allowance.");
           //NOTE we may or may not want to try and get the below to work.
           //     manual allowance granting seems more trustless.
