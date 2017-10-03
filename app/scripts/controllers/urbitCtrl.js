@@ -83,9 +83,9 @@ var urbitCtrl = function($scope, $sce, walletService) {
             if (!data.error)
             {
               $scope.tx.gasLimit = data.data;
-              console.log("found gas limit");
             } else {
-              console.error(data.error);
+              // Proper input validation should prevent this.
+              console.error("Gas estimation failed. Probably invalid transaction. Are your parameters correct?");
             }
         });
     }
@@ -243,13 +243,13 @@ var urbitCtrl = function($scope, $sce, walletService) {
       estObj.to = address;
       ethFuncs.estimateGas(estObj, function(data) {
         if (data.error) {
-          console.error(data.error);
+          // Proper input validation should prevent this.
+          console.error("Gas estimation failed. Probably invalid transaction. Are your parameters correct?");
         } else {
           // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
           //TODO 1.8 is a bit much though. consult experts on why this can be so
           //     unpredictable, and how to fix it.
           $scope.tx.gasLimit = Math.round(data.data * 1.8);
-          console.log("found gas limit");
           try {
             if ($scope.wallet == null)
             { throw globalFuncs.errorMsgs[3]; }
@@ -704,6 +704,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doSetAllowance = function() {
       var amount = document.getElementById("allowance_amount").value;
       if (amount < 0) return $scope.notifier.danger("Can't set negative allowance.");
+      amount = amount * $scope.oneSpark;
       $scope.getAllowance(function(data) {
         if (amount == 0 || data[0] == 0) return transact();
         $scope.notifier.danger("To change allowance, set to 0 first.");
@@ -839,7 +840,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doGrantLaunchRights = function() {
       var star = document.getElementById("grantLaunch_star").value;
       var addr = document.getElementById("grantLaunch_address").value;
-      $scope.validateStar(star, function() {
+      $scope.validateParent(star, function() {
         $scope.validateAddress(addr, function() {
           $scope.checkOwnership(star, function() {
             //TODO state enum (living)
@@ -857,7 +858,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doRevokeLaunchRights = function() {
       var star = document.getElementById("revokeLaunch_star").value;
       var addr = document.getElementById("revokeLaunch_address").value;
-      $scope.validateStar(star, function() {
+      $scope.validateParent(star, function() {
         $scope.validateAddress(addr, function() {
           $scope.checkOwnership(star, transact);
         });
