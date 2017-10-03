@@ -222,7 +222,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         types = types[0] == "" ? [] : types;
         return '0x' + funcSig + ethUtil.solidityCoder.encodeParams(types, input);
     }
-    $scope.doTransaction = function(address, func, input) {
+    $scope.doTransaction = function(address, func, input, value) {
       console.log("u doTransaction");
       if ($scope.wallet == null) {
         console.error("no wallet");
@@ -230,6 +230,11 @@ var urbitCtrl = function($scope, $sce, walletService) {
       }
       var data = $scope.buildTransactionData(func, input);
       $scope.tx.data = data;
+      $scope.tx.value = value || 0;
+      $scope.tx.unit = "wei";
+      console.log("tx value: " + $scope.tx.value);
+      console.log("tx func: " + func);
+      console.log("tx input: " + input);
       var estObj = {
         from: $scope.wallet.getAddressString(),
         value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
@@ -257,25 +262,9 @@ var urbitCtrl = function($scope, $sce, walletService) {
               if (data.error) $scope.notifier.danger(data.msg);
               data = data.data;
               $scope.tx.to = address;
-              $scope.tx.contractAddr = $scope.tx.to; // == '0xCONTRACT' ? ethFuncs.getDeteministicContractAddress($scope.wallet.getAddressString(), data.nonce) : '';
-              var txData = uiFuncs.getTxData($scope);
-              console.log(txData);
-              uiFuncs.generateTx(txData, function(rawTx) {
-                if (!rawTx.isError) {
-                  $scope.rawTx = rawTx.rawTx;
-                  $scope.signedTx = rawTx.signedTx;
-                  console.log("doTransaction put raw & signed tx");
-                  console.log($scope.rawTx);
-                  $scope.showRaw = true;
-                  $scope.sendTx();
-                } else {
-                  $scope.showRaw = false;
-                  $scope.notifier.danger(rawTx.error);
-                  console.error("doTransaction generate tx error:");
-                  console.error(rawTx.error);
-                }
-                if (!$scope.$$phase) $scope.$apply();
-              });
+              $scope.tx.contractAddr = $scope.tx.to;
+              $scope.showRaw = false;
+              $scope.sendContractModal.open();
             });
           } catch (e) {
               $scope.notifier.danger(e);
@@ -512,6 +501,22 @@ var urbitCtrl = function($scope, $sce, walletService) {
         callback
       );
     }
+    $scope.getSalePrice = function(address, callback) {
+      $scope.readContractData(address,
+        "price()",
+        [],
+        ["uint256"],
+        callback
+      );
+    }
+    $scope.getSalePlanets = function(address, callback) {
+      $scope.readContractData(address,
+        "getAvailable()",
+        [],
+        ["uint32[]"],
+        callback
+      );
+    }
     //
     // READ: fill fields with requested data
     //
@@ -638,6 +643,25 @@ var urbitCtrl = function($scope, $sce, walletService) {
         document.getElementById("allowance").value = data[0] / $scope.oneSpark;
       })
     }
+    $scope.readSaleData = function() {
+      var addr = document.getElementById("sale_address").value;
+      $scope.validateAddress(addr, function() {
+        $scope.getSalePrice(addr, function(data) {
+          putPrice(data);
+          $scope.getSalePlanets(addr, putPlanets);
+        })
+      });
+      function putPrice(data) {
+        document.getElementById("sale_price").value = etherUnits.toEther(data[0], "wei");
+      }
+      function putPlanets(data) {
+        var res = "";
+        for (var i in data[0]) {
+          res = res + data[0][i] + "\n";
+        }
+        document.getElementById("sale_planets").value = res;
+      }
+    }
     //
     // CHECK: verify if conditions for a transaction are met
     //
@@ -658,6 +682,21 @@ var urbitCtrl = function($scope, $sce, walletService) {
         if (data[0]) return next();
         $scope.notifier.danger("Escape doesn't match.");
       });
+    }
+    $scope.checkSale = function(ship, address, next) {
+      //TODO move to utility function maybe
+      var parent = ship % 65536;
+      if (ship < 65536) parent = ship % 256;
+      $scope.getIsLauncher(parent, address, checkLauncher);
+      function checkLauncher(data) {
+        if (data[0]) return $scope.getSalePrice(address, checkPrice);
+        return $scope.notifier.danger("Contract can't launch ships.");
+      }
+      function checkPrice(data) {
+        if (data[0] > $scope.wallet.getBalance())
+          return $scope.notifier.danger("Not enough ETH in wallet.");
+        next(data[0]);
+      }
     }
     //
     // DO: do transactions that modify the blockchain
@@ -979,6 +1018,52 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.doTransaction($scope.contracts.constitution,
           "castVote(uint8,bytes32,bool)",
           [galaxy, prop, vote]
+        );
+      }
+    }
+    $scope.doBuyPlanet = function() {
+      var addr = document.getElementById("buy_address").value;
+      var ship = document.getElementById("buy_ship").value;
+      var index;
+      $scope.validateAddress(addr, function() {
+        $scope.validateChild(ship, function() {
+          $scope.getSalePlanets(addr, checkPlanet);
+        });
+      });
+      function checkPlanet(data) {
+        var found = false;
+        for (var i in data[0]) {
+          if (data[0][i] == ship) {
+            found = true;
+            index = i;
+            break;
+          }
+        }
+        if (!found) return $scope.notifier.danger("Planet not available.");
+        $scope.checkSale(ship, addr, transact);
+      }
+      function transact(price) {
+        $scope.doTransaction(addr,
+          "buySpecific(uint256,uint32)",
+          [index, ship],
+          price
+        );
+      }
+    }
+    $scope.doBuyAnyPlanet = function() {
+      var addr = document.getElementById("buy_address").value;
+      $scope.validateAddress(addr, function() {
+        $scope.getSalePlanets(addr, checkAvailable);
+      });
+      function checkAvailable(data) {
+        if (data[0].length == 0) return $scope.notifier.danger("No more planets for sale.");
+        $scope.checkSale(data[0][data[0].length-1], addr, transact);
+      }
+      function transact(price) {
+        $scope.doTransaction(addr,
+          "buyAny()",
+          [],
+          price
         );
       }
     }

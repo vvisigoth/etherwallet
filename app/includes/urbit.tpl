@@ -225,6 +225,26 @@
       <label><input id="absVote_vote" type="checkbox" />approve</label>
       <button ng-click="doCastAbstractVote();">abstract vote</button>
     </form>
+    <br/>
+
+    <hr/>
+
+    <form name="fetchSaleData">
+      <input id="sale_address" type="text" placeholder="sale address" />
+      <button ng-click="readSaleData();">get sale data</button>
+      <br/>
+      <input id="sale_price" type="number" disabled />
+      <textarea id="sale_planets"></textarea>
+    </form>
+    <br/>
+
+    <form name="taskBuyPlanet">
+      <input id="buy_address" type="text" placeholder="sale address" />
+      <button ng-click="doBuyAnyPlanet();">buy any planet</button>
+      <input id="buy_ship" type="number" placeholder="planet #" />
+      <button ng-click="doBuyPlanet();">buy specific planet</button>
+    </form>
+
 
   </article>
 
