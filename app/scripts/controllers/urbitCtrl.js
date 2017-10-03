@@ -46,15 +46,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }
 
     });
-    $scope.$watch('tx', function(newValue, oldValue) {
-        $scope.showRaw = false;
-        if (newValue.gasLimit == oldValue.gasLimit && $scope.Validator.isValidHex($scope.tx.data) && $scope.tx.data != '' && $scope.Validator.isPositiveNumber($scope.tx.value)) {
-            if ($scope.estimateTimer) clearTimeout($scope.estimateTimer);
-            $scope.estimateTimer = setTimeout(function() {
-                $scope.estimateGasLimit();
-            }, 50);
-        }
-    }, true);
     $scope.$watch('contract.address', function(newValue, oldValue) {
         if ($scope.Validator.isValidAddress($scope.contract.address)) {
             for (var i in ajaxReq.abiList) {
