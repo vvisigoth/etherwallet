@@ -57,7 +57,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }
     });
     $scope.selectExistingAbi = function(index) {
-        console.log("u selectExistingAbi");
         $scope.selectedAbi = ajaxReq.abiList[index];
         $scope.contract.address = $scope.selectedAbi.address;
         $scope.addressDrtv.ensAddressField = $scope.selectedAbi.address;
@@ -72,7 +71,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }, 50);
     }
     $scope.estimateGasLimit = function() {
-        console.log("u estimateGasLimit");
         var estObj = {
             from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
             value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
@@ -90,7 +88,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         });
     }
     $scope.generateTx = function() {
-        console.log("u generateTx");
         try {
             if ($scope.wallet == null)
             { throw globalFuncs.errorMsgs[3]; }
@@ -109,12 +106,10 @@ var urbitCtrl = function($scope, $sce, walletService) {
                     if (!rawTx.isError) {
                         $scope.rawTx = rawTx.rawTx;
                         $scope.signedTx = rawTx.signedTx;
-                        console.log("put raw & signed tx");
                         $scope.showRaw = true;
                     } else {
                         $scope.showRaw = false;
                         $scope.notifier.danger(rawTx.error);
-                        console.error("generate tx error:");
                         console.error(rawTx.error);
                     }
                     if (!$scope.$$phase) $scope.$apply();
@@ -125,8 +120,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }
     }
     $scope.sendTx = function() {
-        console.log("u sendTx");
-        console.log($scope.signedTx);
         $scope.sendContractModal.close();
         uiFuncs.sendTx($scope.signedTx, function(resp) {
             if (!resp.isError) {
@@ -139,11 +132,9 @@ var urbitCtrl = function($scope, $sce, walletService) {
         });
     }
     $scope.setVisibility = function(str) {
-        console.log("u setVisibility");
         $scope.visibility = str;
     }
     $scope.selectFunc = function(index) {
-        console.log("u selectFunc");
         $scope.contract.selectedFunc = { name: $scope.contract.functions[index].name, index: index };
         if (!$scope.contract.functions[index].inputs.length) {
             $scope.readFromContract();
@@ -152,7 +143,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.dropdownContracts = !$scope.dropdownContracts;
     }
     $scope.getTxData = function() {
-        console.log("u getTxData");
         var curFunc = $scope.contract.functions[$scope.contract.selectedFunc.index];
         var fullFuncName = ethUtil.solidityUtils.transformToFullName(curFunc);
         var funcSig = ethFuncs.getFunctionSignature(fullFuncName);
@@ -169,7 +159,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         return '0x' + funcSig + ethUtil.solidityCoder.encodeParams(types, values);
     }
     $scope.readFromContract = function() {
-        console.log("u readFromContract");
         ajaxReq.getEthCall({ to: $scope.contract.address, data: $scope.getTxData() }, function(data) {
             if (!data.error) {
                 var curFunc = $scope.contract.functions[$scope.contract.selectedFunc.index];
@@ -186,7 +175,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         });
     }
     $scope.initContract = function() {
-        console.log("u initContract");
         try {
             if (!$scope.Validator.isValidAddress($scope.contract.address)) throw globalFuncs.errorMsgs[5];
             else if (!$scope.Validator.isJSON($scope.contract.abi)) throw globalFuncs.errorMsgs[26];
@@ -204,7 +192,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }
     }
     $scope.generateContractTx = function() {
-        console.log("u generateContractTx");
         if (!$scope.wd) {
             $scope.notifier.danger(globalFuncs.errorMsgs[3]);
             return;
@@ -215,7 +202,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
     }
     //
     $scope.buildTransactionData = function(func, input) {
-        console.log("u buildTransactionData");
         var funcSig = ethFuncs.getFunctionSignature(func);
         var typeName = ethUtil.solidityUtils.extractTypeName(func);
         var types = typeName.split(',');
@@ -223,7 +209,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         return '0x' + funcSig + ethUtil.solidityCoder.encodeParams(types, input);
     }
     $scope.doTransaction = function(address, func, input, value) {
-      console.log("u doTransaction");
       if ($scope.wallet == null) {
         console.error("no wallet");
         return;
@@ -232,9 +217,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
       $scope.tx.data = data;
       $scope.tx.value = value || 0;
       $scope.tx.unit = "wei";
-      console.log("tx value: " + $scope.tx.value);
-      console.log("tx func: " + func);
-      console.log("tx input: " + input);
       var estObj = {
         from: $scope.wallet.getAddressString(),
         value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
@@ -273,7 +255,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
       });
     }
     $scope.readContractData = function(address, func, input, outTypes, callback) {
-        console.log("u readContractData");
         $scope.contract.address = address;
         var call = $scope.buildTransactionData(func, input);
         ajaxReq.getEthCall({ to: $scope.contract.address, data: call }, function(data) {
@@ -293,7 +274,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
       $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
       $scope.getShipsOwner(function(data) {
         $scope.contracts.constitution = data[0];
-        console.log("found constitution at " + data[0]);
       });
     }
     //
@@ -729,7 +709,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         });
       });
       function checkPermission(data) {
-        console.log("constitution owner is " + data[0]);
         if (data[0] != $scope.wallet.getAddressString())
           return $scope.notifier.danger("Insufficient permissions.");
         $scope.getHasPilot(galaxy, checkAvailable);
@@ -762,22 +741,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
       function transact(data) {
         if (data[0] < $scope.oneSpark) {
           return $scope.notifier.danger("Insufficient allowance.");
-          //NOTE we may or may not want to try and get the below to work.
-          //     manual allowance granting seems more trustless.
-          // // to change allowance, it must first be set to 0.
-          // if (data[0] != 0) {
-          //   console.log("resetting allowance");
-          //   $scope.doTransaction($scope.contracts.spark,
-          //     "approve(address,uint256)",
-          //     [$scope.contracts.constitution, 0]
-          //   );
-          // }
-          // // send a transaction that allows the constitution to take 1 spark.
-          // console.log("approving spark transfer");
-          // $scope.doTransaction($scope.contracts.spark,
-          //   "approve(address,uint256)",
-          //   [$scope.contracts.constitution, 1]
-          // );
         }
         $scope.doTransaction($scope.contracts.constitution,
           "claimStar(uint16)",
