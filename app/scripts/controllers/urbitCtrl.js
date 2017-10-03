@@ -473,6 +473,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         callback
       );
     }
+    $scope.getIsAbstractMajority = function(proposal, callback) {
+      $scope.readContractData($scope.contracts.votes,
+        "abstractMajorityMap(bytes32)",
+        [proposal],
+        ["bool"],
+        callback
+      );
+    }
     $scope.getAbstractVote = function(galaxy, proposal, callback) {
       $scope.readContractData($scope.contracts.votes,
         "getVote(uint8,bytes32)",
@@ -938,7 +946,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doCastConcreteVote = function() {
       var galaxy = document.getElementById("conVote_galaxy").value;
       var addr = document.getElementById("conVote_address").value;
-      var vote = document.getElementById("conVote_vote").value;
+      var vote = document.getElementById("conVote_vote").checked;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateAddress(addr, function() {
           $scope.checkOwnership(galaxy, function() {
@@ -963,17 +971,21 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doCastAbstractVote = function() {
       var galaxy = document.getElementById("absVote_galaxy").value;
       var prop = document.getElementById("absVote_proposal").value;
-      var vote = document.getElementById("absVote_vote").value;
+      var vote = document.getElementById("absVote_vote").checked;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateBytes32(prop, function() {
           $scope.checkOwnership(galaxy, function() {
             //TODO state enum (living)
             $scope.checkState(galaxy, 3, function() {
-              $scope.getAbstractVote(galaxy, prop, checkVote);
+              $scope.getIsAbstractMajority(prop, checkMajority);
             });
           });
         });
       });
+      function checkMajority(data) {
+        if (!data[0]) return $scope.getAbstractVote(galaxy, prop, checkVote);
+        return $scope.notifier.danger("Proposal already has majority.");
+      }
       function checkVote(data) {
         if (data[0] != vote) return transact();
         $scope.notifier.danger("Vote already registered.");
