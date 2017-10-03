@@ -70,23 +70,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
             $scope.initContract();
         }, 50);
     }
-    $scope.estimateGasLimit = function() {
-        var estObj = {
-            from: $scope.wallet != null ? $scope.wallet.getAddressString() : globalFuncs.donateAddress,
-            value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
-            data: ethFuncs.sanitizeHex($scope.tx.data),
-        }
-        if ($scope.tx.to != '') estObj.to = $scope.tx.to;
-        ethFuncs.estimateGas(estObj, function(data) {
-            if (!data.error)
-            {
-              $scope.tx.gasLimit = data.data;
-            } else {
-              // Proper input validation should prevent this.
-              console.error("Gas estimation failed. Probably invalid transaction. Are your parameters correct?");
-            }
-        });
-    }
     $scope.generateTx = function() {
         try {
             if ($scope.wallet == null)
