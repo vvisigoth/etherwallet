@@ -911,6 +911,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.doTransferShip = function() {
       var ship = document.getElementById("transfer_ship").value;
       var addr = document.getElementById("transfer_address").value;
+      var reset = document.getElementById("transfer_reset").checked;
       $scope.validateShip(ship, function() {
         $scope.validateAddress(addr, function() {
           $scope.checkOwnership(ship, transact);
@@ -918,8 +919,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
       });
       function transact() {
         $scope.doTransaction($scope.contracts.constitution,
-          "transferShip(uint32,address)",
-          [ship, addr]
+          "transferShip(uint32,address,bool)",
+          [ship, addr, reset]
         );
       }
     }

@@ -179,6 +179,7 @@
     <form name="taskTransfer">
       <input id="transfer_ship" type="number" placeholder="ship #" />
       <input id="transfer_address" type="text" placeholder="to address" />
+      <label><input id="transfer_reset" type="checkbox" checked />reset key</label>
       <button ng-click="doTransferShip();">transfer ship</button>
     </form>
     <br/>
