@@ -122,6 +122,9 @@
 
     <hr/>
 
+    <label><input ng-model="offline" type="checkbox" />OFFLINE MODE (no transaction validation)</label>
+    <br/><br/>
+
     <form name="taskSetAllowance">
       <input id="allowance_amount" type="number" placeholder="allowance amount" />
       <button ng-click="doSetAllowance();">set allowance</button>
@@ -244,6 +247,7 @@
       <button ng-click="doBuyAnyPlanet();">buy any planet</button>
       <input id="buy_ship" type="number" placeholder="planet #" />
       <button ng-click="doBuyPlanet();">buy specific planet</button>
+      <input id="buy_index" type="number" placeholder="(offline only) planet index" />
     </form>
     <br/>
 
