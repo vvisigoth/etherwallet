@@ -244,7 +244,23 @@
       <input id="buy_ship" type="number" placeholder="planet #" />
       <button ng-click="doBuyPlanet();">buy specific planet</button>
     </form>
+    <br/>
 
+    <form name="fetchAuctionData">
+      <input id="auction_address" type="text" placeholder="auction address" />
+      <button ng-click="readAuctionData();">get auction data</button>
+      <br/>
+      <input id="auction_whitelisted" type="checkbox" disabled />
+      <input id="auction_time" type="number" disabled />
+      <input id="auction_deposit" type="number" disabled />
+    </form>
+    <br/>
+
+    <form name="taskDepositBid">
+      <input id="bid_address" type="text" placeholder="auction address" />
+      <input id="bid_amount" type="number" placeholder="bid deposit" />
+      <button ng-click="doDepositBid();">deposit bid</button>
+    </form>
 
   </article>
 

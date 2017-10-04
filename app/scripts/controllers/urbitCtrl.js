@@ -56,6 +56,12 @@ var urbitCtrl = function($scope, $sce, walletService) {
             }
         }
     });
+    $scope.toWei = function(ether) {
+      return etherUnits.toWei(ether, "ether");
+    }
+    $scope.toEther = function(wei) {
+      return etherUnits.toEther(wei, "wei");
+    }
     $scope.selectExistingAbi = function(index) {
         $scope.selectedAbi = ajaxReq.abiList[index];
         $scope.contract.address = $scope.selectedAbi.address;
@@ -191,6 +197,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         types = types[0] == "" ? [] : types;
         return '0x' + funcSig + ethUtil.solidityCoder.encodeParams(types, input);
     }
+    //NOTE value is expected in wei
     $scope.doTransaction = function(address, func, input, value) {
       if ($scope.wallet == null) {
         console.error("no wallet");
@@ -488,6 +495,38 @@ var urbitCtrl = function($scope, $sce, walletService) {
         callback
       );
     }
+    $scope.getAuctionWhitelisted = function(address, callback) {
+      $scope.readContractData(address,
+        "whitelist(address)",
+        [$scope.wallet.getAddressString()],
+        ["bool"],
+        callback
+      );
+    }
+    $scope.getAuctionDeposit = function(address, callback) {
+      $scope.readContractData(address,
+        "deposits(address)",
+        [$scope.wallet.getAddressString()],
+        ["uint256"],
+        callback
+      );
+    }
+    $scope.getAuctionEndTime = function(address, callback) {
+      $scope.readContractData(address,
+        "endTimestamp()",
+        [],
+        ["uint256"],
+        callback
+      );
+    }
+    $scope.getAuctionStrikePrice = function(address, callback) {
+      $scope.readContractData(address,
+        "strikePrice()",
+        [],
+        ["uint256"],
+        callback
+      );
+    }
     //
     // READ: fill fields with requested data
     //
@@ -617,13 +656,11 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.readSaleData = function() {
       var addr = document.getElementById("sale_address").value;
       $scope.validateAddress(addr, function() {
-        $scope.getSalePrice(addr, function(data) {
-          putPrice(data);
-          $scope.getSalePlanets(addr, putPlanets);
-        })
+        $scope.getSalePrice(addr, putPrice);
+        $scope.getSalePlanets(addr, putPlanets);
       });
       function putPrice(data) {
-        document.getElementById("sale_price").value = etherUnits.toEther(data[0], "wei");
+        document.getElementById("sale_price").value = $scope.toEther(data[0]);
       }
       function putPlanets(data) {
         var res = "";
@@ -631,6 +668,24 @@ var urbitCtrl = function($scope, $sce, walletService) {
           res = res + data[0][i] + "\n";
         }
         document.getElementById("sale_planets").value = res;
+      }
+    }
+    $scope.readAuctionData = function() {
+      var addr = document.getElementById("auction_address").value;
+      $scope.validateAddress(addr, function() {
+        $scope.getAuctionWhitelisted(addr, putWhitelisted);
+        $scope.getAuctionEndTime(addr, putTime);
+        $scope.getAuctionDeposit(addr, putDeposit);
+      });
+      function putWhitelisted(data) {
+        document.getElementById("auction_whitelisted").checked = data[0];
+      }
+      function putTime(data) {
+        document.getElementById("auction_time").value = data[0];
+      }
+      function putDeposit(data) {
+        var eth = $scope.toEther(data[0]);
+        document.getElementById("auction_deposit").value = eth;
       }
     }
     //
@@ -654,6 +709,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.notifier.danger("Escape doesn't match.");
       });
     }
+    //NOTE expects amount in wei
+    $scope.checkBalance = function(amount, next) {
+      $scope.wallet.setBalance(function() {
+        if (amount <= $scope.toWei($scope.wallet.getBalance()))
+          return next();
+        $scope.notifier.danger("Not enough ETH in wallet.");
+      });
+    }
     $scope.checkSale = function(ship, address, next) {
       //TODO move to utility function maybe
       var parent = ship % 65536;
@@ -664,9 +727,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         return $scope.notifier.danger("Contract can't launch ships.");
       }
       function checkPrice(data) {
-        if (data[0] > $scope.wallet.getBalance())
-          return $scope.notifier.danger("Not enough ETH in wallet.");
-        next(data[0]);
+        $scope.checkBalance(data[0], function() { next(data[0]); })
       }
     }
     //
@@ -1023,6 +1084,26 @@ var urbitCtrl = function($scope, $sce, walletService) {
           "buyAny()",
           [],
           price
+        );
+      }
+    }
+    $scope.doDepositBid = function() {
+      var addr = document.getElementById("bid_address").value;
+      var amount = document.getElementById("bid_amount").value;
+      amount = $scope.toWei(amount);
+      $scope.validateAddress(addr, function() {
+        $scope.checkBalance(amount, function() {
+          $scope.getAuctionWhitelisted(addr, function(data) {
+            if (data[0]) return transact();
+            $scope.notifier.danger("Not whitelisted as participant.");
+          });
+        });
+      });
+      function transact() {
+        $scope.doTransaction(addr,
+          "deposit()",
+          [],
+          amount
         );
       }
     }
