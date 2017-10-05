@@ -2,9 +2,7 @@
 
   <!-- Title -->
   <div class="block text-center">
-    <h1>
-      <a translate="NAV_InteractUrbit" ng-class="{'isActive': visibility=='interactView'}" ng-click="setVisibility('interactView')"> Interact with Urbit</a>
-    </h1>
+    <h1>Interact with the Urbit Constitution</h1>
   </div>
   <!-- / Title -->
 
