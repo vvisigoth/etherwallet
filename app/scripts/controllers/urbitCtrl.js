@@ -209,12 +209,15 @@ var urbitCtrl = function($scope, $sce, walletService) {
       $scope.tx.unit = "wei";
       var estObj = {
         from: $scope.wallet.getAddressString(),
-        value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex(etherUnits.toWei($scope.tx.value, $scope.tx.unit))),
+        value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.tx.value)),
         data: ethFuncs.sanitizeHex(data),
       }
       estObj.to = address;
       ethFuncs.estimateGas(estObj, function(data) {
         if (data.error) {
+          console.log("on contract " + address);
+          console.log("calling " + func + " " + input);
+          console.log("sending " + value + " wei");
           // Proper input validation should prevent this.
           console.error("Gas estimation failed. Probably invalid transaction. Are your parameters correct?");
         } else {
@@ -239,7 +242,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
               $scope.sendContractModal.open();
             });
           } catch (e) {
-              $scope.notifier.danger(e);
+            $scope.notifier.danger(e);
           }
         }
       });
