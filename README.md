@@ -14,6 +14,13 @@ Addresses in this fork have been hard-coded to work with a specific testnet conf
 7. For wallet access, enter the mnemonic phrase described in step 2, and unlock your wallet.
 8. You are now authenticated and can perform operations that require that. By default, your address is `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`. Go give yourself a galaxy.
 
+### Using hardware wallets when running locally
+
+Because browsers that support U2F can only use it on secure (HTTPS) connections, you can't use your hardware wallet when opening the `/dist/index.html` in your browser as-is.
+
+To work around this, see the solution proposed [here](https://github.com/kvhnuke/etherwallet/issues/558#issuecomment-307307105). tl;dr: set up a tiny HTTPS server, give it a self-signed certificate, and have it serve the files in `/dist`.  
+In the future, it might be nice to bundle this with the static download.
+
 
 ### [https://www.MyEtherWallet.com](https://www.MyEtherWallet.com)
 
