@@ -133,6 +133,7 @@
       <input id="createGalaxy_galaxy" type="number" placeholder="galaxy #" />
       <input id="createGalaxy_owner" type="text" placeholder="owner" />
       <input id="createGalaxy_locktime" type="number" placeholder="locked until timestamp" />
+      <input id="createGalaxy_completetime" type="number" placeholder="completely released at" />
       <button ng-click="doCreateGalaxy();">create galaxy</button>
     </form>
     <br/>

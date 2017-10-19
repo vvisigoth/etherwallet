@@ -757,11 +757,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
       var galaxy = document.getElementById("createGalaxy_galaxy").value;
       var address = document.getElementById("createGalaxy_owner").value;
       var locktime = document.getElementById("createGalaxy_locktime").value;
+      var completetime = document.getElementById("createGalaxy_completetime").value;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateAddress(address, function() {
           $scope.validateTimestamp(locktime, function() {
-            if ($scope.offline) return transact();
-            $scope.getConstitutionOwner(checkPermission);
+            $scope.validateTimestamp(locktime, function() {
+              if ($scope.offline) return transact();
+              $scope.getConstitutionOwner(checkPermission);
+            });
           });
         });
       });
@@ -777,8 +780,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
       }
       function transact() {
         $scope.doTransaction($scope.contracts.constitution,
-          "createGalaxy(uint8,address,uint64)",
-          [galaxy, address, locktime]
+          "createGalaxy(uint8,address,uint64,uint64)",
+          [galaxy, address, locktime, completetime]
         );
       }
     }
