@@ -16,10 +16,11 @@
 var myApp = angular.module('myApp', []);
 myApp.filter('sce', ['$sce', function($sce) {
     return function() {
-
     };
 }]);
-describe('Wallet generation Test', function() {
+
+// Tests based on ship
+describe('Constitution holders', function() {
     beforeEach(angular.mock.module('mewApp'));
     beforeEach(angular.mock.module('myApp'));
     var codeFilter, $sce;
@@ -31,36 +32,158 @@ describe('Wallet generation Test', function() {
     beforeEach(angular.mock.inject(function(_$controller_, _$rootScope_) {
         $rootScope = _$rootScope_;
         $scope = _$rootScope_.$new();
-        $controller = _$controller_('walletGenCtrl', {
-            $rootScope: $rootScope,
-            $scope: $scope
-        });
-        $scope.notifier = uiFuncs.notifier;
-        $scope.notifier.sce = $sce;
-        $scope.notifier.scope = $scope;
+        $controller = _$controller_;
     }));
-    describe('Test', function() {
-        it('Generate 100 random wallet with random passwords', function() {
-            for (var i = 0; i < 100; i++) {
-                $scope.password = ethUtil.crypto.randomBytes(32).toString('hex');
-                $scope.genNewWallet();
-                var jsonOut = $scope.wallet.toJSON();
-                var fromPrivKey = new Wallet(jsonOut.privKey)
-                expect(jsonOut.address).toBe(fromPrivKey.getAddressString());
-                expect(jsonOut.address).toBe(fromPrivKey.getChecksumAddressString().toLowerCase());
-                expect($scope.wallet.getAddressString()).toBe(new Wallet($scope.wallet.getPrivateKeyString()).getAddressString());
-                var encOut = $scope.wallet.toV3($scope.password, {
-                    kdf: globalFuncs.kdf,
-                    n: globalFuncs.scrypt.n
-                });
-                var fromV3 = Wallet.fromV3(JSON.stringify(encOut), $scope.password, true);
-                expect(fromV3.getAddressString()).toBe(jsonOut.address);
-                console.log(i, jsonOut.address);
-            }
+    describe('Create a galaxy', function() {
+        it('creates a galaxy', function() {
+            // Set mnemonic
+            $scope.manualmnemonic = "benefit crew supreme gesture quantum web media hazard theory mercy wing kitten";
+            // Set node type
+            var urbitCtrl = $controller('urbitCtrl', {
+                $scope: $scope
+            });
+            var decryptCtrl = $controller('decryptWalletCtrl', {
+                $scope: $scope
+            });
+            //var urbitCtrl = _$controller_('urbitCtrl', {
+            //    $scope: $scope
+            //});
+            // create a galaxy
+            //$scope.walletType = 'pastemnemonic';
+            console.log($scope);
+            $scope.onMnemonicChange();
+            $scope.decryptWallet();
+            $scope.setHDWallet();
+            console.log($scope);
+            expect(urbitCtrl).toBeDefined();
+            expect(decryptCtrl).toBeDefined();
+            //expect('GALAXY OWNER').toNotEqual('SOMEONE ELSE');
+        });
+        it('fails to create a galaxy from a different address', function() {
+            // create a galaxy
+            //expect('GALAXY OWNER').toNotEqual('ME');
         });
     });
-
 });
+
+//describe('Public transactions', function() {
+//    describe('redeems a usp for a star', function() {
+//        //create galaxy
+//        //galaxy owner liquidate star
+//        it('redeems a usp for a star', function() {
+//            // redeem a USP for a star
+//            expect('NEW STAR OWNER').toBe('ME');
+//            expect('USP BAL').toBe('OLD BAL - 1');
+//        });
+//        it('doesnt have enough usp to redeem a star', function() {
+//            // redeem a USP for a star
+//            expect('NEW STAR OWNER').notToBe('ME');
+//            expect('USP BAL').toBe('0');
+//        });
+//    });
+//});
+//describe('Ship owner transactions', function() {
+//    describe('Liquidate star', function() {
+//        it('liquidates a star for a usp', function() {
+//            //for p in children
+//            ////expect p not to be liquidated star
+//        });
+//    });
+//    describe('Launch', function() {
+//    });
+//    describe('Grant launch rights', function() {
+//    });
+//    describe('Revoke launch rights', function() {
+//    });
+//    describe('Start ship', function() {
+//    });
+//    describe('Transfer ship', function() {
+//    });
+//    describe('Rekey ship', function() {
+//    });
+//    describe('Adopt ship', function() {
+//    });
+//    describe('Reject ship', function() {
+//    });
+//});
+//describe('Galaxy owners', function() {
+//    describe('Cast concrete vote', function() {
+//    });
+//    describe('Cast abstract vote', function() {
+//    });
+//});
+// Ship owners
+// Constituion owner
+
+//describe('Galaxy', function() {
+//    beforeEach(angular.mock.module('mewApp'));
+//    beforeEach(angular.mock.module('myApp'));
+//    var codeFilter, $sce;
+//    beforeEach(inject(function(_$sce_, $filter) {
+//        $sce = _$sce_;
+//    }));
+//    var $controller;
+//    var $scope = {};
+//    beforeEach(angular.mock.inject(function(_$controller_, _$rootScope_) {
+//        $rootScope = _$rootScope_;
+//        $scope = _$rootScope_.$new();
+//        $controller = _$controller_('urbitCtrl', {
+//            $rootScope: $rootScope,
+//            $scope: $scope
+//        });
+//        //$scope.notifier = uiFuncs.notifier;
+//        //$scope.notifier.sce = $sce;
+//        //$scope.notifier.scope = $scope;
+//    }));
+//    describe('Test', function() {
+//        it('Test', function() {
+//            expect(true).toEqual(true);
+//        });
+//    });
+//
+//});
+//describe('Wallet generation Test', function() {
+//    beforeEach(angular.mock.module('mewApp'));
+//    beforeEach(angular.mock.module('myApp'));
+//    var codeFilter, $sce;
+//    beforeEach(inject(function(_$sce_, $filter) {
+//        $sce = _$sce_;
+//    }));
+//    var $controller;
+//    var $scope = {};
+//    beforeEach(angular.mock.inject(function(_$controller_, _$rootScope_) {
+//        $rootScope = _$rootScope_;
+//        $scope = _$rootScope_.$new();
+//        $controller = _$controller_('walletGenCtrl', {
+//            $rootScope: $rootScope,
+//            $scope: $scope
+//        });
+//        $scope.notifier = uiFuncs.notifier;
+//        $scope.notifier.sce = $sce;
+//        $scope.notifier.scope = $scope;
+//    }));
+//    describe('Test', function() {
+//        it('Generate 100 random wallet with random passwords', function() {
+//            for (var i = 0; i < 100; i++) {
+//                $scope.password = ethUtil.crypto.randomBytes(32).toString('hex');
+//                $scope.genNewWallet();
+//                var jsonOut = $scope.wallet.toJSON();
+//                var fromPrivKey = new Wallet(jsonOut.privKey)
+//                expect(jsonOut.address).toBe(fromPrivKey.getAddressString());
+//                expect(jsonOut.address).toBe(fromPrivKey.getChecksumAddressString().toLowerCase());
+//                expect($scope.wallet.getAddressString()).toBe(new Wallet($scope.wallet.getPrivateKeyString()).getAddressString());
+//                var encOut = $scope.wallet.toV3($scope.password, {
+//                    kdf: globalFuncs.kdf,
+//                    n: globalFuncs.scrypt.n
+//                });
+//                var fromV3 = Wallet.fromV3(JSON.stringify(encOut), $scope.password, true);
+//                expect(fromV3.getAddressString()).toBe(jsonOut.address);
+//                console.log(i, jsonOut.address);
+//            }
+//        });
+//    });
+//
+//});
 </script>
 
 </html>
