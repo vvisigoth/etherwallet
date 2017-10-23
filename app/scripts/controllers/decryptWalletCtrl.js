@@ -27,7 +27,7 @@ var decryptWalletCtrl = function($scope, $sce, walletService) {
         hwExpansePath:     "m/44'/40'/0'/0"        // first address: m/44'/40'/0'/0/0
     };
     $scope.HDWallet.dPath = $scope.HDWallet.defaultDPath;
-    $scope.mnemonicModel = new Modal(document.getElementById('mnemonicModel'));
+    //$scope.mnemonicModel = new Modal(document.getElementById('mnemonicModel'));
     $scope.$watch('ajaxReq.type', function() {
         $scope.nodeType = $scope.ajaxReq.type;
         $scope.setdPath();
@@ -196,8 +196,8 @@ var decryptWalletCtrl = function($scope, $sce, walletService) {
     }
     $scope.setHDWallet = function() {
         walletService.wallet = $scope.wallet = $scope.HDWallet.wallets[$scope.HDWallet.id];
-        $scope.mnemonicModel.close();
-        $scope.notifier.info(globalFuncs.successMsgs[1]);
+        //$scope.mnemonicModel.close();
+        //$scope.notifier.info(globalFuncs.successMsgs[1]);
     }
     $scope.decryptWallet = function() {
         $scope.wallet = null;
@@ -216,15 +216,16 @@ var decryptWalletCtrl = function($scope, $sce, walletService) {
                 $scope.wallet = Wallet.getWalletFromPrivKeyFile($scope.fileContent, $scope.filePassword);
                 walletService.password = $scope.filePassword;
             } else if ($scope.showMDecrypt) {
-                $scope.mnemonicModel = new Modal(document.getElementById('mnemonicModel'));
-                $scope.mnemonicModel.open();
+                //$scope.mnemonicModel = new Modal(document.getElementById('mnemonicModel'));
+                //$scope.mnemonicModel.open();
                 $scope.onHDDPathChange($scope.mnemonicPassword);
             } else if ($scope.showParityDecrypt) {
                 $scope.wallet = Wallet.fromParityPhrase($scope.parityPhrase);
             }
             walletService.wallet = $scope.wallet;
         } catch (e) {
-            $scope.notifier.danger(globalFuncs.errorMsgs[6] + e);
+            console.log(e);
+            //$scope.notifier.danger(globalFuncs.errorMsgs[6] + e);
         }
         if ($scope.wallet != null) $scope.notifier.info(globalFuncs.successMsgs[1]);
     };

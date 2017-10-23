@@ -3,7 +3,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
     $scope.ajaxReq = ajaxReq;
     walletService.wallet = null;
     $scope.visibility = "interactView";
-    $scope.sendContractModal = new Modal(document.getElementById('sendContract'));
+    //$scope.sendContractModal = new Modal(document.getElementById('sendContract'));
     $scope.showReadWrite = false;
     $scope.Validator = Validator;
     $scope.oneSpark = 1000000000000000000;
@@ -22,7 +22,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         functions: [],
         selectedFunc: null
     }
-    $scope.selectedAbi = ajaxReq.abiList[0];
+    //$scope.selectedAbi = ajaxReq.abiList[0];
     $scope.showRaw = false;
     $scope.$watch(function() {
         if (walletService.wallet == null) return null;
@@ -32,7 +32,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
         $scope.tx.nonce = 0;
-
     });
     $scope.$watch('visibility', function(newValue, oldValue) {
         $scope.tx = {
@@ -269,9 +268,9 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.contracts.constitution = data[0];
       });
     }
-    //
-    // VALIDATE: validate input data
-    //
+    ////
+    //// VALIDATE: validate input data
+    ////
     $scope.validateShip = function(ship, next) {
       if (ship < 0 || ship > 4294967295)
         return $scope.notifier.danger("Ship " + ship + " not a galaxy, star or planet.");
@@ -1090,7 +1089,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
           "buySpecific(uint256,uint32)",
           [index, ship],
           price
-        );
+       );
       }
     }
     $scope.doBuyAnyPlanet = function() {
