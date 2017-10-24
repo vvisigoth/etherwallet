@@ -19,6 +19,8 @@ myApp.filter('sce', ['$sce', function($sce) {
     };
 }]);
 
+var mnemonic = "benefit crew supreme gesture quantum web media hazard theory mercy wing kitten";
+
 // Tests based on ship
 describe('Constitution holders', function() {
     beforeEach(angular.mock.module('mewApp'));
@@ -36,8 +38,9 @@ describe('Constitution holders', function() {
     }));
     describe('Create a galaxy', function() {
         it('creates a galaxy', function() {
+            // Decrypt wallet
             // Set mnemonic
-            $scope.manualmnemonic = "benefit crew supreme gesture quantum web media hazard theory mercy wing kitten";
+            $scope.manualmnemonic = mnemonic;
             // Set node type
             var urbitCtrl = $controller('urbitCtrl', {
                 $scope: $scope
@@ -45,16 +48,29 @@ describe('Constitution holders', function() {
             var decryptCtrl = $controller('decryptWalletCtrl', {
                 $scope: $scope
             });
-            //var urbitCtrl = _$controller_('urbitCtrl', {
-            //    $scope: $scope
-            //});
+            var tabsCtrl = $controller('tabsCtrl', {
+                $scope: $scope
+            });
             // create a galaxy
-            //$scope.walletType = 'pastemnemonic';
-            console.log($scope);
+            $scope.walletType = 'pastemnemonic';
             $scope.onMnemonicChange();
             $scope.decryptWallet();
+            $scope.HDWallet.id = 0;
             $scope.setHDWallet();
-            console.log($scope);
+            expect($scope.wallet).toBeDefined();
+            // Set node
+            $scope.customNode = { 
+                options: 'eth', 
+                name: 'testrpc-test', 
+                url: 'http://127.0.0.1', 
+                port: '8545', 
+                httpBasicAuth: null, 
+                eip155: false, 
+                chainId: '' 
+            };
+            $scope.saveCustomNode();
+            //check that node is connected?
+            console.log($scope)
             expect(urbitCtrl).toBeDefined();
             expect(decryptCtrl).toBeDefined();
             //expect('GALAXY OWNER').toNotEqual('SOMEONE ELSE');
