@@ -5,6 +5,7 @@ var angularTranslate         = require('angular-translate');
 var angularTranslateErrorLog = require('angular-translate-handler-log');
 var angularSanitize          = require('angular-sanitize');
 var angularAnimate           = require('angular-animate');
+var angularRoute             = require('angular-route');
 var bip39                    = require('bip39');
 var HDKey                    = require('hdkey');
 window.hd                    = { bip39: bip39, HDKey: HDKey };
@@ -65,12 +66,13 @@ var viewCtrl                 = require('./controllers/viewCtrl');
 var decryptWalletCtrl        = require('./controllers/decryptWalletCtrl');
 var globalService            = require('./services/globalService');
 var walletService            = require('./services/walletService');
+var templateService          = require('./services/templateService');
 var addressFieldDrtv         = require('./directives/addressFieldDrtv');
 var QRCodeDrtv               = require('./directives/QRCodeDrtv');
 var walletDecryptDrtv        = require('./directives/walletDecryptDrtv');
 var fileReaderDrtv           = require('./directives/fileReaderDrtv');
 var urbitCtrl                = require('./controllers/urbitCtrl');
-var app = angular.module('mewApp', ['pascalprecht.translate', 'ngSanitize','ngAnimate']);
+var app = angular.module('mewApp', ['pascalprecht.translate', 'ngSanitize','ngAnimate', 'ngRoute']);
 app.config(['$compileProvider', function($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|mailto):/);
 }]);
@@ -83,6 +85,7 @@ app.config(['$animateProvider', function($animateProvider) {
 }]);
 app.factory('globalService', ['$http', '$httpParamSerializerJQLike', globalService]);
 app.factory('walletService', walletService);
+app.factory('templateService', templateService);
 app.directive('addressField', ['$compile', addressFieldDrtv]);
 app.directive('qrCode', QRCodeDrtv);
 app.directive('onReadFile', fileReaderDrtv);
@@ -90,4 +93,19 @@ app.directive('walletDecryptDrtv', walletDecryptDrtv);
 app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', tabsCtrl]);
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', 'walletService', decryptWalletCtrl]);
+//app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', 'templateService', urbitCtrl]);
 app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', urbitCtrl]);
+app.config(['$routeProvider', '$locationProvider', 
+    function($routeProvider, $locationProvider) {
+    console.log('templateService', templateService);
+    $routeProvider
+        .when('/', {
+            template: templateService.t2,
+            controller: 'urbitCtrl'
+        })
+        .when('/state', {
+            template: templateService.state,
+            controller: 'urbitCtrl'
+        })
+    $locationProvider.hashPrefix();
+}]);
