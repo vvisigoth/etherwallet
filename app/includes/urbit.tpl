@@ -1,3 +1,4 @@
+<ng-view></ng-view>
 <main class="tab-pane urbit active" ng-controller='urbitCtrl' ng-cloak>
 
   <!-- Title -->
