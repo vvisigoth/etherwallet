@@ -6,7 +6,13 @@
 <meta name="description" content="MyEtherWallet.com is a free, open-source, client-side interface for generating Ethereum wallets &amp; interacting with the blockchain easily &amp; securely. Double-check the URL ( .com ) before unlocking your wallet.">
 <link rel="canonical" href="https://www.myetherwallet.com" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
 <link rel="stylesheet" href="css/etherwallet-master.min.css">
+-->
+<!-- USE THIS DURING DEV TO HIDE CRUFT -->
+<link rel="stylesheet" href="css/dev.css">
+<link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
 <script type="text/javascript" src="js/etherwallet-static.min.js"></script>
 <script type="text/javascript" src="js/etherwallet-master.js"></script>
 <link rel="apple-touch-icon" sizes="180x180" href="images/fav/apple-touch-icon.png">
