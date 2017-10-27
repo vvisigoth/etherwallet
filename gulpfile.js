@@ -73,11 +73,11 @@ gulp.task('html', function(done) {
 
 // styles: Compile and Minify Less / CSS Files
 let less_watchFolder = app + 'styles/**/*.less';
-let less_srcFile = app + 'styles/etherwallet-master.less';
+let less_srcFile = app + 'styles/urbitwallet-master.less';
 let less_destFolder = dist + 'css';
 let less_destFolder_CX = dist_CX + 'css';
-let less_destFile = 'etherwallet-master.css';
-let less_destFileMin = 'etherwallet-master.min.css';
+let less_destFile = 'urbitwallet-master.css';
+let less_destFileMin = 'urbitwallet-master.min.css';
 
 gulp.task('styles', function() {
     return gulp.src(less_srcFile)
