@@ -74,7 +74,9 @@ var fileReaderDrtv           = require('./directives/fileReaderDrtv');
 var urbitCtrl                = require('./controllers/urbitCtrl');
 var app = angular.module('mewApp', ['pascalprecht.translate', 'ngSanitize','ngAnimate', 'ngRoute']);
 app.config(['$compileProvider', function($compileProvider) {
-  $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|mailto):/);
+  //$compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|mailto):/);
+  //add http to whitelist just for dev
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|http|mailto):/);
 }]);
 app.config(['$translateProvider', function($translateProvider) {
   $translateProvider.useMissingTranslationHandlerLog();
@@ -94,18 +96,23 @@ app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', tab
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', 'walletService', decryptWalletCtrl]);
 //app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', 'templateService', urbitCtrl]);
-app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', urbitCtrl]);
+app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', urbitCtrl]);
 app.config(['$routeProvider', '$locationProvider', 
     function($routeProvider, $locationProvider) {
     console.log('templateService', templateService);
     $routeProvider
         .when('/', {
-            template: templateService.t2,
+            template: templateService.state,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/liquidate', {
+            template: templateService.liquidate,
             controller: 'urbitCtrl'
         })
         .when('/state', {
             template: templateService.state,
             controller: 'urbitCtrl'
         })
-    $locationProvider.hashPrefix();
+    $locationProvider.html5Mode(true);
+    $locationProvider.hashPrefix('!');
 }]);
