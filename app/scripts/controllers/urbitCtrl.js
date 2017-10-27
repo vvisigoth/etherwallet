@@ -1,5 +1,11 @@
 'use strict';
-var urbitCtrl = function($scope, $sce, walletService) {
+var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
+
+    // add params to scope
+    $scope.$routeParams = $routeParams;
+
+    $scope.path = $location.path;
+
     $scope.ajaxReq = ajaxReq;
     walletService.wallet = null;
     $scope.visibility = "interactView";
