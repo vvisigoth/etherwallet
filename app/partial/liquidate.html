@@ -1,0 +1,25 @@
+<div id="liquidate" ng-init="address = '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
+  <span id="address">{{ address }}</span>
+  <section class="general-information">
+    <h1 id="action-title">Liquidate</h1>
+    <div>
+      <p>Liquidating a star means redeeming a star for a SPARK ERC20 token. Your star 
+    ({{ $routeParams.p }}) can then be claimed by anyone, and this is an irreversible 
+    </div>
+    operation.
+    </p>
+  </section>
+  <section class="transaction">
+    <span>Star to liquidate</span>
+    <h2 class="ship-name">{{ $routeParams.p }}</h2>
+    <div class=input-group">
+      <input type="checkbox">
+      <label class="action-confirmation">Yes I am sure</label>
+    </div>
+    <div class="input-group">
+      <input type="text" class="ship-to-liq" value="Liquidate">
+      <div class="error-label">Ship must belong to you</div>
+    </div>
+    <button class="nav-back" ng-click="path('state')" >&#8592 Back</button>
+  </section>
+</div>
