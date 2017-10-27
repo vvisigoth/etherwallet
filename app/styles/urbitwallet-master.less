@@ -1,0 +1,78 @@
+// so that I can extend base.css
+@import (less) "base.css";
+
+
+// State
+
+div.state-col:extend(.col-sm)
+{
+}
+
+div.latent-action-col:extend(.col-sm)
+{
+}
+
+div.live-action-col:extend(.col-sm)
+{
+}
+
+li.spark-bal:extend(h3, .green)
+{
+}
+
+div.row.body:extend(.text-700)
+{
+}
+
+span#address:extend(.text-700)
+{
+}
+
+span.ship-name
+{
+}
+
+li.ship-list:extend(h3)
+{
+}
+
+div.spark-action
+{
+  /* reset this to baseline */
+  font-size: 3rem;
+  line-height: 5rem;
+}
+
+.spark-action a
+{
+  &:extend(.blue);
+}
+
+div.row
+{
+  /* reset this to baseline */
+  font-size: 3rem;
+  line-height: 5rem;
+  font-weight: initial
+}
+
+div.row.body
+{
+}
+
+
+// ship action liquidate
+
+#liquidate .nav-back
+{
+  &:extend(.btn, .btn-tetiary);
+}
+
+#liquidate input[type=text]
+{
+  &:extend(.gray-light-hl, .text-700);
+}
+
+
+
+
