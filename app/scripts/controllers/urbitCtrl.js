@@ -4,7 +4,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
     // add params to scope
     $scope.$routeParams = $routeParams;
 
-    $scope.path = $location.path;
+    $scope.path = function(path) {
+      $location.path(path);
+    }
 
     $scope.ajaxReq = ajaxReq;
     walletService.wallet = null;
