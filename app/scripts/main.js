@@ -94,7 +94,7 @@ app.directive('onReadFile', fileReaderDrtv);
 app.directive('walletDecryptDrtv', walletDecryptDrtv);
 app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', tabsCtrl]);
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
-app.controller('decryptWalletCtrl', ['$scope', '$sce', 'walletService', decryptWalletCtrl]);
+app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
 //app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', 'templateService', urbitCtrl]);
 app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', urbitCtrl]);
 app.config(['$routeProvider', '$locationProvider', 
