@@ -1,9 +1,20 @@
 <article class="block decrypt-drtv clearfix" ng-controller='decryptWalletCtrl as $crtl'>
 
   <!-- Column 1 - Select Type of Key -->
+  <section class="select-type" ng-init="walletType=''" ng-show="!walletType">
+    <h4 style="margin-top:0;">Select your wallet type</h4>
+    <ul>
+      <li><a href="#" ng-click="walletType='metamask'">Metamask / Mist</a></li>
+      <li><a href="#" ng-click="walletType='ledger'">Ledger</a></li>
+      <li><a href="#" ng-click="walletType='trezor'">TREZOR</a></li>
+      <li><a href="#" ng-click="walletType='digitalBitbox'">Digital Bitbox</a></li>
+      <li><a href="#" ng-click="walletType='fileupload'">Keystore File (UTC / JSON)</a></li>
+      <li><a href="#" ng-click="walletType='pastemnemonic'">Mnemonic Phrase</a></li>
+      <li><a href="#" ng-click="walletType='pasteprivkey'">Private Key</a></li>
+    </uL>
+  </section>
+  <!--
   <section class="col-md-4 col-sm-6">
-    <h4 translate="decrypt_Access" style="margin-top:0;"> Select the format of your private key: </h4>
-
     <label class="radio">
       <input aria-flowto="aria3" type="radio" aria-label="MetaMask / Mist" ng-model="walletType" value="metamask" />
       <span translate="x_MetaMask">MetaMask / Mist</span>
@@ -54,10 +65,11 @@
     </label>
 
   </section>
+  -->
   <!-- Column 1 - Select Type of Key -->
 
   <!-- Column 2 - Unlock That Key -->
-  <section class="col-md-4 col-sm-6">
+  <section class="col-md-12">
 
     <!-- if selected keystore -->
     <div id="selectedUploadKey" ng-if="walletType=='fileupload'">
@@ -151,16 +163,16 @@
 
 
     <!-- if selected type mnemonic-->
-    <div id="selectedTypeMnemonic" ng-if="walletType=='pastemnemonic'">
-      <h4 translate="ADD_Radio_5"> Paste / type your mnemonic: </h4>
-      <div class="form-group">
+    <div id="selectedTypeMnemonic" ng-if="walletType=='pastemnemonic'&&!showModal" class="row">
+      <h1 class="col-sm-12">Enter your mnemonic</h1>
+      <div class="form-group col-sm-12">
         <textarea id="aria4"
-                  class="form-control"
+                  class="form-control col-sm-12"
                   ng-change="onMnemonicChange()"
                   ng-class="Validator.isValidMnemonic($parent.$parent.manualmnemonic) ? 'is-valid' : 'is-invalid'"
                   ng-keyup="$event.keyCode == 13 && decryptWallet()"
                   ng-model="$parent.$parent.manualmnemonic"
-                  placeholder="{{ 'x_Mnemonic' | translate}}"
+                  placeholder="your-mnemonic"
                   rows="4"
         ></textarea>
       </div>
@@ -303,18 +315,23 @@
   <!-- / Column 2 - Unlock That Key -->
 
   <!-- Column 3 - The Unlock Button -->
+  <!--
   <section class="col-md-4 col-sm-6" ng-show="showFDecrypt||showPDecrypt||showMDecrypt||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox'||showAOnly||showParityDecrypt">
+  -->
+  <section class="col-md-4 col-sm-6" ng-show="(walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
+    <!--
     <h4 id="uploadbtntxt-wallet" ng-show="showFDecrypt||showPDecrypt||showMDecrypt" translate="ADD_Label_6">
       Access Your Wallet:
     </h4>
+    -->
     <div class="form-group">
       <a
       tabindex="0"
       role="button"
-      class="btn btn-primary btn-block"
-      ng-show="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt"
+      ng-class="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt ? 'btn btn-primary': 'btn'"
+      ng-disabled="!showFDecrypt&&!showPDecrypt&&!showMDecrypt&&!showParityDecrypt"
       ng-click="decryptWallet()"
-      translate="ADD_Label_6_short">UNLOCK</a>
+      >Load</a>
     </div>
     <div class="form-group">
       <a class="btn btn-primary btn-block"
@@ -339,20 +356,17 @@
   <!-- / Column 3 -The Unlock Button -->
 
   <!-- MODAL -->
-  <article class="modal fade" id="mnemonicModel" tabindex="-1" role="dialog" aria-labelledby="Mnemonic Phrase Modal">
+  <article class="modal fade" id="mnemonicModel" tabindex="-1" role="dialog" ng-show="showModal" aria-labelledby="Mnemonic Phrase Modal">
     <section class="modal-dialog">
       <section class="modal-content">
         <div class="modal-body" role="document">
           <button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
-
           <!-- Select HD Path -->
           <h4 id="modalTitle" class="modal-title" translate="ADD_Radio_5_Path" style="margin-bottom: .25rem">
             Select HD derivation path:
           </h4>
-
           <p class="alert alert-danger" ng-hide="ajaxReq.type=='ETH'||ajaxReq.type=='ETC'||ajaxReq.type=='ROPSTEN ETH'||ajaxReq.type=='RINKEBY ETH'||ajaxReq.type=='KOVAN ETH'||ajaxReq.type=='EXP'"> We do not know the correct path for this network. <a href="https://github.com/kvhnuke/etherwallet/issues" target="_blank" rel="noopener">Please open a github issue</a> so we can discuss / be enlightened.</p>
           <section class="row">
-
             <div class="col-sm-4">
               <label class="radio small">
                 <input aria-describedby="Path: Jaxx, Metamask, Exodus, imToken - {{HDWallet.defaultDPath}}"

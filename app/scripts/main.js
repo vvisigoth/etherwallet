@@ -109,6 +109,10 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.liquidate,
             controller: 'urbitCtrl'
         })
+        .when('/mode/type', {
+            template: templateService.type
+            //controller: 'urbitCtrl'
+        })
         .when('/state', {
             template: templateService.state,
             controller: 'urbitCtrl'
