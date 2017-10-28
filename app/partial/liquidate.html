@@ -4,16 +4,20 @@
     <h1 id="action-title">Liquidate</h1>
     <div>
       <p>Liquidating a star means redeeming a star for a SPARK ERC20 token. Your star 
-    ({{ $routeParams.p }}) can then be claimed by anyone, and this is an irreversible 
+    ({{ $routeParams.p }}) can then be claimed by anyone, and this is an irreversible operation.
+      </p>
     </div>
-    operation.
-    </p>
   </section>
   <section class="transaction">
-    <span>Star to liquidate</span>
+    <!-- make this conditional -->
+    <span class="sub-title">Star to liquidate:</span>
     <h2 class="ship-name">{{ $routeParams.p }}</h2>
     <div class=input-group">
+      <!--
       <input type="checkbox">
+      -->
+      <!-- set this as equal to actual var -->
+      <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
       <label class="action-confirmation">Yes I am sure</label>
     </div>
     <div class="input-group">
