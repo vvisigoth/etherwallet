@@ -10,8 +10,7 @@
   <!--wallet decrypt-->
   <article class="form-group" ng-show="(true || !wd && visibility=='deployView') || (!wd && visibility=='interactView' && contract.selectedFunc && !contract.functions[contract.selectedFunc.index].constant)">
       <wallet-decrypt-drtv></wallet-decrypt-drtv>
-  </article>
-
+  </article> 
 
   <!-- read calls -->
 
