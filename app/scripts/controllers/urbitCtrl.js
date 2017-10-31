@@ -9,7 +9,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
     }
 
     $scope.ajaxReq = ajaxReq;
-    walletService.wallet = null;
+    console.log('walletService', walletService);
+    // why does this reset as null?
+    //walletService.wallet = null;
     $scope.visibility = "interactView";
     //$scope.sendContractModal = new Modal(document.getElementById('sendContract'));
     $scope.showReadWrite = false;
