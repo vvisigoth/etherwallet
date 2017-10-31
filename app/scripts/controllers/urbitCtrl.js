@@ -197,7 +197,10 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
         }
         $scope.tx.data = $scope.getTxData();
         $scope.tx.to = $scope.contract.address;
-        $scope.sendContractModal.open();
+        console.log('generate contract tx');
+        //$scope.sendContractModal.open();
+        // just generate the transaction
+        $scope.generateTx();
     }
     //
     $scope.buildTransactionData = function(func, input) {
@@ -249,7 +252,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
               $scope.tx.to = address;
               $scope.tx.contractAddr = $scope.tx.to;
               $scope.showRaw = false;
-              $scope.sendContractModal.open();
+              //$scope.sendContractModal.open();
+              // just generate transaction with default amount and gas
+              $scope.generateTx();
             });
           } catch (e) {
             $scope.notifier.danger(e);
