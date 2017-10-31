@@ -1,6 +1,7 @@
 <div 
-    ng-init="address = '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'; spark_total = 4.11231; ships = [{ name: '~wacten', state: 'Latent'}, { name: '~marlur', state: 'Latent'}]">
-    <span id="address">{{ address }}</span>
+    ng-init="ships = [{ name: '~wacten', state: 'Latent'}, { name: '~marlur', state: 'Latent'}]; loadAddresses(); readOwnedShips();">
+    <span id="address">{{ wallet.getAddressString() }}</span>
+    {{ ownedShips }}
     <section class="how-to">
         <h1>Your Urbit Wallet</h1>
         <ul>
