@@ -14,5 +14,9 @@ _ens/
 *.zip
 cert.pem
 key.pem
-dist
+dist/
 chrome-extension
+
+*.swp
+*.swo
+*.swn
