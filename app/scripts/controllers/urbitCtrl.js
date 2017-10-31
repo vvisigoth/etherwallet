@@ -116,7 +116,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
         }
     }
     $scope.sendTx = function() {
-        $scope.sendContractModal.close();
+        // need some way to show error or success
+        //$scope.sendContractModal.close();
         uiFuncs.sendTx($scope.signedTx, function(resp) {
             if (!resp.isError) {
                 var bExStr = $scope.ajaxReq.type != nodes.nodeTypes.Custom ? "<a href='" + $scope.ajaxReq.blockExplorerTX.replace("[[txHash]]", resp.data) + "' target='_blank' rel='noopener'> View your transaction </a>" : '';
