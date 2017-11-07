@@ -8,22 +8,31 @@
       </p>
     </div>
   </section>
-  <section class="transaction">
-    <!-- make this conditional -->
-    <span class="sub-title">Star to liquidate:</span>
-    <h2 class="ship-name">{{ $routeParams.p }}</h2>
-    <div class=input-group">
-      <!--
-      <input type="checkbox">
-      -->
-      <!-- set this as equal to actual var -->
-      <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
+  <section class="transaction-params">
+    <div class="label-group">
+      <span class="sub-title text-700">Star to liquidate:</span>
+      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+    </div>
+    <div class="input-group row slim-input-group">
+      <div class="checkbox-container col-md-1">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
+      </div>
       <label class="action-confirmation">Yes I am sure</label>
     </div>
     <div class="input-group">
       <input type="text" class="ship-to-liq" value="Liquidate">
       <div class="error-label">Ship must belong to you</div>
     </div>
-    <button class="nav-back" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="checked && !starError && star ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" ng-click="doLiquidate(star)" >Create</button>
+  </section>
+  <section class="transaction-data" ng-show="rawTx">
+    <pre class="raw-tx row col-md-8">
+      {{ rawTx }}
+    </pre>
+    <pre class="signed-tx row col-md-8">
+      {{ signedTx }}
+    </pre>
+    <button class="btn btn-primary" ng-click="sendTx()">Send</button>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
   </section>
 </div>

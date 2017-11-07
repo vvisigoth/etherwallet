@@ -1,13 +1,15 @@
-<div id=create-galaxy" class="row" ng-init="my_address = '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'; loadAddresses();">
-  <span id="address" class="col-md-12">{{ wallet.getAddressString() }}</span>
-  <section class="general-information col-md-12">
-    <h1 id="action-title col-md-12">Create galaxy</h1>
-    <div class="help-text col-md-12">
-      <p> As the constitution owner, you can create a galaxy.
+<div id=create-galaxy" class="col-md-12 transaction" ng-init="loadAddresses();">
+  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <!-- GENERAL INFORMATION ABOUT TRANSACTION -->
+  <section class="general-information">
+    <h1 id="action-title row">Create galaxy</h1>
+    <div class="help-text row">
+      <p class="col-md-8"> As the constitution owner, you can create a galaxy.
       </p>
     </div>
   </section>
-  <section class="transaction">
+  <!-- TRANSACTION PARAMS -->
+  <section class="transaction-params">
     <!-- this section changes with transaction type -->
     <div class="input-group">
       <input type="text" class="gray-light-hl text-700" ng-model="galaxy" value="Galaxy Name" placeholder="galaxy">
@@ -27,11 +29,12 @@
     </pre>
     <button class="btn btn-secondary" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
   </section>
-  <section class="transaction-data">
-    <pre class="raw-tx">
+  <!-- RAW AND SIGNED TRANSACTIONS-->
+  <section class="transaction-data" ng-show="rawTx">
+    <pre class="raw-tx row col-md-8">
       {{ rawTx }}
     </pre>
-    <pre class="signed-tx">
+    <pre class="signed-tx row col-md-8">
       {{ signedTx }}
     </pre>
     <button class="btn btn-primary" ng-click="sendTx()">Send</button>
