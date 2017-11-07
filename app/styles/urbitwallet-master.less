@@ -1,6 +1,32 @@
 // so that I can extend base.css
 @import (less) "base.css";
 
+// Header
+header 
+{
+  padding: 1rem;
+}
+
+header a 
+{
+  color: white;
+  text-decoration: inherit;
+}
+
+header .mode .mode-indicator
+{
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 1000px;
+  float: left;
+  margin: 2.15rem 2.15rem 0 0;
+}
+
+header .mode .mode-indicator.off
+{
+  background-color: #fffba7;
+}
+
 
 // State
 
@@ -63,41 +89,50 @@ div.row.body
 
 // ship action liquidate
 
-#liquidate .nav-back
+.transaction .nav-back
 {
   &:extend(.btn, .btn-tetiary);
 }
 
-#liquidate input[type=text]
+.transaction input[type=text]
 {
   &:extend(.gray-light-hl, .text-700);
 }
 
-#liquidate .ship-name:extend(.blue)
+.transaction .ship-name:extend(.blue)
 {
 }
 
-#liquidate .checkbox
+.transaction .checkbox
 {
   cursor: pointer;
-  height: 4rem;
-  width: 4rem;
+  height: 6rem;
+  width: 6rem;
   background-color: #d4d4d4;
 }
 
-#liquidate .checkbox.checked
+.transaction .checkbox.checked
 {
-  height: 4rem;
-  width: 4rem;
   background-color: #5b5b5b;
 }
 
-#liquidate section.transaction .sub-title
+section.transaction-params .sub-title
 {
   &:extend(.text-700);
 }
 
+.transaction .input-group {
+  margin: 0px 0 2rem;
+  height: 12rem;
+}
 
+.transaction .slim-input-group {
+  height: 9rem;
+}
+
+button.disabled {
+  pointer: initial;
+} 
 
 
 
