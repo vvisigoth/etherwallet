@@ -112,6 +112,18 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.liquidate,
             controller: 'urbitCtrl'
         })
+        .when('/state/:p/launch', {
+            template: templateService.launch,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/start', {
+            template: templateService.start,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/purchase', {
+            template: templateService.purchase,
+            controller: 'urbitCtrl'
+        })
         .when('/state/creategalaxy', {
             template: templateService.createGalaxy,
             controller: 'urbitCtrl'
