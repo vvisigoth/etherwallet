@@ -1,8 +1,10 @@
 'use strict';
-var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
-
-    // add params to scope
+var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, obService) {
+//var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
+    // add route params to scope
     $scope.$routeParams = $routeParams;
+
+    $scope.ob = obService;
 
     $scope.path = function(path) {
       $location.path(path);
@@ -64,6 +66,16 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
                 }
             }
         }
+    });
+    $scope.$watch('ownedShips', function(newVal, oldVal) {
+      if (newVal == oldVal) {
+        return;
+      }
+      var k = Object.keys(newVal);
+      console.log('newval', k);
+      for (var i = 0; i < k.length; i ++) {
+        $scope.readShipData(k[i]);
+      };
     });
     $scope.toWei = function(ether) {
       return etherUnits.toWei(ether, "ether");
@@ -333,6 +345,77 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
       return next();
     }
     //
+    // UI Validators
+    //
+    $scope.valGalaxy = function(galaxy) {
+      console.log('validating galaxy');
+      if (galaxy < 0 || galaxy > 255) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.valStar = function(star) {
+      console.log('validating star');
+      if (star < 256 || star > 65535) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    $scope.valShip = function(ship) {
+      if (ship < 0 || ship > 4294967295) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.valAddress = function(address) {
+      if (!ethFuncs.validateEtherAddress(address)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.valTimestamp = function(timestamp) {
+      if (timestamp < 0 || timestamp > 4200000000) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+    //UI Conviences
+    $scope.buildOwnedShips = function() {
+      readOwnedShips();
+    };
+
+    $scope.toShipName = function(address) {
+      // fix this to deal with planet
+      if (address > -1 || address < 256) {
+        return $scope.ob.toGalaxyName(address);
+      } else if (address > 255 || address < 65534) {
+        return $scope.ob.toStarName(address);
+      } else {
+        return $scope.ob.toPlanetName(address);
+      }
+    };
+
+    $scope.generateShipList = function(shipListString) {
+      var t = shipListString.split('\n');
+      var r = {};
+      for (var i = 0; i < t.length; i ++) {
+        if (t[i]) {
+          r[t[i]] = { address: t[i], name: '~' + $scope.toShipName(t[i])};
+        }
+      };
+      return r;
+    };
+    //
     // GET: read contract data, pass the result to callback
     //
     $scope.getShipsOwner = function(callback) {
@@ -549,23 +632,30 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
     // READ: fill fields with requested data
     //
     $scope.readShipData = function(ship) {
+      console.log('ship', ship);
       //var ship = document.getElementById("getShipData_ship").value;
       $scope.validateShip(ship, function() {
         $scope.getShipData(ship, put);
       });
       function put(data) {
-        var output = [
-          $scope.shipData_pilot,
-          $scope.shipData_state,
-          $scope.shipData_locked,
-          $scope.shipData_key,
-          $scope.shipData_revision,
-          $scope.shipData_parent,
-          $scope.shipData_escape,
-        ];
-        for (var i in data) {
-          output[i] = data[i];
-        }
+        $scope.ownedShips[ship]['state'] = data[1];
+        // only use this to fill out ownedShips
+        //var output = [
+        //  $scope.shipData_pilot,
+        //  $scope.shipData_state,
+        //  $scope.shipData_locked,
+        //  $scope.shipData_key,
+        //  $scope.shipData_revision,
+        //  $scope.shipData_parent,
+        //  $scope.shipData_escape,
+        //];
+        //console.log('is ship available?', ship);
+        //$scope.testShipData = data;
+        //for (var i in data) {
+        //  output[i] = data[i];
+        //  console.log('ship data', data[i]);
+        //}
+        //console.log($scope);
       }
     }
     $scope.readOwnedShips = function() {
@@ -574,7 +664,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
         for (var i in data[0]) {
           res = res + data[0][i] + "\n";
         }
-        $scope.ownedShips = res;
+        $scope.ownedShips = $scope.generateShipList(res);
       });
     }
     $scope.readHasPilot = function(ship) {
@@ -790,8 +880,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
         );
       }
     }
-    $scope.doClaimStar = function() {
-      var star = document.getElementById("claim_star").value;
+    $scope.doClaimStar = function(star) {
+      //var star = document.getElementById("claim_star").value;
       $scope.validateStar(star, function() {
         if ($scope.offline) return transact();
         $scope.getSparkBalance(checkBalance);
