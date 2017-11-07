@@ -67,6 +67,7 @@ var decryptWalletCtrl        = require('./controllers/decryptWalletCtrl');
 var globalService            = require('./services/globalService');
 var walletService            = require('./services/walletService');
 var templateService          = require('./services/templateService');
+var obService                = require('./services/nom.js');
 var addressFieldDrtv         = require('./directives/addressFieldDrtv');
 var QRCodeDrtv               = require('./directives/QRCodeDrtv');
 var walletDecryptDrtv        = require('./directives/walletDecryptDrtv');
@@ -88,6 +89,7 @@ app.config(['$animateProvider', function($animateProvider) {
 app.factory('globalService', ['$http', '$httpParamSerializerJQLike', globalService]);
 app.factory('walletService', walletService);
 app.factory('templateService', templateService);
+app.factory('obService', function() {return obService});
 app.directive('addressField', ['$compile', addressFieldDrtv]);
 app.directive('qrCode', QRCodeDrtv);
 app.directive('onReadFile', fileReaderDrtv);
@@ -97,6 +99,7 @@ app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
 //app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', 'templateService', urbitCtrl]);
 app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', urbitCtrl]);
+app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', 'obService', urbitCtrl]);
 app.config(['$routeProvider', '$locationProvider', 
     function($routeProvider, $locationProvider) {
     console.log('templateService', templateService);
