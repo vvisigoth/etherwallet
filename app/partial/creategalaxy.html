@@ -11,23 +11,26 @@
   <!-- TRANSACTION PARAMS -->
   <section class="transaction-params">
     <!-- this section changes with transaction type -->
-    <div class="input-group">
-      <input type="text" class="gray-light-hl text-700" ng-model="galaxy" value="Galaxy Name" placeholder="galaxy">
-      <div class="error-label row">Ship must belong to you</div>
+    <div ng-init="galaxyError = false" ng-class="galaxyError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="galaxyError = valGalaxy(galaxy)" ng-model="galaxy" value="Galaxy Name" placeholder="galaxy">
+      <div class="error-label">Ship {{ galaxy }} is not a galaxy</div>
     </div>
-    <div class="input-group">
-      <input type="text" class="gray-light-hl text-700" ng-model="address" value="Galaxy Name" placeholder="new-address">
-      <div class="error-label row">Ship must belong to you</div>
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Galaxy Name" placeholder="new-address">
+      <div class="error-label">Not a valid address</div>
     </div>
-    <div class="input-group">
-      <input type="text" class="gray-light-hl text-700" ng-model="locktime" value="Lock Time" placeholder="lock-time">
-      <div class="error-label row">Ship must belong to you</div>
+    <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
+      <div class="error-label">Lock time must be positive</div>
     </div>
-    <div class="input-group">
-      <input type="text" class="gray-light-hl text-700" ng-model="completetime" value="Complete Time" placeholder="complete-time">
-      <pre class="error-label row">Ship must belong to you</div>
-    </pre>
-    <button class="btn btn-secondary" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
+    <div ng-init="completeTimeError = false" ng-class="completeTimeError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="completeTimeError = valTimestamp(completetime)" ng-model="completetime" value="Complete Time" placeholder="complete-time">
+      <div class="error-label">Complete time must be positive</div>
+    </div>
+    <!--
+    <button ng-class="btn btn-secondary" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
+    -->
+    <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn btn-tetiary disabled'" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
   </section>
   <!-- RAW AND SIGNED TRANSACTIONS-->
   <section class="transaction-data" ng-show="rawTx">
