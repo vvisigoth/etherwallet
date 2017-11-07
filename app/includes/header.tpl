@@ -56,8 +56,8 @@
       </span>
     </div>
     <!-- dummy indicator, link to urbtiCtrl -->
-    <div class="mode col-md-2" ng-init="online = true">
-      <div ng-class="online ? 'on green-hl mode-indicator' : 'off mode-indicator'">
+    <div class="mode col-md-2" ng-init="online = false">
+      <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
       </div>
       <span class="mode-label"><a href="#">{{ online ? curNode.name : "Offline"}}</a></span>
     </div>
