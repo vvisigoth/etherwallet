@@ -1,7 +1,10 @@
 <div 
     ng-init="ships = [{ name: '~wacten', state: 'Latent'}, { name: '~marlur', state: 'Latent'}]; loadAddresses(); readOwnedShips();">
+    <!-- temp links -->
+    <a href="mode/type">LOGIN</a>
+    <a href="#" ng-click="readOwnedShips();">Read Ships</a>
+    <a href="#" ng-click="readShipData(0);">Read Ship Data</a>
     <span id="address">{{ wallet.getAddressString() }}</span>
-    {{ ownedShips }}
     <section class="how-to">
         <h1>Your Urbit Wallet</h1>
         <ul>
@@ -10,21 +13,23 @@
             </li>
         </ul>
     </section>
+    <!--
     <section class="balance">
         <h2>Balance:</h2>
         <ul>
-            <li class="spark-bal" ng-init="unit = spark_total > 1 ? 'Sparks' : 'Spark'">
-                {{ spark_total }} {{ unit }}
+            <li class="spark-bal" ng-init="unit = balance > 1 ? 'Sparks' : 'Spark'">
+                {{ balance }} {{ unit }}
                 <div class="spark-action">
                     <a href="#">Claim a star</a>
                 </div>
             </li>
         </ul>
     </section>
+    -->
     <section class="ships">
         <h2>Ships:</h2>
         <ul>
-            <li ng-repeat="ship in ships" class="ship-list">
+            <li ng-repeat="ship in ownedShips" class="ship-list">
                 <span class="ship-name">{{ ship.name }}</span>
                 <div class="ship-actions">
                     <div class="row head">
@@ -52,7 +57,7 @@
                         <div class="state-col">
                         </div>
                         <div class="latent-action-col">
-                            <a class="blue" href='#'>Start</a>
+                          <a class="blue" ng-href='state/{{ ship.name }}/start'>Start</a>
                         </div>
                         <div class="live-action-col">
                             <a href='#'>Rekey</a>
@@ -62,7 +67,7 @@
                         <div class="state-col">
                         </div>
                         <div class="latent-action-col">
-                            <a class="blue" href='#'>Launch</a>
+                            <a class="blue" href='state/{{ ship.name }}/launch'>Launch</a>
                         </div>
                         <div class="live-action-col">
                             <a href='#'>Escape</a>
@@ -72,7 +77,8 @@
                         <div class="state-col">
                         </div>
                         <div class="latent-action-col">
-                            <a class="blue" href='#'>Grant</a>
+                            <!-- temporary make galaxy -->
+                            <a class="blue" href='state/creategalaxy'>Create galaxy</a>
                         </div>
                         <div class="live-action-col">
                         </div>
