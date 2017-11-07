@@ -991,7 +991,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         $scope.validateBytes32(key, function() {
           if ($scope.offline) return transact();
           $scope.checkOwnership(ship, function() {
-            $scope.checkState(ship, 2, function() {
+            // have to update all these states to reflect changes in contract
+            $scope.checkState(ship, 1, function() {
               $scope.getLocked(ship, checkLocktime);
             });
           });
