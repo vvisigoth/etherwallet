@@ -9,9 +9,9 @@
     </div>
   </section>
   <section class="transaction-params">
-    <div class="label-group">
-      <span class="sub-title text-700">Star to launch:</span>
-      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+    <div class="label-group" ng-show="ship">
+      <span class="sub-title text-700">Ship to launch:</span>
+      <h2 class="ship-name">~{{ toShipName(ship) }}</h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">
@@ -25,20 +25,27 @@
       -->
       <input type="text" class="gray-light-hl text-700" ng-change="shipError = valShip(ship)" ng-model="ship" value="Star Name" placeholder="ship">
       <div class="error-label">Ship {{ star }} is not a or a galaxy star</div>
+      <button class="btn btn-primary" ng-click="ship = getChildCandidate(ob.toAddress($routeParams.p))">Generate</button>
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
       <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
       <div class="error-label">Not a valid address</div>
     </div>
-    <button ng-class="checked && !shipError && ship && !addressError && address ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" ng-click="doLaunch(ship, address)" >Create</button>
+    <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
+      <div class="error-label">Lock time must be positive</div>
+    </div>
+    <button ng-class="checked && !shipError && ship && !addressError && address &&  !lockTimeError && locktime? 'btn btn-secondary' : 'btn btn-tetiary disabled'" ng-click="doLaunch(ship, address)" >Create</button>
   </section>
   <section class="transaction-data" ng-show="rawTx">
-    <pre class="raw-tx row col-md-8">
+    <label>Raw Tx</label>
+    <div class="raw-tx row col-md-8 text-code tx">
       {{ rawTx }}
-    </pre>
-    <pre class="signed-tx row col-md-8">
+    </div>
+    <label>Signed Tx</label>
+    <div class="signed-tx row col-md-8 text-code tx">
       {{ signedTx }}
-    </pre>
+    </div>
     <button class="btn btn-primary" ng-click="sendTx()">Send</button>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
   </section>

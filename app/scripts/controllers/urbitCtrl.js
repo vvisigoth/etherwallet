@@ -396,13 +396,31 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
 
     $scope.toShipName = function(address) {
       // fix this to deal with planet
-      if (address > -1 || address < 256) {
+      if (address > -1 && address < 256) {
         return $scope.ob.toGalaxyName(address);
-      } else if (address > 255 || address < 65534) {
+      } else if (address > 255 && address < 65534) {
         return $scope.ob.toStarName(address);
       } else {
         return $scope.ob.toPlanetName(address);
       }
+    };
+
+    $scope.getChildCandidate = function(address) {
+      console.log(address);
+      var candidate;
+      if (address > -1 && address < 256) {
+        candidate = ((Math.floor(Math.random() * 255) + 1) * 256 + address);
+        //while (!isValid) {
+        //  $scope.getIsState(candidate, 0, function(data) {
+        //    if (data[0] == true) {
+        //      $scope.validChild = candidate;
+        //    }          
+        //  });
+        //}
+        return candidate;
+      } else {
+        return;
+      };
     };
 
     $scope.generateShipList = function(shipListString) {
@@ -923,22 +941,24 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         );
       }
     }
-    $scope.doLaunch = function(ship, addr) {
+    $scope.doLaunch = function(ship, addr, locktime) {
       var parent = ship % 256;
       if (ship > 65535) parent = ship % 65536;
       $scope.validateShip(ship, function() {
         $scope.validateAddress(addr, function() {
-          if ($scope.offline) return transact();
-          // ship needs to be latent
-          //TODO state enum (latent)
-          $scope.checkState(ship, 0, checkParent);
+          $scope.validateTimestamp(locktime, function() {
+            if ($scope.offline) return transact();
+            // ship needs to be latent
+            //TODO state enum (latent)
+            $scope.checkState(ship, 0, checkParent);
+          });
         });
       });
       // ship needs to be galaxy, or its parent needs to be living
       function checkParent() {
         if (ship < 256) return checkRights();
         //TODO state enum (living)
-        $scope.checkState(parent, 3, checkRights);
+        $scope.checkState(parent, 2, checkRights);
       }
       // user needs to be pilot of parent or launcher of parent
       function checkRights() {
@@ -950,8 +970,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
       }
       function transact() {
         $scope.doTransaction($scope.contracts.constitution,
-          "launch(uint32,address)",
-          [ship, addr]
+          "launch(uint32,address,uint64)",
+          [ship, addr, locktime]
         );
       }
     }
