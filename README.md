@@ -14,6 +14,46 @@ Addresses in this fork have been hard-coded to work with a specific testnet conf
 7. For wallet access, enter the mnemonic phrase described in step 2, and unlock your wallet.
 8. You are now authenticated and can perform operations that require that. By default, your address is `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`. Go give yourself a galaxy.
 
+
+### E2E Test Flow     
+
+<add 0> (Constitution Owner) 0x6deffb0cafdb11d175f123f6891aa64f01c24f7d
+<add 1> 0xd53208cf45fc9bd7938b200bff8814a26146688f
+<mnemonic> `benefit crew supreme gesture quantum web media hazard theory mercy wing kitten`
+
+- [ ] Reset testrpc with mnemonic
+- [ ] Deploy constitution
+- [ ] Login
+  - login with file
+  - login with file
+  - login with Ledger
+  - login with Trezor
+  - login with Metamask
+- [ ] With <add 0> create galaxy 0, assign to <add 0>
+- [ ] Start 0 with `123`
+- [ ] With <add 0> launch star 512 to <add 1>
+  - [ ] With <add 0> launch <any star> to <add 1>
+- [ ] With <add 1>, transfer star to <add 0>
+- [ ] with <add 0>, rekey star to 456
+
+### Misc to do
+- header invert
+- switch node indicator position
+- change favicon
+- underline link in header
+- change header order Wallet / Mode / State / <ACTION>
+- Generate launch candidates
+
+### E2E Test Flow
+1. Reset testrpc
+2. With <const addr> create galaxy 0
+3. Launch galaxy 0 to <const addr>
+4. Launch star 512 to <other addr>
+3. Liquidate star 512
+4. Use sparks to purchase a star
+5. Rekey star
+6. Transfer star
+
 ### Using hardware wallets when running locally
 
 Because browsers that support U2F can only use it on secure (HTTPS) connections, you can't use your hardware wallet when opening the `/dist/index.html` in your browser as-is.
