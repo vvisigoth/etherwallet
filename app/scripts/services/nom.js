@@ -214,6 +214,7 @@ var toAddress = function(name, unscramble) {
   if (!unscramble) {
     unscramble = true;
   };
+  name = name.replace(/~/, '');
   if (name.length == 3) {
     return getsuffixindex(name);
   } else if (name.length == 6) {
