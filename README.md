@@ -17,21 +17,23 @@ Addresses in this fork have been hard-coded to work with a specific testnet conf
 
 ### E2E Test Flow     
 
-<add 0> (Constitution Owner) 0x6deffb0cafdb11d175f123f6891aa64f01c24f7d
-<add 1> 0xd53208cf45fc9bd7938b200bff8814a26146688f
-<mnemonic> `benefit crew supreme gesture quantum web media hazard theory mercy wing kitten`
+*addresses*
+- <add 0> (Constitution Owner) `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`
+- <add 1> `0xd53208cf45fc9bd7938b200bff8814a26146688f`
+- <mnemonic> `benefit crew supreme gesture quantum web media hazard theory mercy wing kitten`
 
-- [ ] Reset testrpc with mnemonic
-- [ ] Deploy constitution
+*flow*
+- [x] Reset testrpc with mnemonic
+- [x] Deploy constitution
 - [ ] Login
-  - login with file
-  - login with file
-  - login with Ledger
-  - login with Trezor
-  - login with Metamask
-- [ ] With <add 0> create galaxy 0, assign to <add 0>
-- [ ] Start 0 with `123`
-- [ ] With <add 0> launch star 512 to <add 1>
+  - [x] login with mnemonic
+  - [ ] login with file
+  - [ ] login with Ledger
+  - [ ] login with Trezor
+  - [ ] login with Metamask
+- [x] With <add 0> create galaxy 0, assign to <add 0>
+- [x] With <add 0> Start 0 with `123`
+- [x] With <add 0> launch star 512 to <add 1>
   - [ ] With <add 0> launch <any star> to <add 1>
 - [ ] With <add 1>, transfer star to <add 0>
 - [ ] with <add 0>, rekey star to 456
