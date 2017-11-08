@@ -34,12 +34,14 @@
   </section>
   <!-- RAW AND SIGNED TRANSACTIONS-->
   <section class="transaction-data" ng-show="rawTx">
-    <pre class="raw-tx row col-md-8">
+    <label>Raw Tx</label>
+    <div class="raw-tx row col-md-8 text-code tx">
       {{ rawTx }}
-    </pre>
-    <pre class="signed-tx row col-md-8">
+    </div>
+    <label>Signed Tx</label>
+    <div class="signed-tx row col-md-8 text-code tx">
       {{ signedTx }}
-    </pre>
+    </div>
     <button class="btn btn-primary" ng-click="sendTx()">Send</button>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
   </section>
