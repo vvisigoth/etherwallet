@@ -1,18 +1,17 @@
 <div 
-    ng-init="ships = [{ name: '~wacten', state: 'Latent'}, { name: '~marlur', state: 'Latent'}]; loadAddresses(); readOwnedShips();">
+    ng-init="states = ['Latent', 'Locked', 'Living']; loadAddresses(); readOwnedShips();">
     <!-- temp links -->
-    <a href="mode/type">LOGIN</a>
-    <a href="#" ng-click="readOwnedShips();">Read Ships</a>
-    <a href="#" ng-click="readShipData(0);">Read Ship Data</a>
     <span id="address">{{ wallet.getAddressString() }}</span>
+    <h1>Your Urbit Wallet</h1>
+    <!--
     <section class="how-to">
-        <h1>Your Urbit Wallet</h1>
         <ul>
             <li>
             <a href='#'>How to use this</a>
             </li>
         </ul>
     </section>
+    -->
     <!--
     <section class="balance">
         <h2>Balance:</h2>
@@ -26,65 +25,73 @@
         </ul>
     </section>
     -->
-    <section class="ships">
-        <h2>Ships:</h2>
-        <ul>
-            <li ng-repeat="ship in ownedShips" class="ship-list">
-                <span class="ship-name">{{ ship.name }}</span>
-                <div class="ship-actions">
-                    <div class="row head">
-                        <div class="state-col">
-                            State:
-                        </div>
-                        <div class="latent-action-col">
-                            Action:
-                        </div>
-                        <div class="live-action-col">
-                        </div>
-                    </div>
-                    <div class="row body">
-                        <div class="state-col">
-                            {{ ship.state }}
-                        </div>
-                        <div class="latent-action-col">
-                            <a class="blue" ng-href="state/{{ ship.name }}/liquidate">Liquidate</a>
-                        </div>
-                        <div class="live-action-col">
-                            <a href='#'>Transfer</a>
-                        </div>
-                    </div>
-                    <div class="row body">
-                        <div class="state-col">
-                        </div>
-                        <div class="latent-action-col">
-                          <a class="blue" ng-href='state/{{ ship.name }}/start'>Start</a>
-                        </div>
-                        <div class="live-action-col">
-                            <a href='#'>Rekey</a>
-                        </div>
-                    </div>
-                    <div class="row body">
-                        <div class="state-col">
-                        </div>
-                        <div class="latent-action-col">
-                            <a class="blue" href='state/{{ ship.name }}/launch'>Launch</a>
-                        </div>
-                        <div class="live-action-col">
-                            <a href='#'>Escape</a>
-                        </div>
-                    </div>
-                    <div class="row body">
-                        <div class="state-col">
-                        </div>
-                        <div class="latent-action-col">
-                            <!-- temporary make galaxy -->
-                            <a class="blue" href='state/creategalaxy'>Create galaxy</a>
-                        </div>
-                        <div class="live-action-col">
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
+    <section class="constitution-owner col-md-12" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
+      <ul class="h4">
+        <li> <a href="state/creategalaxy">Create Galaxy</a> </li>
+      </ul>
+    </section>
+    <section class="ships col-md-12">
+      <h4>Ships:</h4>
+      <div class="ship-entry" ng-repeat="ship in ownedShips">
+        <div class="ship-name row">
+          <i class="glyph"></i>
+          <h2>{{ ship.name }}</h2>
+        </div>
+        <div class="ship-actions row">
+          <div class="state-col col-md-2">
+            <div class="col-title">
+              State:
+            </div>
+            <ul class="text-lh-sm list-reset state-label text-700">
+              <li>
+                {{ states[ship.state] }}
+              </li>
+            </ul>
+          </div>
+          <div class="latent-action-col col-md-2">
+            <div class="col-title">
+              Actions
+            </div>
+            <ul class="text-lh-sm list-reset text-700">
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/start'>Start</a>
+              </li>
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/launch'>Launch</a>
+              </li>
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/grant'>Grant</a>
+              </li>
+            </ul>
+          </div>
+          <div class="live-action-col col-md-2" ng-switch="ship.state > 1">
+            <div class="col-title buffer">
+              00
+            </div>
+            <ul class="text-lh-sm list-reset text-700" ng-switch-when="true">
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/transfer'>Transfer</a>
+              </li>
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/rekey'>Rekey</a>
+              </li>
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/escape'>Escape</a>
+              </li>
+            </ul>
+            <ul class="text-lh-sm list-reset text-700 gray-light" ng-switch-when="false">
+              <li>
+                <u>Transfer</u>
+              </li>
+              <li>
+                <u>Rekey</u>
+              </li>
+              <li>
+                <u>Escape</u>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
 </div>
