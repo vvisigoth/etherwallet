@@ -40,7 +40,7 @@
 "logo":"https://myetherwallet.com/images/myetherwallet-logo-banner.png","description": "MyEtherWallet.com is a free, open-source, client-side interface for generating Ethereum wallets &amp; more. Interact with the Ethereum blockchain easily &amp; securely. Double-check the URL ( .com ) before unlocking your wallet.","sameAs":["https://www.myetherwallet.com/","https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm","https://www.facebook.com/MyEtherWallet/","https://twitter.com/myetherwallet","https://medium.com/@myetherwallet_96408","https://myetherwallet.groovehq.com/help_center","https://github.com/kvhnuke/etherwallet","https://github.com/MyEtherWallet","https://kvhnuke.github.io/etherwallet/","https://github.com/kvhnuke/etherwallet/releases/latest","https://github.com/409H/EtherAddressLookup","https://myetherwallet.slack.com/","https://myetherwallet.herokuapp.com/","https://www.reddit.com/r/MyEtherWallet/","https://www.reddit.com/user/insomniasexx/","https://www.reddit.com/user/kvhnuke/","https://www.reddit.com/user/myetherwallet"]}</script>
 </head>
 <body>
-<header class="{{curNode.name}} {{curNode.service}} {{curNode.service}} nav-index-{{gService.currentTab}} black-hl" aria-label="header" ng-controller='tabsCtrl' >
+<header class="{{curNode.name}} {{curNode.service}} {{curNode.service}} nav-index-{{gService.currentTab}}" aria-label="header" ng-controller='tabsCtrl' >
 
 <div class="container">
   <div class="row">
@@ -49,18 +49,25 @@
         My Urbit Wallet
       </span>
       <span ng-show="getPath() == '/' || getPath() == '/state'">
-        <a href="mode/type">Mode</a> / <u>State</u>
+        <a href="mode/type">Wallet</a> / 
+        <span class="mode-label" ng-init="online = true">
+          <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+          </div>
+        <a href="#">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
+        </span>
+        / State
       </span>
       <span ng-show="isTransaction(getPath())">
-        <a href="mode/type">Mode</a> / <a href="state">State</a> / <u>{{ isTransaction(getPath()) }}</u>
+        <a href="mode/type">Wallet</a> / 
+        <span class="mode-label" ng-init="online = true">
+          <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+          </div>
+        <a href="#">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
+        </span>
+         / <a href="state">State</a> / {{ isTransaction(getPath()) }}
       </span>
     </div>
     <!-- dummy indicator, link to urbtiCtrl -->
-    <div class="mode col-md-2" ng-init="online = true">
-      <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
-      </div>
-      <span class="mode-label"><a href="#">{{ online ? curNode.name : "Offline"}}</a></span>
-    </div>
   </div>
 </div>
 

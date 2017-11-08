@@ -9,17 +9,15 @@ header
 
 header a 
 {
-  color: white;
-  text-decoration: inherit;
 }
 
-header .mode .mode-indicator
+header .mode-label .mode-indicator
 {
   height: 1.5rem;
   width: 1.5rem;
   border-radius: 1000px;
-  float: left;
-  margin: 2.15rem 2.15rem 0 0;
+  display: inline-block;
+  margin: 2.15rem 0.8rem 0 0;
 }
 
 header .mode .mode-indicator.off
@@ -30,25 +28,44 @@ header .mode .mode-indicator.off
 
 // State
 
-div.state-col:extend(.col-sm)
+//div.state-col:extend(.col-sm)
+//{
+//}
+//
+//div.latent-action-col:extend(.col-sm)
+//{
+//}
+//
+//div.live-action-col:extend(.col-sm)
+//{
+//}
+
+.ship-name i.glyph 
 {
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: black;
+  border-radius: 10000px;
+  margin: 7.5rem 4rem 0 0;
 }
 
-div.latent-action-col:extend(.col-sm)
+.ship-actions
 {
+  margin-left: 5.2rem;
 }
 
-div.live-action-col:extend(.col-sm)
+.buffer
 {
+  color: transparent
 }
 
 li.spark-bal:extend(h3, .green)
 {
 }
 
-div.row.body:extend(.text-700)
-{
-}
+//div.row.body:extend(.text-700)
+//{
+//}
 
 span#address:extend(.text-700)
 {
@@ -99,6 +116,11 @@ div.row.body
   &:extend(.gray-light-hl, .text-700);
 }
 
+.transaction btn
+{
+  padding: 3rem 12px;
+}
+
 .transaction .ship-name:extend(.blue)
 {
 }
@@ -121,9 +143,15 @@ section.transaction-params .sub-title
   &:extend(.text-700);
 }
 
+.transaction .input[type=text]
+{
+  border-color: #d4d4d4;
+  padding: 3rem 12px;
+}
+
 .transaction .input-group {
   margin: 0px 0 2rem;
-  height: 12rem;
+  height: 14rem;
 }
 
 .transaction .slim-input-group {
