@@ -39,12 +39,9 @@ Addresses in this fork have been hard-coded to work with a specific testnet conf
 - [ ] with <add 0>, rekey star to 456
 
 ### Misc to do
-- header invert
-- switch node indicator position
-- change favicon
-- underline link in header
-- change header order Wallet / Mode / State / <ACTION>
 - Generate launch candidates
+- disable transaction buttons until validate
+- disable transaction buttons once clicked (to avoid double submit)
 
 ### E2E Test Flow
 1. Reset testrpc
