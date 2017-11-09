@@ -398,7 +398,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
       // fix this to deal with planet
       if (address > -1 && address < 256) {
         return $scope.ob.toGalaxyName(address);
-      } else if (address > 255 && address < 65534) {
+      } else if (address > 255 && address < 65536) {
         return $scope.ob.toStarName(address);
       } else {
         return $scope.ob.toPlanetName(address);
@@ -418,9 +418,12 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         //  });
         //}
         return candidate;
+      } else if (address > 255 && address < 65536) {
+        candidate = ((Math.floor(Math.random() * 65535) + 1) * 65536 + address);
+        return candidate;
       } else {
         return;
-      };
+      }
     };
 
     $scope.generateShipList = function(shipListString) {
