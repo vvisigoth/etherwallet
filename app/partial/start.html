@@ -31,9 +31,13 @@
       <input type="text" class="gray-light-hl text-700" ng-model="key" value="Star Name" placeholder="key">
       <div class="error-label">Key has to be an alphanumeric string</div>
     </div>
-    <button ng-class="checked ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" ng-click="doStart(ob.toAddress($routeParams.p), key)" >Create</button>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="checked && key ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+      ng-click="checked && key ? doStart(ob.toAddress($routeParams.p), key) : ''" >
+      Create
+    </button>
   </section>
-  <section class="transaction-data" ng-show="rawTx">
+  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
     <label>Raw Tx</label>
     <div class="raw-tx row col-md-8 text-code tx">
       {{ rawTx }}
@@ -42,7 +46,7 @@
     <div class="signed-tx row col-md-8 text-code tx">
       {{ signedTx }}
     </div>
-    <button class="btn btn-primary" ng-click="sendTx()">Send</button>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
   </section>
 </div>
