@@ -11,11 +11,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
     }
 
     $scope.ajaxReq = ajaxReq;
-    console.log('walletService', walletService);
-    // why does this reset as null?
-    //walletService.wallet = null;
     $scope.visibility = "interactView";
-    //$scope.sendContractModal = new Modal(document.getElementById('sendContract'));
     $scope.showReadWrite = false;
     $scope.Validator = Validator;
     $scope.oneSpark = 1000000000000000000;
@@ -44,6 +40,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
         $scope.tx.nonce = 0;
+    });
+    $scope.$watch('wallet', function(newVal, oldVal) {
+      if (newVal) {
+        $scope.readOwnedShips(newVal.getAddressString());
+      }
     });
     $scope.$watch('visibility', function(newValue, oldValue) {
         $scope.tx = {
@@ -98,6 +99,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         }, 50);
     }
     $scope.generateTx = function() {
+      console.log('generateTx');
+      console.log('address at generate', $scope.wallet.getAddressString());
         try {
             if ($scope.wallet == null)
             { throw globalFuncs.errorMsgs[3]; }
@@ -131,7 +134,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
     }
     $scope.sendTx = function() {
         // need some way to show error or success
-        //$scope.sendContractModal.close();
         uiFuncs.sendTx($scope.signedTx, function(resp) {
             if (!resp.isError) {
                 var bExStr = $scope.ajaxReq.type != nodes.nodeTypes.Custom ? "<a href='" + $scope.ajaxReq.blockExplorerTX.replace("[[txHash]]", resp.data) + "' target='_blank' rel='noopener'> View your transaction </a>" : '';
@@ -295,6 +297,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
       $scope.getShipsOwner(function(data) {
         $scope.contracts.constitution = data[0];
       });
+      console.log('loadAddresses', $scope.contracts);
     }
     ////
     //// VALIDATE: validate input data
@@ -348,7 +351,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
     // UI Validators
     //
     $scope.valGalaxy = function(galaxy) {
-      console.log('validating galaxy');
       if (galaxy < 0 || galaxy > 255) {
         return true;
       } else {
@@ -357,7 +359,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
     }
 
     $scope.valStar = function(star) {
-      console.log('validating star');
       if (star < 256 || star > 65535) {
         return true;
       } else {
@@ -406,7 +407,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
     };
 
     $scope.getChildCandidate = function(address) {
-      console.log(address);
+      console.log('get random child', address);
       var candidate;
       if (address > -1 && address < 256) {
         candidate = ((Math.floor(Math.random() * 255) + 1) * 256 + address);
@@ -486,10 +487,10 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         callback
       );
     }
-    $scope.getOwnedShips = function(callback) {
+    $scope.getOwnedShips = function(addr, callback) {
       $scope.readContractData($scope.contracts.ships,
-        "getOwnedShips()",
-        [],
+        "getOwnedShips(address)",
+        [addr],
         ["uint32[]"],
         callback
       );
@@ -679,8 +680,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         //console.log($scope);
       }
     }
-    $scope.readOwnedShips = function() {
-      $scope.getOwnedShips(function(data) {
+    $scope.readOwnedShips = function(addr) {
+      console.log(addr);
+      console.log('from wallet', $scope.wallet);
+      if (!addr) {
+        return;
+      }
+      $scope.getOwnedShips(addr, function(data) {
         var res = "";
         for (var i in data[0]) {
           res = res + data[0][i] + "\n";
@@ -1233,5 +1239,18 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
         );
       }
     }
+
+    /*
+     * Transaction objects 
+     * TODO break this into service
+     */
+
+    $scope.dummyShips = function(addr) {
+      if (addr >= 0 && addr < 256) {
+        return '~zod'
+      } else {
+        return '~wanzod'
+      }
+    };
 }
 module.exports = urbitCtrl;
