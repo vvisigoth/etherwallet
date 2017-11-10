@@ -73,6 +73,7 @@ var QRCodeDrtv               = require('./directives/QRCodeDrtv');
 var walletDecryptDrtv        = require('./directives/walletDecryptDrtv');
 var fileReaderDrtv           = require('./directives/fileReaderDrtv');
 var urbitCtrl                = require('./controllers/urbitCtrl');
+console.log('obService', obService);
 var app = angular.module('mewApp', ['pascalprecht.translate', 'ngSanitize','ngAnimate', 'ngRoute']);
 app.config(['$compileProvider', function($compileProvider) {
   //$compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|mailto):/);
@@ -121,6 +122,14 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.start,
             controller: 'urbitCtrl'
         })
+        .when('/state/:p/rekey', {
+            template: templateService.rekey,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/transfer', {
+            template: templateService.transfer,
+            controller: 'urbitCtrl'
+        })
         .when('/state/:p/purchase', {
             template: templateService.purchase,
             controller: 'urbitCtrl'
@@ -131,7 +140,6 @@ app.config(['$routeProvider', '$locationProvider',
         })
         .when('/mode/type', {
             template: templateService.type
-            //controller: 'urbitCtrl'
         })
         .when('/state', {
             template: templateService.state,
