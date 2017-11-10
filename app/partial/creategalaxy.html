@@ -30,10 +30,14 @@
     <!--
     <button ng-class="btn btn-secondary" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
     -->
-    <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn btn-tetiary disabled'" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn btn-tetiary disabled'" 
+      ng-click="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? doCreateGalaxy(galaxy, address, locktime, completetime): ''">
+      Create
+    </button>
   </section>
   <!-- RAW AND SIGNED TRANSACTIONS-->
-  <section class="transaction-data" ng-show="rawTx">
+  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
     <label>Raw Tx</label>
     <div class="raw-tx row col-md-8 text-code tx">
       {{ rawTx }}
@@ -43,6 +47,6 @@
       {{ signedTx }}
     </div>
     <button class="btn btn-primary" ng-click="sendTx()">Send</button>
-    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button class="btn btn-tetiary" ng-click="path('state'); sent = true" >&#8592 Back</button>
   </section>
 </div>
