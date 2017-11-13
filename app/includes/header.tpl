@@ -49,29 +49,35 @@
 <div class="container">
   <div class="row">
     <div class="path text-600 col-md-10">
-      <span ng-show="getPath() == '/mode/type'">
+      <span ng-show="path() == '/type'">
         My Urbit Wallet
       </span>
-      <span ng-show="getPath() == '/' || getPath() == '/state'">
-        <a href="mode/type">Wallet</a> / 
+      <span ng-show="path() == '/type/mode'">
+        <a href="type">Wallet</a> / Mode
+      </span>
+      <span ng-show="path() == '/' || path() == '/state'">
+        <a href="type">Wallet</a> / 
+        <!--
         <span class="mode-label" ng-init="online = true">
-          <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+        -->
+        <span class="mode-label">
+          <div ng-class="!offline ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
           </div>
-        <a href="#">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
+        <a href="type/mode">{{"  "}}{{ !offline ? curNode.name : "Offline"}}</a>
         </span>
         / State
       </span>
-      <span ng-show="isTransaction(getPath())">
+      <span ng-show="isTransaction(path())">
         <a href="mode/type">Wallet</a> / 
         <span class="mode-label" ng-init="online = true">
           <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
           </div>
-        <a href="#">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
+        <a href="type/mode">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
         </span>
-         / <a href="state">State</a> / {{ isTransaction(getPath()) }}
+         / <a href="state">State</a> / {{ isTransaction(path()) }}
       </span>
     </div>
-    <!-- dummy indicator, link to urbtiCtrl -->
+    <!-- dummy indicator, link to urbitCtrl -->
   </div>
 </div>
 
