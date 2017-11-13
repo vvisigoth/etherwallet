@@ -1,5 +1,5 @@
 'use strict';
-var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, obService) {
+var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, walletService, obService) {
 //var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
     // add route params to scope
     $scope.$routeParams = $routeParams;
@@ -10,6 +10,10 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService, o
       $location.path(path);
     }
 
+    //Offline status done through rootScope
+    $scope.offline = $rootScope.offline;
+
+    console.log('urbit offline', $scope.offline);
     $scope.ajaxReq = ajaxReq;
     $scope.visibility = "interactView";
     $scope.showReadWrite = false;
