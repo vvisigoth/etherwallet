@@ -1,0 +1,55 @@
+<div id="vote" class="col-md-12 transaction" ng-init="loadAddresses();">
+  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <section class="general-information">
+    <h1 id="action-title row">Vote</h1>
+    <div class="help-text row">
+      <p class="col-md-8">You have one vote per galaxy owned. If you would like to vote on an abstract proposal, check the appropriate box and enter the proposal hash. To vote on a new constitution contract, enter the new proposed constitution address and your vote. Once a concrete constitution attains a majority vote, ownership of all data contracts is transferred to the proposed address and the current Constitution is destroyed.
+      </p>
+    </div>
+  </section>
+  <section class="transaction-params">
+    <div class="label-group" ng-show="ship">
+      <span class="sub-title text-700">Vote on behalf of:</span>
+      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+    </div>
+    <div class="input-group row slim-input-group" ng-init="concrete=true">
+      <div class="checkbox-container col-md-1">
+        <div ng-class="concrete ? 'checkbox checked' : 'checkbox'" ng-click="concrete = !concrete"></div>
+      </div>
+      <label class="action-confirmation"><span ng-show="concrete">Concrete</span><span ng-show="!concrete">Abstract</span></label>
+    </div>
+    <div class="input-group row slim-input-group vote-toggle">
+      <div class="checkbox-container col-md-1">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
+      </div>
+      <label class="action-confirmation"><span ng-show="checked">Yes</span><span ng-show="!checked">No</span></label>
+    </div>
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'" ng-show="concrete">
+      <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="constitution-address">
+      <div class="error-label">Not a valid address</div>
+    </div>
+    <div ng-init="hashError = false" ng-class="hashError ? 'error input-group' : 'input-group'" ng-show="!concrete">
+      <input type="text" class="gray-light-hl text-700" ng-change="" ng-model="hash" value="Address" placeholder="proposal-hash">
+      <div class="error-label">Not a valid hash</div>
+    </div>
+    <div>
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="(address || hash) ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+      ng-click="(address || hash) ? concrete ? doCastConcreteVote(ob.toAddress($routeParams.p), address, checked) : doCastAbstractVote(ob.toAddress($routeParams.p), ahash, checked) : ''" >
+      Create
+    </button>
+  </section>
+  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
+    <label>Raw Tx</label>
+    <div class="raw-tx row col-md-8 text-code tx">
+      {{ rawTx }}
+    </div>
+    <label>Signed Tx</label>
+    <div class="signed-tx row col-md-8 text-code tx">
+      {{ signedTx }}
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
+  </section>
+</div>

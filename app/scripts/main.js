@@ -122,6 +122,18 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.start,
             controller: 'urbitCtrl'
         })
+        .when('/state/:p/escape', {
+            template: templateService.escape,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/adopt', {
+            template: templateService.adopt,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/vote', {
+            template: templateService.vote,
+            controller: 'urbitCtrl'
+        })
         .when('/state/:p/rekey', {
             template: templateService.rekey,
             controller: 'urbitCtrl'
@@ -138,8 +150,12 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.createGalaxy,
             controller: 'urbitCtrl'
         })
-        .when('/mode/type', {
+        .when('/type', {
             template: templateService.type
+        })
+        .when('/type/mode', {
+            template: templateService.mode,
+            controller: 'tabsCtrl'
         })
         .when('/state', {
             template: templateService.state,
