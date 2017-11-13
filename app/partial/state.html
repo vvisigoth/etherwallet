@@ -57,10 +57,10 @@
                 <a class="blue" href='state/{{ ship.name }}/start'>Start</a>
               </li>
               <li>
-                <a class="blue" href='state/{{ ship.name }}/launch'>Launch</a>
+                <a class="blue" href='state/{{ ship.name }}/transfer'>Transfer</a>
               </li>
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/grant'>Grant</a>
+              <li ng-show="ship.address < 256">
+                <a class="blue" href='state/{{ ship.name }}/vote'>Vote</a>
               </li>
             </ul>
           </div>
@@ -70,13 +70,19 @@
             </div>
             <ul class="text-lh-sm list-reset text-700" ng-switch-when="true">
               <li>
-                <a class="blue" href='state/{{ ship.name }}/transfer'>Transfer</a>
+                <a class="blue" href='state/{{ ship.name }}/launch'>Launch child</a>
+              </li>
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/grant'>Grant</a>
               </li>
               <li>
                 <a class="blue" href='state/{{ ship.name }}/rekey'>Rekey</a>
               </li>
               <li>
                 <a class="blue" href='state/{{ ship.name }}/escape'>Escape</a>
+              </li>
+              <li>
+                <a class="blue" href='state/{{ ship.name }}/adopt'>Adopt</a>
               </li>
             </ul>
             <ul class="text-lh-sm list-reset text-700 gray-light" ng-switch-when="false">
