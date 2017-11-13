@@ -2,8 +2,8 @@
 
   <!-- Column 1 - Select Type of Key -->
   <section class="select-type" ng-init="walletType=''" ng-show="!walletType">
-    <h4 style="margin-top:0;">Select your wallet type</h4>
-    <ul>
+    <h1 style="margin-top:0;">Select your wallet type</h1>
+    <ul class="h4">
       <li><a href="#" ng-click="walletType='metamask'">Metamask / Mist</a></li>
       <li><a href="#" ng-click="walletType='ledger'">Ledger</a></li>
       <li><a href="#" ng-click="walletType='trezor'">TREZOR</a></li>
@@ -11,7 +11,7 @@
       <li><a href="#" ng-click="walletType='fileupload'">Keystore File (UTC / JSON)</a></li>
       <li><a href="#" ng-click="walletType='pastemnemonic'">Mnemonic Phrase</a></li>
       <li><a href="#" ng-click="walletType='pasteprivkey'">Private Key</a></li>
-    </uL>
+    </ul>
   </section>
   <!--
   <section class="col-md-4 col-sm-6">
@@ -73,23 +73,21 @@
 
     <!-- if selected keystore -->
     <div id="selectedUploadKey" ng-if="walletType=='fileupload'">
-      <h4 translate="ADD_Radio_2_alt">Select your wallet file:</h4>
-      <div class="form-group">
+      <h1>Select your wallet file</h1>
+      <div class="input-group">
         <input style="display:none;" type="file" on-read-file="showContent($fileContent)" id="fselector" />
-        <a class="btn-file marg-v-sm"
+        <button class="btn btn-primary marg-v-sm"
            ng-click="openFileDialog()"
-           translate="ADD_Radio_2_short"
-           id="aria1"
            tabindex="0"
-           role="button">SELECT WALLET FILE... </a>
+           role="button">WALLET FILE</button>
       </div>
       <div class="form-group" ng-if="requireFPass">
-        <p translate="ADD_Label_3"> Your file is encrypted. Please enter the password: </p>
-        <input class="form-control"
+        <label>Enter the password</label>
+        <input class="text-700"
                ng-change="onFilePassChange()"
                ng-class="Validator.isPasswordLenValid($parent.$parent.filePassword,0) ? 'is-valid' : 'is-invalid'"
                ng-model="$parent.$parent.filePassword"
-               placeholder="{{ 'x_Password' | translate }}"
+               placeholder="password"
                type="password" />
       </div>
     </div>
@@ -165,25 +163,24 @@
     <!-- if selected type mnemonic-->
     <div id="selectedTypeMnemonic" ng-if="walletType=='pastemnemonic'&&!showModal" class="row">
       <h1 class="col-sm-12">Enter your mnemonic</h1>
-      <div class="form-group col-sm-12">
-        <textarea id="aria4"
-                  class="form-control col-sm-12"
+      <div class="input-group col-sm-12">
+        <textarea class="text-700 col-sm-12"
                   ng-change="onMnemonicChange()"
                   ng-class="Validator.isValidMnemonic($parent.$parent.manualmnemonic) ? 'is-valid' : 'is-invalid'"
                   ng-keyup="$event.keyCode == 13 && decryptWallet()"
                   ng-model="$parent.$parent.manualmnemonic"
                   placeholder="your-mnemonic"
-                  rows="4"
-        ></textarea>
+                  rows="2"
+        >
+        </textarea>
       </div>
-      <div class="form-group">
-        <p translate="ADD_Label_8">Password (optional): </p>
+      <div class="input-group col-md-12">
+        <label>password (optional)</label>
         <div>
-          <input class="form-control"
-                 id="aria5"
+          <input class="text-700"
                  ng-keyup="$event.keyCode == 13 && decryptWallet()"
                  ng-model="$parent.$parent.mnemonicPassword"
-                 placeholder="{{ 'x_Password' | translate }}"
+                 placeholder="password"
                  type="password" / >
         </div>
       </div>
@@ -192,27 +189,26 @@
 
 
     <!-- if selected type private key-->
-    <div id="selectedTypeKey" ng-if="walletType=='pasteprivkey'">
-      <h4 translate="ADD_Radio_3"> Paste / type your private key: </h4>
-      <div class="form-group">
-        <textarea id="aria6"
-                  class="form-control"
+    <div id="selectedTypeKey" ng-if="walletType=='pasteprivkey' && !showModal" class="row">
+      <h1 class="col-md-12">Enter your private key</h1>
+      <div class="input-group col-sm-12">
+        <textarea class="text-700 col-md-12"
                   ng-change="onPrivKeyChange()"
                   ng-class="Validator.isValidPrivKey($parent.$parent.manualprivkey.length) ? 'is-valid' : 'is-invalid'"
                   ng-keyup="$event.keyCode == 13 && decryptWallet()"
                   ng-model="$parent.$parent.manualprivkey"
-                  placeholder="{{ 'x_PrivKey2' | translate }}"
-                  rows="4"
+                  placeholder="your-private-key"
+                  rows="2"
         ></textarea>
       </div>
-      <div class="form-group" ng-if="requirePPass">
-        <p translate="ADD_Label_3"> Your file is encrypted. Please enter the password: </p>
-        <input class="form-control"
+      <div class="input-group col-sm-12" ng-if="requirePPass">
+        <label>Enter the password</p>
+        <input class="text-700"
                ng-change="onPrivKeyPassChange()"
                ng-class="Validator.isPasswordLenValid($parent.$parent.privPassword,0) ? 'is-valid' : 'is-invalid'"
                ng-keyup="$event.keyCode == 13 && decryptWallet()"
                ng-model="$parent.$parent.privPassword"
-               placeholder="{{ 'x_Password' | translate }}"
+               placeholder="password"
                type="password"
         />
       </div>
@@ -221,7 +217,6 @@
 
 
     <!-- if selected type trezor-->
-    <br />
     <div id="selectedTypeTrezor" ng-if="walletType=='trezor'">
       <div class="form-group">
         <a id="aria7"
@@ -318,7 +313,7 @@
   <!--
   <section class="col-md-4 col-sm-6" ng-show="showFDecrypt||showPDecrypt||showMDecrypt||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox'||showAOnly||showParityDecrypt">
   -->
-  <section class="col-md-4 col-sm-6" ng-show="(walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
+  <section class="col-md-4 col-sm-6" ng-show="(showPDecrypt||showFDecrypt||walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
     <!--
     <h4 id="uploadbtntxt-wallet" ng-show="showFDecrypt||showPDecrypt||showMDecrypt" translate="ADD_Label_6">
       Access Your Wallet:
@@ -330,7 +325,7 @@
       role="button"
       ng-class="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt ? 'btn btn-primary': 'btn'"
       ng-disabled="!showFDecrypt&&!showPDecrypt&&!showMDecrypt&&!showParityDecrypt"
-      ng-click="decryptWallet()"
+      ng-click="decryptWallet();"
       >Load</a>
     </div>
     <div class="form-group">
@@ -339,8 +334,7 @@
          ng-show="showAOnly"
          role="button"
          tabindex="0"
-         translate="ADD_Label_6_short"
-      > UNLOCK </a>
+      >Unlock</a>
     </div>
     <div class="form-group">
       <a class="btn btn-primary btn-block"

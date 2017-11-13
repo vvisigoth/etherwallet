@@ -1,5 +1,15 @@
 'use strict';
 var decryptWalletCtrl = function($scope, $sce, $location, walletService) {
+
+    
+    $scope.path = function(p) {
+      if (!p) {
+        return $location.path();
+      } else {
+        return $location.path(p);
+      }
+    };
+
     $scope.walletType = "";
     $scope.requireFPass = $scope.requirePPass = $scope.showFDecrypt = $scope.showPDecrypt = $scope.showAOnly = $scope.showParityDecrypt = false;
     $scope.filePassword = "";
@@ -195,13 +205,16 @@ var decryptWalletCtrl = function($scope, $sce, $location, walletService) {
         }
     }
     $scope.setHDWallet = function() {
+        //this assigns the wallet to the walletService
         walletService.wallet = $scope.wallet = $scope.HDWallet.wallets[$scope.HDWallet.id];
-        console.log($scope);
+        console.log('HDWallet',$scope);
+        console.log('walletService',walletService);
         $location.path('state');
         //$scope.mnemonicModel.close();
         //$scope.notifier.info(globalFuncs.successMsgs[1]);
     }
     $scope.decryptWallet = function() {
+        console.log('wallet decrypted called');
         $scope.wallet = null;
         try {
             if ($scope.showPDecrypt && $scope.requirePPass) {
