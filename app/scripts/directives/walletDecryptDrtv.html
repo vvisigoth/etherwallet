@@ -7,7 +7,9 @@
       <li><a href="#" ng-click="walletType='metamask'">Metamask / Mist</a></li>
       <li><a href="#" ng-click="walletType='ledger'">Ledger</a></li>
       <li><a href="#" ng-click="walletType='trezor'">TREZOR</a></li>
+      <!--
       <li><a href="#" ng-click="walletType='digitalBitbox'">Digital Bitbox</a></li>
+      -->
       <li><a href="#" ng-click="walletType='fileupload'">Keystore File (UTC / JSON)</a></li>
       <li><a href="#" ng-click="walletType='pastemnemonic'">Mnemonic Phrase</a></li>
       <li><a href="#" ng-click="walletType='pasteprivkey'">Private Key</a></li>
@@ -79,7 +81,7 @@
         <button class="btn btn-primary marg-v-sm"
            ng-click="openFileDialog()"
            tabindex="0"
-           role="button">WALLET FILE</button>
+           role="button">Wallet File</button>
       </div>
       <div class="form-group" ng-if="requireFPass">
         <label>Enter the password</label>
@@ -95,36 +97,41 @@
 
 
     <!-- if selected type ledger-->
-    <div id="selectedTypeLedger" ng-if="walletType=='ledger'">
+    <div id="selectedTypeLedger" ng-if="walletType=='ledger'&&!showModal">
+      <h1 class="col-md-12">Connect your Ledger</h1>
       <ol>
-        <li id="aria2" tabinex="0" translate="ADD_Ledger_0a" class="text-danger" ng-hide="isSSL">
-          You must access MyEtherWallet via a secure(SSL / HTTPS) connection to connect to your Ledger device.
+        <li class="red" ng-hide="isSSL">
+          You must access My Urbit Wallet via a secure(SSL / HTTPS) connection to connect to your Ledger device.
         </li>
-        <li tabinex="0">
-          <span translate="ADD_Ledger_1">Connect your Ledger Wallet</span> &amp;
-          <span translate="ADD_Ledger_2">Open the Ethereum application (or a contract application)</span>
+        <li>
+          Connect your Ledger Wallet
         </li>
-        <li tabinex="0" translate="ADD_Ledger_3">
+        <li>
+          Open the Ethereum application (or a contract application)
+        </li>
+        <li>
           Verify that Browser Support is enabled in Settings
         </li>
-        <li tabinex="0" translate="ADD_Ledger_4">
+        <li>
           If no Browser Support is found in settings, verify that you have Firmware >1.2
         </li>
       </ol>
       <p role="alert" ng-show="ledgerError" class="text-center text-danger"><strong>
-        {{ledgerErrorString}}
+        Ledger error: {{ledgerErrorString}}
       </strong></p>
       <div class="text-center">
-        <p>Guides:<br />
-          <a href="http://support.ledgerwallet.com/knowledge_base/topics/how-to-use-myetherwallet-with-ledger" target="_blank" rel="noopener">
-            How to use MyEtherWallet with your Nano S
-          </a><br />
-          <a href="https://ledger.groovehq.com/knowledge_base/topics/how-to-secure-your-eth-tokens-augur-rep-dot-dot-dot-with-your-nano-s" target="_blank" rel="noopener">
-            How to secure your tokens with your Nano S
-          </a><br /><br />
-          <a tabindex="0" role="button" class="btn btn-default btn-xs" href="https://www.ledgerwallet.com/r/fa4b?path=/products/" target="_blank" rel="noopener">
-            Don't have a Ledger? Buy one today.
-          </a>
+        <h3>Help:</h3>
+        <ul>
+          <li>
+            <a href="http://support.ledgerwallet.com/knowledge_base/topics/how-to-use-myetherwallet-with-ledger" target="_blank" rel="noopener">How to use MyEtherWallet with your Nano S</a>
+          </li>
+          <li>
+            <a href="https://ledger.groovehq.com/knowledge_base/topics/how-to-secure-your-eth-tokens-augur-rep-dot-dot-dot-with-your-nano-s" target="_blank" rel="noopener"> How to secure your tokens with your Nano S</a>
+          </li>
+          <li>
+            <a href="https://www.ledgerwallet.com/r/fa4b?path=/products/" target="_blank" rel="noopener">Don't have a Ledger? Buy one today.</a>
+          </li>
+        </ul>
         </p>
       </div>
     </div>
@@ -132,29 +139,24 @@
 
 
     <!-- if selected type MetaMask-->
-    <br />
     <div id="selectedTypeMetamask" ng-if="walletType=='metamask'">
-      <p id="aria2" tabinex="0" translate="ADD_Ledger_0a" class="text-danger" ng-hide="isSSL">
+      <p class="text-danger red" ng-hide="isSSL">
           You must access MyEtherWallet via a secure(SSL / HTTPS) connection to connect.
       </p>
-      <div class="form-group">
-        <a id="aria3"
+      <div class="text-center">
+        <h3>Help:</h3>
+        <ul>
+          <li>
+          <a tabindex="0" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en" target="_blank">Download MetaMask</a>
+          </li>
+        </ul>
+      </div>
+      <div class="input-group">
+        <button id="aria3"
            class="btn btn-primary btn-block"
            ng-click="scanMetamask()"
            ng-show="walletType=='metamask'"
-           tabindex="0" role="button"
-           translate="ADD_MetaMask"
-        > Connect to MetaMask </a>
-      </div>
-      <div class="text-center" style="margin-top: 1rem;">
-        <a tabindex="0"
-           role="button"
-           class="btn btn-default btn-xs"
-           href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en"
-           target="_blank"
-           rel="noopener">
-              Download MetaMask
-        </a>
+        > Connect to MetaMask </button>
       </div>
     </div>
     <!-- /if selected type MetaMask-->
@@ -217,35 +219,49 @@
 
 
     <!-- if selected type trezor-->
-    <div id="selectedTypeTrezor" ng-if="walletType=='trezor'">
-      <div class="form-group">
-        <a id="aria7"
-           class="btn btn-primary btn-block"
+    <div id="selectedTypeTrezor" ng-if="walletType=='trezor'&&!showModal">
+      <h1 class="col-md-12">Connect your TREZOR</h1>
+      <ol>
+        <li>
+          Connect your TREZOR via USB
+        </li>
+        <li>
+          Click button 
+        </li>
+        <li>
+          Pop-up will open, asking to export address
+        </li>
+        <li>
+          Confirm export via PIN
+        </li>
+      </ol>
+      <p role="alert" ng-show="trezorError" class="text-center text-danger"><strong>
+        TREZOR error: {{trezorErrorString}}
+      </strong></p>
+      <div class="text-center">
+        <h3>Help:</h3>
+        <ul>
+          <li>
+            <a href="https://blog.trezor.io/trezor-integration-with-myetherwallet-3e217a652e08#.n5fddxmdg" target="_blank" rel="noopener">How to use TREZOR</a>
+          </li>
+          <li>
+            <a href="https://trezor.io/?a=myetherwallet.com" target="_blank" rel="noopener">Don't have a TREZOR? Order one now</a>
+          </li>
+        </ul>
+        </p>
+      </div>
+      <div class="input-group">
+        <button id="aria7"
+           class="btn btn-primary"
            ng-click="scanTrezor()"
            ng-show="walletType=='trezor'"
-           tabindex="0" role="button"
-           translate="ADD_Trezor_scan"
-        > SCAN </a>
-      </div>
-      <p role="alert" ng-show="trezorError" class="text-center text-danger"><strong>
-        {{trezorErrorString}}
-      </strong></p>
-      <br /><br />
-      <div class="text-center">
-        <p>Guide:<br />
-          <a href="https://blog.trezor.io/trezor-integration-with-myetherwallet-3e217a652e08#.n5fddxmdg" target="_blank" rel="noopener">
-            How to use TREZOR with MyEtherWallet
-          </a><br />
-          <a tabindex="0" role="button" class="btn btn-xs btn-default" href="https://trezor.io/?a=myetherwallet.com" target="_blank" rel="noopener">
-            Don't have a TREZOR? Order one now.
-          </a>
-        </p>
+        >Connect</button>
       </div>
     </div>
     <!-- /if selected type trezor-->
 
     <!-- if selected type digitalBitbox-->
-    <div id="selectedTypeDigitalBitbox" ng-if="walletType=='digitalBitbox'">
+    <div id="selectedTypeDigitalBitbox" ng-if="walletType=='digitalBitbox'&&!showModal">
       <div class="form-group">
         <a tabindex="0" role="button" class="btn btn-primary btn-block" ng-click="scanDigitalBitbox()" translate="ADD_DigitalBitbox_scan">
           SCAN
@@ -320,13 +336,12 @@
     </h4>
     -->
     <div class="form-group">
-      <a
-      tabindex="0"
-      role="button"
+      <button
       ng-class="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt ? 'btn btn-primary': 'btn'"
+      ng-show="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt"
       ng-disabled="!showFDecrypt&&!showPDecrypt&&!showMDecrypt&&!showParityDecrypt"
       ng-click="decryptWallet();"
-      >Load</a>
+      >Unlock</button>
     </div>
     <div class="form-group">
       <a class="btn btn-primary btn-block"
@@ -350,6 +365,8 @@
   <!-- / Column 3 -The Unlock Button -->
 
   <!-- MODAL -->
+  <section class="path-modal">
+  </section>
   <article class="modal fade" id="mnemonicModel" tabindex="-1" role="dialog" ng-show="showModal" aria-labelledby="Mnemonic Phrase Modal">
     <section class="modal-dialog">
       <section class="modal-content">
