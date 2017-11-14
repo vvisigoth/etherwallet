@@ -266,8 +266,9 @@ var decryptWalletCtrl = function($scope, $sce, $location, walletService) {
         }
     }
     $scope.HWWalletCreate = function(publicKey, chainCode, walletType, path) {
-        $scope.mnemonicModel = new Modal(document.getElementById('mnemonicModel'));
-        $scope.mnemonicModel.open();
+        //$scope.mnemonicModel = new Modal(document.getElementById('mnemonicModel'));
+        //$scope.mnemonicModel.open();
+        $scope.showModal = true;
         $scope.HDWallet.hdk = new hd.HDKey();
         $scope.HDWallet.hdk.publicKey = new Buffer(publicKey, 'hex');
         $scope.HDWallet.hdk.chainCode = new Buffer(chainCode, 'hex');
