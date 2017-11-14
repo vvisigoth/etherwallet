@@ -1,0 +1,49 @@
+<div id="allow-transfer" class="col-md-12 transaction" ng-init="loadAddresses();">
+  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <section class="general-information">
+    <h1 id="action-title row">Allow transfer</h1>
+    <div class="help-text row">
+      <p class="col-md-8">This transaction allows the given address to transfer ownership of this ship. This can be used to transfer a ship to a pool, which can then manage it on your behalf.
+      </p>
+    </div>
+  </section>
+  <section class="transaction-params">
+    <div class="label-group">
+      <span class="sub-title text-700">Allow transfer of:</span>
+      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+    </div>
+    <div class="input-group row slim-input-group">
+      <div class="checkbox-container col-md-1">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
+      </div>
+      <label class="action-confirmation">Yes I am sure</label>
+    </div>
+    <!--
+    <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="shipError = valShip(ship)" ng-model="ship" value="Star Name" placeholder="ship">
+      <div class="error-label">{{ ship }} is not a ship</div>
+    </div>
+    -->
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
+      <div class="error-label">Not a valid address</div>
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="checked && !addressError && address ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+      ng-click="checked && !addressError && address ? doAllowTransferBy(ob.toAddress($routeParams.p), address) : ''" >
+      Create
+    </button>
+  </section>
+  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
+    <label>Raw Tx</label>
+    <div class="raw-tx row col-md-8 text-code tx">
+      {{ rawTx }}
+    </div>
+    <label>Signed Tx</label>
+    <div class="signed-tx row col-md-8 text-code tx">
+      {{ signedTx }}
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
+  </section>
+</div>

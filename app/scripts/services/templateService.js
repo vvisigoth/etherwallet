@@ -5,8 +5,8 @@ const start = require('../../partial/start.html');
 const purchase = require('../../partial/buy.html');
 const launch = require('../../partial/launch.html');
 const mode = require('../../partial/mode.html');
-//const launchRights = require('../../partial/launchrights.html');
-//const allowTransfer = require('../../partial/allowtransfer.html');
+const launchRights = require('../../partial/launchrights.html');
+const allowTransfer = require('../../partial/allowtransfer.html');
 const transfer = require('../../partial/transfer.html');
 const rekey = require('../../partial/rekey.html');
 const escape = require('../../partial/escape.html');
@@ -21,6 +21,8 @@ var templateService = {
     mode: mode,
     transfer: transfer,
     rekey: rekey,
+    launchRights: launchRights,
+    allowTransfer: allowTransfer,
     liquidate: liquidate,
     start: start,
     adopt: adopt,

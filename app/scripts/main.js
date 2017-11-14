@@ -96,12 +96,13 @@ app.directive('addressField', ['$compile', addressFieldDrtv]);
 app.directive('qrCode', QRCodeDrtv);
 app.directive('onReadFile', fileReaderDrtv);
 app.directive('walletDecryptDrtv', walletDecryptDrtv);
-app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', tabsCtrl]);
+//app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', 'walletService', tabsCtrl]);
+app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', '$rootScope', 'walletService', tabsCtrl]);
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
 //app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', 'templateService', urbitCtrl]);
-app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', urbitCtrl]);
-app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', 'obService', urbitCtrl]);
+//app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', urbitCtrl]);
+app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', '$rootScope', 'walletService', 'obService', urbitCtrl]);
 app.config(['$routeProvider', '$locationProvider', 
     function($routeProvider, $locationProvider) {
     console.log('templateService', templateService);
@@ -136,6 +137,14 @@ app.config(['$routeProvider', '$locationProvider',
         })
         .when('/state/:p/rekey', {
             template: templateService.rekey,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/launchrights', {
+            template: templateService.launchRights,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/allowtransfer', {
+            template: templateService.allowTransfer,
             controller: 'urbitCtrl'
         })
         .when('/state/:p/transfer', {
