@@ -97,19 +97,17 @@ app.directive('addressField', ['$compile', addressFieldDrtv]);
 app.directive('qrCode', QRCodeDrtv);
 app.directive('onReadFile', fileReaderDrtv);
 app.directive('walletDecryptDrtv', walletDecryptDrtv);
-//app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', 'walletService', tabsCtrl]);
+app.directive('muwHeader', muwHeader);
 app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', '$rootScope', 'walletService', tabsCtrl]);
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
-//app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', 'templateService', urbitCtrl]);
-//app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', 'walletService', urbitCtrl]);
 app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', '$rootScope', 'walletService', 'obService', urbitCtrl]);
 app.config(['$routeProvider', '$locationProvider', 
     function($routeProvider, $locationProvider) {
     console.log('templateService', templateService);
     $routeProvider
         .when('/', {
-            template: templateService.state,
+            template: templateService.type,
             controller: 'urbitCtrl'
         })
         .when('/state/:p/liquidate', {
