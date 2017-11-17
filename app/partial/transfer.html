@@ -1,5 +1,5 @@
 <div id="transfer" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <span class="address row">{{ wallet.getAddressString() }}</span>
   <section class="general-information">
     <h1 id="action-title row">Transfer</h1>
     <div class="help-text row">
@@ -10,7 +10,7 @@
   <section class="transaction-params">
     <div class="label-group">
       <span class="sub-title text-700">Ship to transfer:</span>
-      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+      <h2 class="ship-name blue">{{ $routeParams.p }}</h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">
@@ -25,7 +25,7 @@
     </div>
     -->
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
+      <input type="text" class="gray-light-hl text-700 text-code col-md-12" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
       <div class="error-label">Not a valid address</div>
     </div>
     <div class="input-group row slim-input-group">

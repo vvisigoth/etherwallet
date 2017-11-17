@@ -1,5 +1,5 @@
-<div id="start" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+<div id="start" class="col-md-12 transaction" ng-init="loadAddresses(); shipName = $routeParams.p">
+  <span class="address row">{{ wallet.getAddressString() }}</span>
   <section class="general-information">
     <h1 id="action-title row">Start</h1>
     <div class="help-text row">
@@ -8,9 +8,9 @@
     </div>
   </section>
   <section class="transaction-params">
-    <div class="label-group">
+    <div class="label-group" ng-show="shipName != 'offline'">
       <span class="sub-title text-700">Ship to start:</span>
-      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+      <h2 class="ship-name blue">{{ shipName }}</h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">
@@ -18,22 +18,17 @@
       </div>
       <label class="action-confirmation">Yes I am sure</label>
     </div>
-    <!--
-    <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="shipError = valShip(ship)" ng-model="ship" value="Star Name" placeholder="ship">
-      <div class="error-label">{{ ship }} is not a ship</div>
+    <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'" ng-show="offline">
+      <input type="text" class="gray-light-hl text-700 col-md-8" ng-change="shipError = valShip(ob.toAddress(shipName))" ng-model="shipName" value="Star Name" placeholder="ship">
+      <div class="error-label">{{ shipName }} is not a ship</div>
     </div>
-    -->
     <div ng-init="keyError = false" ng-class="keyError ? 'error input-group' : 'input-group'">
-      <!--
-      <input type="text" class="gray-light-hl text-700" ng-change="keyError = valStar(key)" ng-model="key" value="Star Name" placeholder="key">
-      -->
-      <input type="text" class="gray-light-hl text-700" ng-model="key" placeholder="public-key">
+      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-model="key" placeholder="public-key">
       <div class="error-label">Key has to be an alphanumeric string</div>
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="checked && key ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
-      ng-click="checked && key ? doStart(ob.toAddress($routeParams.p), key) : ''" >
+      ng-click="checked && key ? doStart(ob.toAddress(shipName), key) : ''" >
       Create
     </button>
   </section>

@@ -1,5 +1,5 @@
 <div id=create-galaxy" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <span class="address row">{{ wallet.getAddressString() }}</span>
   <!-- GENERAL INFORMATION ABOUT TRANSACTION -->
   <section class="general-information">
     <h1 id="action-title row">Create galaxy</h1>
@@ -12,19 +12,19 @@
   <section class="transaction-params">
     <!-- this section changes with transaction type -->
     <div ng-init="galaxyError = false" ng-class="galaxyError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="galaxyError = valGalaxy(galaxy)" ng-model="galaxy" value="Galaxy Name" placeholder="galaxy">
+      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="galaxyError = valGalaxy(galaxy)" ng-model="galaxy" value="Galaxy Name" placeholder="galaxy">
       <div class="error-label">Ship {{ galaxy }} is not a galaxy</div>
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Galaxy Name" placeholder="new-address">
+      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(address)" ng-model="address" value="Galaxy Name" placeholder="new-address">
       <div class="error-label">Not a valid address</div>
     </div>
     <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
+      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
       <div class="error-label">Lock time must be positive</div>
     </div>
     <div ng-init="completeTimeError = false" ng-class="completeTimeError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="completeTimeError = valTimestamp(completetime)" ng-model="completetime" value="Complete Time" placeholder="complete-time">
+      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="completeTimeError = valTimestamp(completetime)" ng-model="completetime" value="Complete Time" placeholder="complete-time">
       <div class="error-label">Complete time must be positive</div>
     </div>
     <!--

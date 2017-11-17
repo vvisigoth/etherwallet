@@ -1,5 +1,5 @@
 <div id="launch" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <span class="address row">{{ wallet.getAddressString() }}</span>
   <section class="general-information">
     <h1 id="action-title row">Launch</h1>
     <div class="help-text row">
@@ -11,7 +11,7 @@
   <section class="transaction-params">
     <div class="label-group" ng-show="ship">
       <span class="sub-title text-700">Ship to launch:</span>
-      <h2 class="ship-name">~{{ toShipName(ship) }}</h2>
+      <h2 class="ship-name blue">~{{ toShipName(ship) }}</h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">
@@ -23,19 +23,21 @@
       <!-- turn off this error until we know when to trigger 
       <input type="text" class="gray-light-hl text-700" ng-change="shipError = valStar(ship)" ng-model="ship" value="Star Name" placeholder="ship">
       -->
-      <input type="text" ng-class="isState ? 'gray-light-hl text-700 confirmed' : 'gray-light-hl text-700'" ng-change="shipError = valShip(ship); isState = false" ng-model="ship" value="Star Name" placeholder="ship">
+      <input type="text" ng-class="isState ? 'gray-light-hl text-700 confirmed col-md-8' : 'gray-light-hl text-700 col-md-8'" ng-change="shipError = valShip(ship); isState = false" ng-model="ship" value="Star Name" placeholder="ship">
       <!--
       <div class="error-label">Ship {{ star }} is not a or a galaxy star</div>
       -->
+    </div>
+    <div class="input-group">
       <button class="btn btn-primary" ng-click="ship = getChildCandidate(ob.toAddress($routeParams.p)); isState = false">Generate</button>
       <button ng-class="isState ? 'btn btn-tetiary' : 'btn btn-secondary'" ng-click="readIsState(ship, 0)">Confirm</button>
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
+      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
       <div class="error-label">Not a valid address</div>
     </div>
     <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
+      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
       <div class="error-label">Lock time must be positive</div>
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>

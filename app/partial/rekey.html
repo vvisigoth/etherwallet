@@ -1,5 +1,5 @@
 <div id="rekey" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <span class="address row">{{ wallet.getAddressString() }}</span>
   <section class="general-information">
     <h1 id="action-title row">Rekey</h1>
     <div class="help-text row">
@@ -10,7 +10,7 @@
   <section class="transaction-params">
     <div class="label-group">
       <span class="sub-title text-700">Ship to rekey:</span>
-      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+      <h2 class="ship-name blue">{{ $routeParams.p }}</h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">
@@ -28,7 +28,7 @@
       <!--
       <input type="text" class="gray-light-hl text-700" ng-change="keyError = valStar(key)" ng-model="key" value="Star Name" placeholder="key">
       -->
-      <input type="text" class="gray-light-hl text-700" ng-model="key" placeholder="public-key">
+      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-model="key" placeholder="public-key">
       <div class="error-label">Key has to be an alphanumeric string</div>
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>

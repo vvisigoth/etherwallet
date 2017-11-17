@@ -1,5 +1,5 @@
 <div id="liquidate" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span id="address" class="row">{{ wallet.getAddressString() }}</span>
+  <span class="address row">{{ wallet.getAddressString() }}</span>
   <section class="general-information">
     <h1 id="action-title row">Liquidate</h1>
     <div class="help-text row">
@@ -11,7 +11,7 @@
   <section class="transaction-params">
     <div class="label-group">
       <span class="sub-title text-700">Star to liquidate:</span>
-      <h2 class="ship-name">{{ $routeParams.p }}</h2>
+      <h2 class="ship-name blue">{{ $routeParams.p }}</h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">

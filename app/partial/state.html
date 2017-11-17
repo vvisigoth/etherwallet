@@ -1,103 +1,129 @@
 <div 
     ng-init="states = ['Latent', 'Locked', 'Living']; loadAddresses();">
-    <!-- temp links -->
-    <span id="address">{{ wallet.getAddressString() }}</span>
+    <span id="" class="address">{{ wallet.getAddressString() }}</span>
     <h1>Your Urbit Wallet</h1>
-    <!--
-    <section class="how-to">
-        <ul>
-            <li>
-            <a href='#'>How to use this</a>
-            </li>
+    <div class="online" ng-show="!offline">
+      <section class="constitution-owner row" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
+        <ul class="h4 list-reset">
+          <li> <a href="state/creategalaxy">Create Galaxy</a> </li>
         </ul>
-    </section>
-    -->
-    <!--
-    <section class="balance">
-        <h2>Balance:</h2>
-        <ul>
-            <li class="spark-bal" ng-init="unit = balance > 1 ? 'Sparks' : 'Spark'">
-                {{ balance }} {{ unit }}
-                <div class="spark-action">
-                    <a href="#">Claim a star</a>
-                </div>
-            </li>
-        </ul>
-    </section>
-    -->
-    <section class="constitution-owner col-md-12" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
-      <ul class="h4">
-        <li> <a href="state/creategalaxy">Create Galaxy</a> </li>
-      </ul>
-    </section>
-    <section class="ships col-md-12">
-      <h4>Ships:</h4>
-      <div class="ship-entry" ng-repeat="ship in ownedShips">
-        <div class="ship-name row">
-          <i class="glyph"></i>
-          <h2>{{ ship.name }}</h2>
-        </div>
-        <div class="ship-actions row">
-          <div class="state-col col-md-2">
-            <div class="col-title">
-              State:
-            </div>
-            <ul class="text-lh-sm list-reset state-label text-700">
-              <li>
-                {{ states[ship.state] }}
-              </li>
-            </ul>
+      </section>
+      <section class="ships col-md-12">
+        <h4>Ships:</h4>
+        <div class="ship-entry" ng-repeat="ship in ownedShips">
+          <div class="ship-name row">
+            <i class="glyph"></i>
+            <h2>{{ ship.name }}</h2>
           </div>
-          <div class="latent-action-col col-md-2">
-            <div class="col-title">
-              Actions
+          <div class="ship-actions row">
+            <div class="state-col col-md-2">
+              <div class="col-title">
+                State:
+              </div>
+              <ul class="text-lh-sm list-reset state-label text-700">
+                <li>
+                  {{ states[ship.state] }}
+                </li>
+              </ul>
             </div>
-            <ul class="text-lh-sm list-reset text-700">
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/start'>Start</a>
-              </li>
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/transfer'>Transfer</a>
-              </li>
-              <li ng-show="ship.address < 256">
-                <a class="blue" href='state/{{ ship.name }}/vote'>Vote</a>
-              </li>
-            </ul>
-          </div>
-          <div class="live-action-col col-md-2" ng-switch="ship.state > 1">
-            <div class="col-title buffer">
-              00
+            <div class="latent-action-col col-md-2">
+              <div class="col-title">
+                Actions
+              </div>
+              <ul class="text-lh-sm list-reset text-700">
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/start'>Start</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/transfer'>Transfer</a>
+                </li>
+                <li ng-show="ship.address < 256">
+                  <a class="blue" href='state/{{ ship.name }}/vote'>Vote</a>
+                </li>
+              </ul>
             </div>
-            <ul class="text-lh-sm list-reset text-700" ng-switch-when="true">
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/launch'>Launch child</a>
-              </li>
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/grant'>Grant</a>
-              </li>
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/rekey'>Rekey</a>
-              </li>
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/escape'>Escape</a>
-              </li>
-              <li>
-                <a class="blue" href='state/{{ ship.name }}/adopt'>Adopt</a>
-              </li>
-            </ul>
-            <ul class="text-lh-sm list-reset text-700 gray-light" ng-switch-when="false">
-              <li>
-                <u>Transfer</u>
-              </li>
-              <li>
-                <u>Rekey</u>
-              </li>
-              <li>
-                <u>Escape</u>
-              </li>
-            </ul>
+            <div class="live-action-col col-md-2" ng-switch="ship.state > 1">
+              <div class="col-title buffer">
+                00
+              </div>
+              <ul class="text-lh-sm list-reset text-700" ng-switch-when="true">
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/launch'>Launch child</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/launchrights'>Grant rights</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/allowtransfer'>Allow transfer</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/rekey'>Rekey</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/escape'>Escape</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/adopt'>Adopt</a>
+                </li>
+              </ul>
+              <ul class="text-lh-sm list-reset text-700 gray-light" ng-switch-when="false">
+                <li>
+                  <u>Launch child</u>
+                </li>
+                <li>
+                  <u>Grant rights</u>
+                </li>
+                <li>
+                  <u>Allow transfer</u>
+                </li>
+                <li>
+                  <u>Rekey</u>
+                </li>
+                <li>
+                  <u>Escape</u>
+                </li>
+                <li>
+                  <u>Adopt</u>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <div class="offline" ng-show="offline">
+      <h2>Offline transactions</h2>
+        <ul class="h4">
+          <li> 
+            <a href="state/creategalaxy">Create Galaxy</a> </li>
+          </li>
+          <li> 
+            <a class="" href='state/offline/start'>Start</a>
+          </li>
+          <li>
+            <a class="" href='state/offline/transfer'>Transfer</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/vote'>Vote</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/launch'>Launch child</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/launchrights'>Grant rights</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/allowtransfer'>Allow transfer</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/rekey'>Rekey</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/escape'>Escape</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/adopt'>Adopt</a>
+          </li>
+        </ul>
+    </div>
 </div>
