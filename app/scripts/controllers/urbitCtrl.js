@@ -1032,6 +1032,20 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         );
       }
     }
+    $scope.doAllowTransferBy = function(ship, addr) {
+      $scope.validateShip(ship, function() {
+        $scope.validateAddress(addr, function() {
+          if ($scope.offline) return transact();
+          $scope.checkOwnership(ship, transact);
+        });
+      });
+      function transact() {
+        $scope.doTransaction($scope.contracts.constitution,
+          "allowTransferBy(uint32,address)",
+          [ship, addr]
+        );
+      }
+    }
     $scope.doRekey = function(ship, key) {
       $scope.validateShip(ship, function() {
         $scope.validateBytes32(key, function() {
