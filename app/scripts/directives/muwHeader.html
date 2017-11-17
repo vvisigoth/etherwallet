@@ -1,0 +1,93 @@
+<header class="{{curNode.name}} {{curNode.service}} {{curNode.service}} nav-index-{{gService.currentTab}}" aria-label="header" ng-controller='tabsCtrl' >
+
+<div class="container">
+  <div class="row">
+    <div class="path text-600 col-md-10">
+      <span ng-show="path() == '/type' || path() == '/'">
+        My Urbit Wallet
+      </span>
+      <span ng-show="path() == '/type/mode'">
+        <a href="type">Wallet</a> / Mode
+      </span>
+      <span ng-show="path() == '/state'">
+        <a href="type">Wallet</a> / 
+        <!--
+        <span class="mode-label" ng-init="online = true">
+        -->
+        <span class="mode-label">
+          <div ng-class="!offline ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+          </div>
+        <a href="type/mode">{{"  "}}{{ !offline ? curNode.name : "Offline"}}</a>
+        </span>
+        / State
+      </span>
+      <span ng-show="isTransaction(path())">
+        <a href="type">Wallet</a> / 
+        <span class="mode-label" ng-init="online = true">
+          <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+          </div>
+        <a href="type/mode">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
+        </span>
+         / <a href="state">State</a> / {{ isTransaction(path()) }}
+      </span>
+    </div>
+    <!-- dummy indicator, link to urbitCtrl -->
+  </div>
+</div>
+
+<!--
+<section class="bg-gradient header-branding">
+  <section class="container">
+    <a class="brand" href="/" aria-label="Go to homepage">
+      My Urbit Wallet
+    </a>
+    <div class="tagline">
+
+    <span>3.10.3.9</span>
+
+    <span class="dropdown dropdown-gas" ng-cloak>
+      <a tabindex="0" aria-haspopup="true" aria-label="adjust gas price" class="dropdown-toggle  btn btn-white" ng-click="dropdownGasPrice = !dropdownGasPrice">
+        <span translate="OFFLINE_Step2_Label_3">Gas Price</span>: {{gas.value}} Gwei
+        <i class="caret"></i>
+      </a>
+      <ul class="dropdown-menu" ng-show="dropdownGasPrice">
+        <div class="header--gas">
+          <span translate="OFFLINE_Step2_Label_3">Gas Price</span>: {{gas.value}} Gwei
+          <input type="range" ng-model="gas.value" min="{{gas.min}}" max="{{gas.max}}" steps="1" ng-change="gasChanged()"/>
+          <p class="small col-xs-4 text-left">Not So Fast</p>
+          <p class="small col-xs-4 text-center">Fast</p>
+          <p class="small col-xs-4 text-right">Fast AF</p>
+          <p class="small" style="white-space:normal;font-weight:300;margin: 2rem 0 0;" translate="GAS_PRICE_Desc"></p>
+          <a class="small" translate="x_ReadMore" href="https://myetherwallet.groovehq.com/knowledge_base/topics/what-is-gas" target="_blank" rel="noopener"></a>
+        </div>
+      </ul>
+    </span>
+-->
+
+    <!-- Warning: The separators you see on the frontend are in styles/etherwallet-custom.less. If you add / change a node, you have to adjust these. Ping tayvano if you''re not a CSS wizard -->
+<!--
+    <span class="dropdown dropdown-node" ng-cloak>
+      <a tabindex="0" aria-haspopup="true" aria-label="change node. current node {{curNode.name}} node by {{curNode.service}}" class="dropdown-toggle  btn btn-white" ng-click="dropdownNode = !dropdownNode">
+        Network: {{curNode.name}} <small>({{curNode.service}})</small>
+        <i class="caret"></i>
+      </a>
+      <ul class="dropdown-menu" ng-show="dropdownNode">
+        <li ng-repeat="(key, value) in nodeList"><a ng-class="{true:'active'}[curNode == key]" ng-click="changeNode(key)">
+          {{value.name}}
+          <small> ({{value.service}}) </small>
+          <img ng-show="value.service=='Custom'" src="images/icon-remove.svg" class="node-remove" title="Remove Custom Node" ng-click="removeNodeFromLocal(value.name)"/>
+        </a></li>
+        <li><a ng-click="customNodeModal.open(); dropdownNode = !dropdownNode;"> Add Custom Node </a></li>
+      </ul>
+    </span>
+
+    </div>
+  </section>
+</section>
+-->
+
+<!--
+@@include( './header-node-modal.tpl', { "site": "mew" } )
+-->
+
+</header>
