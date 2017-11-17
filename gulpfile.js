@@ -100,7 +100,7 @@ let js_watchFolder = [app + 'scripts/**/*.{js,json,html}', app + 'partial/*.html
 let js_srcFile = app + 'scripts/main.js';
 let js_destFolder = dist + 'js/';
 let js_destFolder_CX = dist_CX + 'js/';
-let js_destFile = 'etherwallet-master.js';
+let js_destFile = 'urbitwallet-master.js';
 let browseOpts = { debug: true }; // generates inline source maps - only in js-debug
 let babelOpts = {
     presets: ['es2015'],
@@ -151,7 +151,7 @@ gulp.task('js-debug', function() {
 // Rebuild Static JS
 let js_srcFilesStatic = app + 'scripts/staticJS/to-compile-to-static/*.js';
 let js_destFolderStatic = app + 'scripts/staticJS/';
-let js_destFileStatic = 'etherwallet-static.min.js';
+let js_destFileStatic = 'urbitwallet-static.min.js';
 
 gulp.task('staticJS', function() {
     return gulp.src(js_srcFilesStatic)
