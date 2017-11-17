@@ -77,7 +77,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         return;
       }
       var k = Object.keys(newVal);
-      console.log('newval', k);
       for (var i = 0; i < k.length; i ++) {
         $scope.readShipData(k[i]);
       };
@@ -103,8 +102,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         }, 50);
     }
     $scope.generateTx = function() {
-      console.log('generateTx');
-      console.log('address at generate', $scope.wallet.getAddressString());
         try {
             if ($scope.wallet == null)
             { throw globalFuncs.errorMsgs[3]; }
@@ -127,7 +124,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
                     } else {
                         $scope.showRaw = false;
                         $scope.notifier.danger(rawTx.error);
-                        console.error(rawTx.error);
                     }
                     if (!$scope.$$phase) $scope.$apply();
                 });
@@ -215,7 +211,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         }
         $scope.tx.data = $scope.getTxData();
         $scope.tx.to = $scope.contract.address;
-        console.log('generate contract tx');
         //$scope.sendContractModal.open();
         // just generate the transaction
         $scope.generateTx();
@@ -231,7 +226,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //NOTE value is expected in wei
     $scope.doTransaction = function(address, func, input, value) {
       if ($scope.wallet == null) {
-        console.error("no wallet");
         return;
       }
       var data = $scope.buildTransactionData(func, input);
@@ -246,11 +240,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       estObj.to = address;
       ethFuncs.estimateGas(estObj, function(data) {
         if (data.error) {
-          console.log("on contract " + address);
-          console.log("calling " + func + " " + input);
-          console.log("sending " + value + " wei");
           // Proper input validation should prevent this.
-          console.error("Gas estimation failed. Probably invalid transaction. Are your parameters correct?");
         } else {
           // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
           //TODO 1.8 is a bit much though. consult experts on why this can be so
@@ -301,7 +291,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       $scope.getShipsOwner(function(data) {
         $scope.contracts.constitution = data[0];
       });
-      console.log('loadAddresses', $scope.contracts);
     }
     ////
     //// VALIDATE: validate input data
@@ -400,7 +389,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     };
 
     $scope.toShipName = function(address) {
-      // fix this to deal with planet
       if (address > -1 && address < 256) {
         return $scope.ob.toGalaxyName(address);
       } else if (address > 255 && address < 65536) {
@@ -411,17 +399,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     };
 
     $scope.getChildCandidate = function(address) {
-      console.log('get random child', address);
       var candidate;
       if (address > -1 && address < 256) {
         candidate = ((Math.floor(Math.random() * 255) + 1) * 256 + address);
-        //while (!isValid) {
-        //  $scope.getIsState(candidate, 0, function(data) {
-        //    if (data[0] == true) {
-        //      $scope.validChild = candidate;
-        //    }          
-        //  });
-        //}
         return candidate;
       } else if (address > 255 && address < 65536) {
         candidate = ((Math.floor(Math.random() * 65535) + 1) * 65536 + address);
@@ -658,7 +638,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     // READ: fill fields with requested data
     //
     $scope.readShipData = function(ship) {
-      console.log('ship', ship);
       //var ship = document.getElementById("getShipData_ship").value;
       $scope.validateShip(ship, function() {
         $scope.getShipData(ship, put);
@@ -675,18 +654,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         //  $scope.shipData_parent,
         //  $scope.shipData_escape,
         //];
-        //console.log('is ship available?', ship);
         //$scope.testShipData = data;
         //for (var i in data) {
         //  output[i] = data[i];
-        //  console.log('ship data', data[i]);
         //}
-        //console.log($scope);
       }
     }
     $scope.readOwnedShips = function(addr) {
-      console.log(addr);
-      console.log('from wallet', $scope.wallet);
       if (!addr) {
         return;
       }
