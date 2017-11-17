@@ -12,12 +12,10 @@ var tabsCtrl = function($scope, globalService, $translate, $sce, $location, $roo
 
     $scope.wallet = walletService.wallet;
 
-    $scope.offline = $rootScope.offline;
-
     //Offline status done through rootScope
     $scope.setOffline = function() {
       $scope.offline = true;
-      console.log('tabctrl offline', $rootScope.offline);
+      $rootScope.offline = true;
     };
 
     $scope.toggleHttpView = function() {
@@ -148,7 +146,9 @@ var tabsCtrl = function($scope, globalService, $translate, $sce, $location, $roo
                 $scope.notifier.info( globalFuncs.successMsgs[5] + '— Now, check the URL: <strong>' + window.location.href + '.</strong> <br /> Network: <strong>' + $scope.nodeType + ' </strong> provided by <strong>' + $scope.nodeService + '.</strong>', 5000)
             }
         });
-        networkHasChanged && window.setTimeout(function() {location.reload() }, 250)
+        networkHasChanged && window.setTimeout(function() {location.reload() }, 250);
+        // set offline to false
+        $rootScope.offline = false;
     }
     $scope.checkNodeUrl = function(nodeUrl) {
         return $scope.Validator.isValidURL(nodeUrl);

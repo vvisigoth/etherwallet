@@ -13,7 +13,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //Offline status done through rootScope
     $scope.offline = $rootScope.offline;
 
-    console.log('urbit offline', $scope.offline);
+    //$rootScope.$watch('offline', function(n, o) {
+    //});
+
     $scope.ajaxReq = ajaxReq;
     $scope.visibility = "interactView";
     $scope.showReadWrite = false;
