@@ -970,7 +970,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
           if ($scope.offline) return transact();
           $scope.checkOwnership(star, function() {
             //TODO state enum (living)
-            $scope.checkState(star, 3, transact);
+            $scope.checkState(star, 2, transact);
           });
         });
       });
@@ -1103,7 +1103,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
           if ($scope.offline) return transact();
           $scope.checkOwnership(galaxy, function() {
             //TODO state enum (living)
-            $scope.checkState(galaxy, 3, function() {
+            $scope.checkState(galaxy, 2, function() {
               $scope.getConcreteVote(galaxy, addr, checkVote);
             });
           });
@@ -1129,7 +1129,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
           if ($scope.offline) return transact();
           $scope.checkOwnership(galaxy, function() {
             //TODO state enum (living)
-            $scope.checkState(galaxy, 3, function() {
+            $scope.checkState(galaxy, 2, function() {
               $scope.getIsAbstractMajority(prop, checkMajority);
             });
           });
