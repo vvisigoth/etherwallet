@@ -71,6 +71,7 @@ var obService                = require('./services/nom.js');
 var addressFieldDrtv         = require('./directives/addressFieldDrtv');
 var QRCodeDrtv               = require('./directives/QRCodeDrtv');
 var walletDecryptDrtv        = require('./directives/walletDecryptDrtv');
+var muwHeader                = require('./directives/muwHeader');
 var fileReaderDrtv           = require('./directives/fileReaderDrtv');
 var urbitCtrl                = require('./controllers/urbitCtrl');
 console.log('obService', obService);
