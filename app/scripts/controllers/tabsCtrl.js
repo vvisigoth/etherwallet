@@ -32,7 +32,9 @@ var tabsCtrl = function($scope, globalService, $translate, $sce, $location, $roo
     }
 
     $scope.navDisplayDict = {
-      'creategalaxy': 'Create Galaxy',
+      'creategalaxy': 'Create galaxy',
+      'launchrights': 'Launch rights',
+      'allowtransfer': 'Allow transfer',
       'launch': 'Launch',
       'transfer': 'Transfer',
       'rekey': 'Rekey',
