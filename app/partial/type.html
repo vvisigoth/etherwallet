@@ -323,35 +323,56 @@
           <!-- Select HD Path -->
             <h2>HD derivation path</h2>
             <p class="alert alert-danger" ng-hide="ajaxReq.type=='ETH'||ajaxReq.type=='ETC'||ajaxReq.type=='ROPSTEN ETH'||ajaxReq.type=='RINKEBY ETH'||ajaxReq.type=='KOVAN ETH'||ajaxReq.type=='EXP'"> We do not know the correct path for this network. <a href="https://github.com/kvhnuke/etherwallet/issues" target="_blank" rel="noopener">Please open a github issue</a> so we can discuss / be enlightened.</p>
-            <ul class="h4">
-              <li ng-click="HDWallet.dPath = HDWallet.defaultDPath; onHDDPathChange();">
-                <a ng-class="{true: 'green'}[HDWallet.dPath == HDWallet.defaultDPath]" href="">Jaxx, Metamask, Exodus, imToken - {{HDWallet.defaultDPath}}</a>
+            <ul class="radio-group list-reset">
+              <li>
+                <label class="row text-700">
+                  <input type="radio" name="hd-path" ng-click="onHDDPathChange()" ng-value="HDWallet.defaultDPath" ng-model="HDWallet.dPath"/>
+                  Jaxx, Metamask, Exodus, imToken - {{HDWallet.defaultDPath}}
+                </label>
               </li>
-              <li ng-click="HDWallet.dPath = HDWallet.ledgerPath; onHDDPathChange();">
-                <a ng-class="{true: 'green'}[HDWallet.dPath == HDWallet.ledgerPath]" href="">Ledger (ETH) {{HDWallet.ledgerPath}}</a>
+              <li>
+                <label class="row text-700">
+                  <input type="radio" name="hd-path" ng-click="onHDDPathChange()" ng-value="HDWallet.ledgerPath" ng-model="HDWallet.dPath"/>
+                  Ledger (ETH) {{HDWallet.ledgerPath}}
+                </label>
               </li>
-              <li ng-click="HDWallet.dPath = HDWallet.customPath; onHDDPathChange();">
-                <a ng-class="{true: 'green'}[HDWallet.dPath == HDWallet.customPath]" href="">Custom path</a>
+              <li> 
+                <label class="row text-700">
+                  <input type="radio" name="hd-path" ng-click="onHDDPathChange()" ng-value="HDWallet.customPath" ng-model="HDWallet.dPath"/>
+                  Custom path
+                </label>
               </li>
               <div class="input-group" ng-show="HDWallet.dPath == HDWallet.customPath">
-                <input type="text" class="text-700"
+                <input type="text" class="text-700 col-md-4"
                       ng-model="HDWallet.customDPath"
                       ng-change="onCustomHDDPathChange()"
                       placeholder="new-path"/>
               </div>
             </ul>
             <h2>Address to use</h2>
+            <form>
+            <ul class="radio-group list-reset">
+              <li ng-repeat="wallet in HDWallet.wallets track by $index">
+                <label class="row">
+                  <input type="radio" name="address-select" ng-value="$index" ng-model="HDWallet.id"/>
+                  <span class="address text-700">{{ wallet.getChecksumAddressString() }}</span> - {{wallet.getBalance()}} {{ajaxReq.type}}
+                </label>
+                  <div class="address-links row">
+                    <a href="{{ajaxReq.blockExplorerAddr.replace('[[address]]', wallet.getAddressString())}}" class="col-md-offset-2 col-md-4" target="_blank" rel="noopener">
+                      etherscan.io
+                    </a>
+                    <a href="https://ethplorer.io/address/{{wallet.getAddressString()}}" class="col-md-4" target="_blank" rel="noopener" ng-click="removeTokenFromLocal(token.symbol)" ng-show="token.type!=='default'" title="https://ethplorer.io/address/{{wallet.getAddressString()}}">ethplorer.io</a>
+                  </div>
+              </li>
+            </ul>
+            </form>
+            <!--
             <ul class="h4">
               <li ng-repeat="wallet in HDWallet.wallets track by $index">
                 <a href="" ng-click="HDWallet.id = $index" ng-class="{true: 'green'}[HDWallet.id == $index]">{{ wallet.getChecksumAddressString() }}</a>
-                <a href="{{ajaxReq.blockExplorerAddr.replace('[[address]]', wallet.getAddressString())}}" target="_blank" rel="noopener">
-                  {{wallet.getBalance()}} {{ajaxReq.type}}
-                </a>
-                <a href="https://ethplorer.io/address/{{wallet.getAddressString()}}" target="_blank" rel="noopener" title="https://ethplorer.io/address/{{wallet.getAddressString()}}">
-                  <img src="images/icon-external-link.svg" title="https://ethplorer.io/address/{{wallet.getAddressString()}}" ng-click="removeTokenFromLocal(token.symbol)" ng-show="token.type!=='default'" />
-                </a>
               </li>
             </ul>
+            -->
           <!--
           <div class="button-group">
             <button ng-click="AddRemoveHDAddresses(false)"
