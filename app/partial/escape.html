@@ -1,0 +1,44 @@
+<div id="escape" class="col-md-12 transaction" ng-init="loadAddresses();">
+  <span class="address row">{{ wallet.getAddressString() }}</span>
+  <section class="general-information">
+    <h1 id="action-title row">Escape</h1>
+    <div class="help-text row">
+      <!-- update this -->
+      <p class="col-md-8">Your ship can escape to a new parent. The escape will take effect when the new parent accepts the adoption. Make sure that the new parent ship is living.
+      </p>
+    </div>
+  </section>
+  <section class="transaction-params">
+    <div class="label-group">
+      <span class="sub-title text-700">Ship to escape:</span>
+      <h2 class="ship-name blue">{{ $routeParams.p }}</h2>
+    </div>
+    <div class="input-group row slim-input-group">
+      <div class="checkbox-container col-md-1">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
+      </div>
+      <label class="action-confirmation">Yes I am sure</label>
+    </div>
+    <div ng-init="parentError = false" ng-class="parentError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700 col-md-8" ng-change="parentError = valShip(parent)" ng-model="parent" value="Address" placeholder="new-parent">
+      <div class="error-label">Not a valid ship</div>
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="checked && !parentError && parent ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+      ng-click="checked && !parentError && parent ? doEscape(toAddress($routeParams.p), parent): ''">
+      Create
+    </button>
+  </section>
+  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
+    <label>Raw Tx</label>
+    <div class="raw-tx row col-md-8 text-code tx">
+      {{ rawTx }}
+    </div>
+    <label>Signed Tx</label>
+    <div class="signed-tx row col-md-8 text-code tx">
+      {{ signedTx }}
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
+  </section>
+</div>

@@ -1,0 +1,224 @@
+html {
+  /* set this to 6, since this was the original base.css size */
+  font-size: 6px;
+}
+
+header 
+{
+  padding: 1rem;
+}
+
+header a 
+{
+}
+
+section.tree-list li > span 
+{
+  cursor: pointer;
+}
+
+header .mode-label .mode-indicator
+{
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 1000px;
+  display: inline-block;
+  margin: 2.15rem 0.8rem 0 0;
+}
+
+header .mode .mode-indicator.off
+{
+  /*background-color: #fffba7;*/
+}
+
+
+.ship-name i.glyph 
+{
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: black;
+  border-radius: 10000px;
+  margin: 7.5rem 4rem 0 0;
+}
+
+.ship-actions
+{
+  margin-left: 5.2rem;
+}
+
+.buffer
+{
+  color: transparent
+}
+
+/*
+li.spark-bal:extend(h3, .green)
+{
+}
+
+.spark-action a
+{
+  &:extend(.blue);
+}
+
+
+span#address:extend(.text-700)
+{
+}
+
+span.ship-name
+{
+}
+
+li.ship-list:extend(h3)
+{
+}
+*/
+
+div.spark-action
+{
+  /* reset this to baseline */
+  font-size: 3rem;
+  line-height: 5rem;
+}
+
+
+div.row
+{
+  /* reset this to baseline */
+  font-size: 3rem;
+  line-height: 5rem;
+  font-weight: initial
+}
+
+div.row.body
+{
+}
+
+.vote-toggle .checkbox
+{
+  background-color: inherit;
+  border: 0.5rem solid #FF4444;
+}
+
+.vote-toggle .checkbox.checked
+{
+  background-color: #8fee9d;
+  border: 0.5rem solid #8fee9d;
+}
+
+input[type=password]
+{
+  border: 2px solid #000;
+  padding: 12px;
+}
+
+.transaction btn
+{
+  padding: 3rem 12px;
+}
+
+.checkbox
+{
+  cursor: pointer;
+  height: 6rem;
+  width: 6rem;
+  background-color: #d4d4d4;
+}
+
+.checkbox.checked
+{
+  background-color: #5b5b5b;
+}
+
+/*
+section.transaction-params .sub-title
+{
+  &:extend(.text-700);
+}
+*/
+
+span.address
+{
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+}
+
+input[type=text].confirmed
+{
+  border-color: #8FEE9D;
+}
+
+.transaction .input[type=text]
+{
+  border-color: #d4d4d4;
+  padding: 3rem 12px;
+}
+
+.input-group {
+  margin: 0px 0 2rem;
+  height: 14rem;
+}
+
+.slim-input-group {
+  height: 9rem;
+}
+
+.radio-buttons
+{
+  margin: 2rem 0 2rem 0;
+}
+
+.node-options
+{
+  margin-top: 0;
+}
+
+.transaction .tx 
+{
+  word-break: break-all;
+  background-color: #f1f1f1;
+  padding: 3rem 12px 3rem 12px;
+}
+
+button.disabled {
+  pointer: initial;
+} 
+
+input.is-valid,
+textarea.is-valid
+{
+  border-color: #8fee9d;
+}
+
+#selectedTypeMnemonic textarea,
+#selectedTypeKey textarea 
+{
+  padding: 12px;
+}
+.alert.popup 
+{
+  background-color: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  margin: 0;
+}
+
+.alert.popup .container 
+{
+  position: relative;
+  padding: 0 10rem 0 5rem;
+  //@media screen and (max-width: @screen-sm) { padding: 1rem 8rem 1rem 4rem; }
+  //@media screen and (max-width: @screen-xs) { padding: 3rem 1rem 0 4rem; }
+}
+
+/* THESE ARE OVERRIDES OF BASE, PR THESE */
+
+.button-group .btn
+{
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+

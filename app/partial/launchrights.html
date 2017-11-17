@@ -1,0 +1,43 @@
+<div id="launch-rights" class="col-md-12 transaction" ng-init="loadAddresses();">
+  <span class="address row">{{ wallet.getAddressString() }}</span>
+  <section class="general-information">
+    <h1 id="action-title row">Launch rights</h1>
+    <div class="help-text row">
+      <p class="col-md-8">Grant or revoke the given address the right to launch planets belonging to this star or galaxy.
+      </p>
+    </div>
+  </section>
+  <section class="transaction-params">
+    <div class="label-group" ng-show="ship">
+      <span class="sub-title text-700">Launch ships on behalf of:</span>
+      <h2 class="ship-name blue">{{ $routeParams.p }}</h2>
+    </div>
+    <div class="input-group row slim-input-group" ng-init="grant=true">
+      <div class="checkbox-container col-md-1">
+        <div ng-class="grant ? 'checkbox checked' : 'checkbox'" ng-click="grant = !grant"></div>
+      </div>
+      <label class="action-confirmation"><span ng-show="grant">Grant</span><span ng-show="!grant">Revoke</span></label>
+    </div>
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
+      <input type="text" class="gray-light-hl text-700 text-code col-md-12" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
+      <div class="error-label">Not a valid address</div>
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="address && !addressError ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+      ng-click="address && !addressError ? grant ? doGrantLaunchRights(ob.toAddress($routeParams.p), address) : doRevokeLaunchRights(ob.toAddress($routeParams.p), address) : ''" >
+      Create
+    </button>
+  </section>
+  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
+    <label>Raw Tx</label>
+    <div class="raw-tx row col-md-8 text-code tx">
+      {{ rawTx }}
+    </div>
+    <label>Signed Tx</label>
+    <div class="signed-tx row col-md-8 text-code tx">
+      {{ signedTx }}
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
+  </section>
+</div>

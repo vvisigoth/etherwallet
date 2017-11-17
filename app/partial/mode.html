@@ -1,0 +1,146 @@
+<div id="mode" class="col-md-12">
+  <span class="address row">{{ wallet.getAddressString() }}</span>
+  <section class="general-information" ng-init="uiState = 0">
+    <h1 id="action-title row">Let's get started</h1>
+  </section>
+  <section class="tree-list online-mode" ng-show="uiState == 0">
+    <ul class="h4">
+      <li>
+        <span class="gray" ng-click="setOffline(); path('state');"><u>Offline</u></span>
+      </li>
+      <li>
+        <span class="blue" ng-click="uiState = 1"><u>Online</u></span>
+      </li>
+    </ul>
+  </section>
+  <section class="tree-list node-select" ng-show="uiState == 1">
+    <ul class="h4">
+      <li>
+        <span class="blue" ng-click="uiState = 2"><u>Add a new custom node</u></span>
+      </li>
+      <li ng-repeat="(key, val) in nodeList">
+      <span href="" ng-class="{true: 'green'}[curNode == val]" ng-click="changeNode(key); path('state');"><u>{{ val.name }} - {{ val.service }}</u></span>
+      </li>
+    </ul>
+  </section>
+  <section class="custom-node" ng-show="uiState == 2">
+    <div ng-show="browserProtocol=='https:'" class="alert alert-danger small">
+      Your node must be HTTPS in order to connect to it via My Urbit Wallet. You can download the repo at <a href="https://github.com/urbit/etherwallet">Github</a>. Or, get free SSL certificate via [LetsEncrypt](https://letsencrypt.org/)
+    </div>
+
+      <div class="input-group">
+        <label>Node Name</label>
+        <input class="gray-light-hl text-700"
+           type="text"
+           placeholder="My ETH Node"
+           ng-model="customNode.name"
+           ng-class="Validator.isAlphaNumericSpace(customNode.name) ? 'is-valid' : 'is-invalid'">
+      </div>
+      <div class="clearfix col-xs-9">
+        <label>URL</label>
+        <input class="gray-light-hl text-700"
+          type="text" 
+          placeholder="http://127.0.0.1" 
+          ng-model="customNode.url" 
+          ng-class="checkNodeUrl(customNode.url) ? 'is-valid' : 'is-invalid'">
+      </div>
+      <div class="input-group">
+        <label class="NODE_Port">Port</label>
+        <input class="gray-light-hl text-700"
+          type="text" 
+          placeholder="8545" 
+          ng-model="customNode.port" 
+          ng-class="Validator.isPositiveNumber(customNode.port) || customNode.port=='' ? 'is-valid' : 'is-invalid'">
+      </div>
+      <div class="radio-buttons http-auth">
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-model="customNode.httpBasicAuth" ng-class="customNode.httpBasicAuth ? 'checkbox checked' : 'checkbox'" ng-click="toggleHttpView()"></div>
+          </div>
+          <label class="">HTTP Basic Auth</label>
+        </div>
+      </div>
+      <div class="input-group" ng-show="customNode.httpBasicAuth">
+        <label>User</label>
+        <input class="gray-light-hl text-700"
+          type="text" 
+          ng-model="customNode.httpBasicAuth.user" 
+          ng-class="customNode.httpBasicAuth &amp;&amp; customNode.httpBasicAuth.user.length > 0 ? 'is-valid' : 'is-invalid'">
+      </div>
+      <div class="input-group" ng-show="customNode.httpBasicAuth">
+        <label>Password</label>
+        <input class="gray-light-hl text-700"
+          type="password" 
+          ng-model="customNode.httpBasicAuth.password" 
+          ng-class="customNode.httpBasicAuth &amp;&amp; customNode.httpBasicAuth.password.length > 0 ? 'is-valid' : 'is-invalid'">
+      </div>
+      <!--
+      -->
+      <div class="radio-buttons node-options">
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-class="customNode.options == 'eth' ? 'checkbox checked' : 'checkbox'" ng-click="customNode.options = 'eth'">
+            </div>
+          </div>
+          <label class="">ETH</label>
+        </div>
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-class="customNode.options == 'etc' ? 'checkbox checked' : 'checkbox'" ng-click="customNode.options = 'etc'">
+            </div>
+          </div>
+          <label class="">ETC</label>
+        </div>
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-class="customNode.options == 'rop' ? 'checkbox checked' : 'checkbox'" ng-click="customNode.options = 'rop'">
+            </div>
+          </div>
+          <label class="">Ropsten</label>
+        </div>
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-class="customNode.options == 'kov' ? 'checkbox checked' : 'checkbox'" ng-click="customNode.options = 'kov'">
+            </div>
+          </div>
+          <label class="">Kovan</label>
+        </div>
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-class="customNode.options == 'rin' ? 'checkbox checked' : 'checkbox'" ng-click="customNode.options = 'rin'">
+            </div>
+          </div>
+          <label class="">Rinkeby</label>
+        </div>
+        <div class="row">
+          <div class="checkbox-container col-md-1">
+            <div ng-class="customNode.options == 'cus' ? 'checkbox checked' : 'checkbox'" ng-click="customNode.options = 'cus'">
+            </div>
+          </div>
+          <label class="">Custom</label>
+        </div>
+      </div>
+      <div class="radio-buttons eid">
+        <div class="row">
+          <div class="checkbox-container col-md-1" ng-init="customNode.eip155 = false">
+            <div ng-class="customNode.eip155  ? 'checkbox checked' : 'checkbox'" ng-click="customNode.eip155 = !customNode.eip155">
+            </div>
+          </div>
+          <label class="">Suppports EIP-155</label>
+        </div>
+      </div>
+      <div class="input-group" ng-show="customNode.eip155">
+        <label>Chain ID</label>
+        <input class="gray-light-hl" 
+          type="text" placeholder="" 
+          ng-model="customNode.chainId" 
+          ng-class="Validator.isPositiveNumber(customNode.chainId) ? 'is-valid' : 'is-invalid'">
+      </div>
+    <div class="modal-footer">
+      <button class="btn btn-tetiary" ng-click="uiState = 0" >&#8592 Back</button>
+      <button class="btn btn-primary" ng-click="saveCustomNode(); path('state');">
+        Save Node
+      </button>
+    </div>
+  </section>
+</div>
