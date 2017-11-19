@@ -23,10 +23,10 @@
       </span>
       <span ng-show="isTransaction(path())">
         <a href="type">Wallet</a> / 
-        <span class="mode-label" ng-init="online = true">
-          <div ng-class="online ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+        <span class="mode-label">
+          <div ng-class="!offline ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
           </div>
-        <a href="type/mode">{{"  "}}{{ online ? curNode.name : "Offline"}}</a>
+        <a href="type/mode">{{"  "}}{{ !offline ? curNode.name : "Offline"}}</a>
         </span>
          / <a href="state">State</a> / {{ isTransaction(path()) }}
       </span>
