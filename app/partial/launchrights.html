@@ -1,30 +1,79 @@
-<div id="launch-rights" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span class="address row">{{ wallet.getAddressString() }}</span>
+<div id="launch-rights" 
+  class="col-md-12 transaction" 
+  ng-init="loadAddresses(); shipName = $routeParams.p != 'offline' ? $routeParams.p : ''">
+  <span class="address row text-700">
+    {{ wallet.getAddressString() }}
+  </span>
   <section class="general-information">
-    <h1 id="action-title row">Launch rights</h1>
+    <h1 id="action-title row">Grant/revoke launch rights</h1>
     <div class="help-text row">
       <p class="col-md-8">Grant or revoke the given address the right to launch planets belonging to this star or galaxy.
+      </p>
+      <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
     </div>
   </section>
   <section class="transaction-params">
     <div class="label-group" ng-show="ship">
       <span class="sub-title text-700">Launch ships on behalf of:</span>
-      <h2 class="ship-name blue">{{ $routeParams.p }}</h2>
+      <h2 class="ship-name blue" ng-show="shipName != ''">
+        {{ shipName[0] == '~' ? shipName : '~' + shipName }}
+      </h2>
     </div>
-    <div class="input-group row slim-input-group" ng-init="grant=true">
-      <div class="checkbox-container col-md-1">
-        <div ng-class="grant ? 'checkbox checked' : 'checkbox'" ng-click="grant = !grant"></div>
-      </div>
-      <label class="action-confirmation"><span ng-show="grant">Grant</span><span ng-show="!grant">Revoke</span></label>
+    <div class="button-group slim-input-group input-group toggle-group" ng-init="grant=true">
+      <button ng-class="grant ? 'btn btn-sm btn-secondary' : 'btn btn-sm'" ng-click="grant = !grant">Adopt</button>
+      <button ng-class="!grant ? 'btn btn-sm btn-warning' : 'btn btn-sm'" ng-click="grant = !grant">Reject</button>
     </div>
+    <!-- show this offline -->
+    <div ng-init="shipError = false" 
+      ng-class="shipError ? 'error input-group' : 'input-group'" 
+      ng-show="offline">
+      <input type="text" 
+        class="gray-light-hl text-700 col-md-8" 
+        ng-change="shipError = valShip(ob.toAddress(shipName))" 
+        ng-model="shipName" 
+        value="Ship Name" 
+        placeholder="ship">
+      <div class="error-label">{{ shipName }} is not a ship</div>
+    </div>
+    <!-- /show this offline -->
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
       <input type="text" class="gray-light-hl text-700 text-code col-md-12" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
       <div class="error-label">Not a valid address</div>
     </div>
+    <!-- show these offline -->
+    <div class="offline-params" ng-show="offline">
+      <div ng-init="gasLimitError = false" 
+        ng-class="gasLimitError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="gray-light-hl text-700 col-md-4" 
+          ng-change="gasLimitError = tx.gasLimit > 3000000"
+          ng-model="tx.gasLimit" 
+          value="Gas Limit" 
+          placeholder="gas-limit">
+        <div class="error-label">{{ tx.gasLimit }} is too high</div>
+      </div>
+      <div ng-init="nonceError = false" 
+        ng-class="nonceError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="gray-light-hl text-700 col-md-4" 
+          ng-model="tx.nonce" 
+          value="nonce" 
+          placeholder="nonce">
+      </div>
+      <div ng-init="gasPriceError = false" 
+        ng-class="gasPriceError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="gray-light-hl text-700 col-md-4" 
+          ng-model="tx.gasPrice" 
+          value="gasPrice" 
+          placeholder="gas-price">
+      </div>
+    </div>
+    <!-- /show these offline -->
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="address && !addressError ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
-      ng-click="address && !addressError ? grant ? doGrantLaunchRights(ob.toAddress($routeParams.p), address) : doRevokeLaunchRights(ob.toAddress($routeParams.p), address) : ''" >
+      ng-click="address && !addressError ? grant ? doGrantLaunchRights(ob.toAddress(shipName), address) : doRevokeLaunchRights(ob.toAddress(shipName), address) : ''" >
       Create
     </button>
   </section>
@@ -38,6 +87,10 @@
       {{ signedTx }}
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
+    <button ng-show="!sent && !offline" 
+      class="btn btn-primary" 
+      ng-click="sendTx(); sent = true;">
+      Send
+    </button>
   </section>
 </div>

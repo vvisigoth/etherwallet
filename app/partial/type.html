@@ -365,31 +365,13 @@
               </li>
             </ul>
             </form>
-            <!--
-            <ul class="h4">
-              <li ng-repeat="wallet in HDWallet.wallets track by $index">
-                <a href="" ng-click="HDWallet.id = $index" ng-class="{true: 'green'}[HDWallet.id == $index]">{{ wallet.getChecksumAddressString() }}</a>
-              </li>
-            </ul>
-            -->
-          <!--
-          <div class="button-group">
-            <button ng-click="AddRemoveHDAddresses(false)"
-              ng-show="HDWallet.numWallets > 5"> 
-              Previous Addresses 
-            </button>
-            <button ng-click="AddRemoveHDAddresses(true)"> 
-              More Addresses 
-            </button>
-          </div>
-          -->
-          <div class="button-group">
-            <button class="btn btn-primary pull-right"
-                    ng-click="setHDWallet()"> Access Wallet 
-            </button>
-            <button class="btn btn-default pull-right"> Cancel 
-            </button>
-          </div>
+            <div class="">
+              <button class="btn btn-primary pull-right"
+                      ng-click="setHDWallet()"> Access Wallet 
+              </button>
+              <button class="btn btn-default pull-right"> Cancel 
+              </button>
+            </div>
         </div>
       </section>
     </section>

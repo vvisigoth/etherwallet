@@ -1,16 +1,28 @@
-<div id="adopt" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span class="address row">{{ wallet.getAddressString() }}</span>
+<div id="adopt" 
+  class="col-md-12 transaction" 
+  ng-init="loadAddresses(); parentShipName = $routeParams.p != 'offline' ? $routeParams.p : ''">
+  <span class="address row text-700">
+    {{ wallet.getAddressString() }}
+  </span>
   <section class="general-information">
     <h1 id="action-title row">Adopt a ship</h1>
     <div class="help-text row">
       <p class="col-md-8">Accept or reject an escaping ship. In order to accept or reject, you must be the child's chosen escape.
+      </p>
+      <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
     </div>
   </section>
   <section class="transaction-params">
     <div class="label-group" ng-show="ship">
       <span class="sub-title text-700">Ship to adopt/reject:</span>
-      <h2 class="ship-name blue">~{{ toShipName(ship) }}</h2>
+      <h2 class="ship-name blue">~{{ ship }}</h2>
+    </div>
+    <div class="label-group" ng-show="parentShipName != '' && offline">
+      <span class="sub-title text-700">On behalf of:</span>
+      <h2 class="ship-name">
+        {{ parentShipName[0] == '~' ? parentShipName : '~' + parentShipName }}
+      </h2>
     </div>
     <div class="input-group row slim-input-group">
       <div class="checkbox-container col-md-1">
@@ -18,14 +30,25 @@
       </div>
       <label class="action-confirmation">Yes I am sure</label>
     </div>
-    <div class="input-group row slim-input-group" ng-init="adopt=true">
-      <div class="checkbox-container col-md-1">
-        <div ng-class="adopt ? 'checkbox checked' : 'checkbox'" ng-click="adopt = adopt == true ? false : true"></div>
-      </div>
-      <label class="action-confirmation"><span ng-show="adopt">Adopt</span><span ng-show="!adopt">Reject</span></label>
+    <div class="button-group slim-input-group input-group toggle-group" ng-init="adopt=true">
+      <button ng-class="adopt ? 'btn btn-sm btn-secondary' : 'btn btn-sm'" ng-click="adopt = !adopt">Adopt</button>
+      <button ng-class="!adopt ? 'btn btn-sm btn-warning' : 'btn btn-sm'" ng-click="adopt = !adopt">Reject</button>
     </div>
+    <!-- show this offline -->
+    <div ng-init="parentShipError = false" 
+      ng-class="parentShipError ? 'error input-group' : 'input-group'" 
+      ng-show="offline">
+      <input type="text" 
+        class="gray-light-hl text-700 col-md-8" 
+        ng-change="parentShipError = valShip(ob.toAddress(parentShipName))" 
+        ng-model="parentShipName" 
+        value="Star Name" 
+        placeholder="parent-ship">
+      <div class="error-label">{{ parentShipName }} is not a ship</div>
+    </div>
+    <!-- /show this offline -->
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
-      <input type="text" ng-class="isState ? 'gray-light-hl text-700 confirmed col-md-8' : 'gray-light-hl text-700 col-md-8'" ng-model="ship" value="Star Name" placeholder="ship">
+      <input type="text" ng-class="isState ? 'gray-light-hl text-700 confirmed col-md-8' : 'gray-light-hl text-700 col-md-8'" ng-model="ship" value="Star Name" placeholder="ship-to-adopt">
     </div>
     <!--
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
@@ -33,9 +56,39 @@
       <div class="error-label">{{ ship }} is not a ship</div>
     </div>
     -->
+    <!-- show these offline -->
+    <div class="offline-params" ng-show="offline">
+      <div ng-init="gasLimitError = false" 
+        ng-class="gasLimitError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="gray-light-hl text-700 col-md-4" 
+          ng-change="gasLimitError = tx.gasLimit > 3000000"
+          ng-model="tx.gasLimit" 
+          value="Gas Limit" 
+          placeholder="gas-limit">
+        <div class="error-label">{{ manualGas }} is too high</div>
+      </div>
+      <div ng-init="nonceError = false" 
+        ng-class="nonceError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="gray-light-hl text-700 col-md-4" 
+          ng-model="tx.nonce" 
+          value="nonce" 
+          placeholder="nonce">
+      </div>
+      <div ng-init="gasPriceError = false" 
+        ng-class="gasPriceError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="gray-light-hl text-700 col-md-4" 
+          ng-model="tx.gasPrice" 
+          value="gasPrice" 
+          placeholder="gas-price">
+      </div>
+    </div>
+    <!-- /show these offline -->
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="checked && ship ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
-      ng-click="checked && ship ? adopt ? doAdopt(ob.toAddress($routeParams.p), ship) : doReject(ob.toAddress($routeParams.p), ship) : ''" >
+      ng-click="checked && ship ? adopt ? doAdopt(ob.toAddress(parentShipName), ship) : doReject(ob.toAddress(parentShipName), ship) : ''" >
       Create
     </button>
   </section>
@@ -49,6 +102,10 @@
       {{ signedTx }}
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-show="!sent" class="btn btn-primary" ng-click="sendTx(); sent = true;">Send</button>
+    <button ng-show="!sent && !offline" 
+      class="btn btn-primary" 
+      ng-click="sendTx(); sent = true;">
+      Send
+    </button>
   </section>
 </div>
