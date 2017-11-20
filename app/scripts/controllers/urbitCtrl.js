@@ -82,6 +82,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.readShipData(k[i]);
       };
     });
+    $scope.path = function(path) {
+      $location.path(path);
+    }
     $scope.toWei = function(ether) {
       return etherUnits.toWei(ether, "ether");
     }
