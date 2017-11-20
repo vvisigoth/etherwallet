@@ -57,7 +57,7 @@
                 </li>
               </ul>
             </div>
-            <div class="live-action-col col-md-2" ng-switch="ship.state > 1">
+            <div class="live-action-col col-md-3" ng-switch="ship.state > 1">
               <div class="col-title buffer">
                 00
               </div>
@@ -66,10 +66,7 @@
                   <a class="blue" href='state/{{ ship.name }}/launch'>Launch child</a>
                 </li>
                 <li>
-                  <a class="blue" href='state/{{ ship.name }}/launchrights'>Grant rights</a>
-                </li>
-                <li>
-                  <a class="blue" href='state/{{ ship.name }}/allowtransfer'>Allow transfer</a>
+                  <a class="blue" href='state/{{ ship.name }}/launchrights'>Grant/revoke rights</a>
                 </li>
                 <li>
                   <a class="blue" href='state/{{ ship.name }}/rekey'>Rekey</a>
@@ -78,7 +75,13 @@
                   <a class="blue" href='state/{{ ship.name }}/escape'>Escape</a>
                 </li>
                 <li>
-                  <a class="blue" href='state/{{ ship.name }}/adopt'>Adopt</a>
+                  <a class="blue" href='state/{{ ship.name }}/adopt'>Adopt/reject</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/allowtransfer'>Allow transfer</a>
+                </li>
+                <li>
+                  <a class="blue" href='state/{{ ship.name }}/deposit'>Deposit</a>
                 </li>
               </ul>
               <ul class="text-lh-sm list-reset text-700 gray-light" ng-switch-when="false">
@@ -86,10 +89,7 @@
                   <u>Launch child</u>
                 </li>
                 <li>
-                  <u>Grant rights</u>
-                </li>
-                <li>
-                  <u>Allow transfer</u>
+                  <u>Grant/revoke rights</u>
                 </li>
                 <li>
                   <u>Rekey</u>
@@ -98,7 +98,13 @@
                   <u>Escape</u>
                 </li>
                 <li>
-                  <u>Adopt</u>
+                  <u>Adopt/reject</u>
+                </li>
+                <li>
+                  <u>Allow transfer</u>
+                </li>
+                <li>
+                  <u>Deposit</u>
                 </li>
               </ul>
             </div>
@@ -128,9 +134,6 @@
             <a class="" href='state/offline/launchrights'>Grant rights</a>
           </li>
           <li> 
-            <a class="" href='state/offline/allowtransfer'>Allow transfer</a>
-          </li>
-          <li> 
             <a class="" href='state/offline/rekey'>Rekey</a>
           </li>
           <li> 
@@ -138,6 +141,12 @@
           </li>
           <li> 
             <a class="" href='state/offline/adopt'>Adopt</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/allowtransfer'>Allow transfer</a>
+          </li>
+          <li> 
+            <a class="" href='state/offline/deposit'>Deposit</a>
           </li>
         </ul>
     </div>

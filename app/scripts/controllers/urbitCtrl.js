@@ -28,6 +28,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         nonce: null,
         gasPrice: null
     }
+    $scope.shipStates = ['Latent', 'Locked', 'Living']; 
     $scope.contract = {
         address: globalFuncs.urlGet('address') != null && $scope.Validator.isValidAddress(globalFuncs.urlGet('address')) ? globalFuncs.urlGet('address') : '',
         abi: '',
@@ -288,9 +289,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       $scope.contracts.ships = "0xe0834579269eac6beca2882a6a21f6fb0b1d7196";
       $scope.contracts.votes = "0x0654b24a5da81f6ed1ac568e802a9d6b21483561";
       $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
-      $scope.getShipsOwner(function(data) {
-        $scope.contracts.constitution = data[0];
-      });
+      $scope.contracts.constitution = '0x56db68f29203ff44a803faa2404a44ecbb7a7480';
+      //$scope.getShipsOwner(function(data) {
+      //    $scope.contracts.constitution = data[0];
+      //  };
+      //});
     }
     ////
     //// VALIDATE: validate input data
