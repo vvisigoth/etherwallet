@@ -173,6 +173,6 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.state,
             controller: 'urbitCtrl'
         })
-    $locationProvider.html5Mode(true);
-    $locationProvider.hashPrefix('!');
+    //$locationProvider.html5Mode(true);
+    //$locationProvider.hashPrefix('!');
 }]);
