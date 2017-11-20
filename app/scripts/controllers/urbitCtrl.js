@@ -1243,17 +1243,5 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
 
-    /*
-     * Transaction objects 
-     * TODO break this into service
-     */
-
-    $scope.dummyShips = function(addr) {
-      if (addr >= 0 && addr < 256) {
-        return '~zod'
-      } else {
-        return '~wanzod'
-      }
-    };
 }
 module.exports = urbitCtrl;
