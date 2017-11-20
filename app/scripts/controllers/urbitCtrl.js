@@ -555,7 +555,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       );
     }
     $scope.getSparkBalance = function(callback) {
-      $scope.readContractData($scope.contracts.spark,
+      $scope.readContractData($rootScope.poolAddress,
         "balanceOf(address)",
         [$scope.wallet.getAddressString()],
         ["uint256"],
@@ -760,9 +760,14 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
     $scope.readBalance = function() {
-      $scope.getSparkBalance(function(data) {
-        $scope.balance = data[0] / $scope.oneSpark;
-      });
+      console.log('readbalance called');
+      console.log($rootScope.poolAddress);
+      console.log($scope.poolAddress);
+      if ($rootScope.poolAddress) {
+        $scope.getSparkBalance(function(data) {
+          $scope.balance = data[0] / $scope.oneSpark;
+        });
+      }
     }
     $scope.readAllowance = function() {
       $scope.getAllowance(function(data) {

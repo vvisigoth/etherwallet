@@ -12,7 +12,7 @@
         <h4>Sparks:</h4>
         <div class="spark-bal row" ng-show="poolAddress">
             <i class="glyph green"></i>
-            <span class="sparks h2 green">{{ sparkBal }} </span><h2 class="green">{{ sparkBal > 1 ? 'USP' : 'USP' }}</h2>
+            <span class="sparks h2 green">{{ balance }} </span><h2 class="green">{{ balance > 1 ? 'USP' : 'USP' }}</h2>
         </div>
         <div class="no-spark-bal row" ng-show="!poolAddress">
             <i class="glyph"></i>
@@ -20,7 +20,7 @@
         </div>
         <div class="pool-input row" ng-show="showPool">
           <input type="text" class="text-code gray-light-hl text-700 address col-md-10" ng-model="tmpPool" placeholder="pool-address"/>
-          <button class="btn btn-primary" ng-click="setPoolAddress(tmpPool); showPool = false;">Save</button>
+          <button class="btn btn-primary" ng-click="setPoolAddress(tmpPool); readBalance(); showPool = false;">Save</button>
         </div>
       </section>
       <section class="ships col-md-12">
