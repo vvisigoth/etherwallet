@@ -6,15 +6,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
 
     $scope.ob = obService;
 
-    $scope.path = function(path) {
-      $location.path(path);
-    }
+    //$scope.poolAddress;
+    $scope.sparkBal = 0;
 
     //Offline status done through rootScope
     $scope.offline = $rootScope.offline;
 
-    //$rootScope.$watch('offline', function(n, o) {
-    //});
+    $scope.poolAddress = $rootScope.poolAddress;
 
     $scope.ajaxReq = ajaxReq;
     $scope.visibility = "interactView";
@@ -389,6 +387,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     $scope.buildOwnedShips = function() {
       readOwnedShips();
     };
+
+    $scope.setPoolAddress = function(x) {
+      $rootScope.poolAddress = x;
+      $scope.poolAddress = $rootScope.poolAddress;
+    }
 
     $scope.toShipName = function(address) {
       if (address > -1 && address < 256) {

@@ -40,7 +40,7 @@
     </div>
     <!-- /show this offline -->
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
+      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(poolAddress)" ng-model="poolAddress" value="Address" placeholder="pool-address">
       <div class="error-label">Not a valid address</div>
     </div>
     <!-- show these offline -->
@@ -74,8 +74,8 @@
     </div>
     <!-- /show these offline -->
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="checked && !addressError && address ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
-      ng-click="checked && !addressError && address ? doAllowTransferBy(ob.toAddress(shipName), address) : ''" >
+    <button ng-class="checked && !addressError && poolAddress ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+      ng-click="checked && !addressError && poolAddress ? doAllowTransferBy(ob.toAddress(shipName), poolAddress) : ''" >
       Create
     </button>
   </section>

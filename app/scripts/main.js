@@ -146,6 +146,10 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.allowTransfer,
             controller: 'urbitCtrl'
         })
+        .when('/state/:p/deposit', {
+            template: templateService.deposit,
+            controller: 'urbitCtrl'
+        })
         .when('/state/:p/transfer', {
             template: templateService.transfer,
             controller: 'urbitCtrl'

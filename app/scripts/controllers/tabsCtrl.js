@@ -35,6 +35,7 @@ var tabsCtrl = function($scope, globalService, $translate, $sce, $location, $roo
       'creategalaxy': 'Create galaxy',
       'launchrights': 'Launch rights',
       'allowtransfer': 'Allow transfer',
+      'deposit': 'Deposit',
       'launch': 'Launch',
       'transfer': 'Transfer',
       'rekey': 'Rekey',
