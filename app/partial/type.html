@@ -5,17 +5,17 @@
 <article class="block decrypt-drtv clearfix" ng-controller='decryptWalletCtrl as $crtl'>
   <!-- Column 1 - Select Type of Key -->
   <section class="select-type" ng-init="walletType=''" ng-show="!walletType">
-    <h1 style="margin-top:0;">Select your wallet type</h1>
-    <ul class="h4">
-      <li><a href="#" ng-click="walletType='metamask'">Metamask / Mist</a></li>
-      <li><a href="#" ng-click="walletType='ledger'">Ledger</a></li>
-      <li><a href="#" ng-click="walletType='trezor'">TREZOR</a></li>
+    <h1>Select your wallet type</h1>
+    <ul class="">
+      <li><a href="" ng-click="walletType='metamask'">Metamask / Mist</a></li>
+      <li><a href="" ng-click="walletType='ledger'">Ledger</a></li>
+      <li><a href="" ng-click="walletType='trezor'">TREZOR</a></li>
       <!--
       <li><a href="#" ng-click="walletType='digitalBitbox'">Digital Bitbox</a></li>
       -->
-      <li><a href="#" ng-click="walletType='fileupload'">Keystore File (UTC / JSON)</a></li>
-      <li><a href="#" ng-click="walletType='pastemnemonic'">Mnemonic Phrase</a></li>
-      <li><a href="#" ng-click="walletType='pasteprivkey'">Private Key</a></li>
+      <li><a href="" ng-click="walletType='fileupload'">Keystore File (UTC / JSON)</a></li>
+      <li><a href="" ng-click="walletType='pastemnemonic'">Mnemonic Phrase</a></li>
+      <li><a href="" ng-click="walletType='pasteprivkey'">Private Key</a></li>
     </ul>
   </section>
   <!-- Column 1 - Select Type of Key -->
@@ -35,7 +35,7 @@
       </div>
       <div class="form-group" ng-if="requireFPass">
         <label>Enter the password</label>
-        <input class="text-700"
+        <input class=""
                ng-change="onFilePassChange()"
                ng-class="Validator.isPasswordLenValid($parent.$parent.filePassword,0) ? 'is-valid' : 'is-invalid'"
                ng-model="$parent.$parent.filePassword"
@@ -115,8 +115,8 @@
     <!-- if selected type mnemonic-->
     <div id="selectedTypeMnemonic" ng-if="walletType=='pastemnemonic'&&!showModal" class="row">
       <h1 class="">Enter your mnemonic</h1>
-      <div class="input-group col-sm-12">
-        <textarea class="text-700 col-sm-12"
+      <div class="col-md-12">
+        <textarea class="col-sm-12"
                   ng-change="onMnemonicChange()"
                   ng-class="Validator.isValidMnemonic($parent.$parent.manualmnemonic) ? 'is-valid' : 'is-invalid'"
                   ng-keyup="$event.keyCode == 13 && decryptWallet()"
@@ -127,9 +127,9 @@
         </textarea>
       </div>
       <div class="input-group col-md-12">
-        <label>password (optional)</label>
+        <label>Password (optional)</label>
         <div>
-          <input class="text-700"
+          <input class=""
                  ng-keyup="$event.keyCode == 13 && decryptWallet()"
                  ng-model="$parent.$parent.mnemonicPassword"
                  placeholder="password"
@@ -144,7 +144,7 @@
     <div id="selectedTypeKey" ng-if="walletType=='pasteprivkey' && !showModal" class="row">
       <h1 class="">Enter your private key</h1>
       <div class="input-group col-sm-12">
-        <textarea class="text-700 col-md-12"
+        <textarea class="col-md-12"
                   ng-change="onPrivKeyChange()"
                   ng-class="Validator.isValidPrivKey($parent.$parent.manualprivkey.length) ? 'is-valid' : 'is-invalid'"
                   ng-keyup="$event.keyCode == 13 && decryptWallet()"
@@ -155,7 +155,7 @@
       </div>
       <div class="input-group col-sm-12" ng-if="requirePPass">
         <label>Enter the password</p>
-        <input class="text-700"
+        <input class=""
                ng-change="onPrivKeyPassChange()"
                ng-class="Validator.isPasswordLenValid($parent.$parent.privPassword,0) ? 'is-valid' : 'is-invalid'"
                ng-keyup="$event.keyCode == 13 && decryptWallet()"
@@ -278,8 +278,9 @@
   <!-- Column 3 - The Unlock Button -->
   <!--
   <section class="col-md-4 col-sm-6" ng-show="showFDecrypt||showPDecrypt||showMDecrypt||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox'||showAOnly||showParityDecrypt">
-  -->
   <section class="col-md-4 col-sm-6" ng-show="(showPDecrypt||showFDecrypt||walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
+  -->
+  <section class="col-md-4 col-sm-6" ng-show="(walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
     <!--
     <h4 id="uploadbtntxt-wallet" ng-show="showFDecrypt||showPDecrypt||showMDecrypt" translate="ADD_Label_6">
       Access Your Wallet:
@@ -288,13 +289,12 @@
     <div class="form-group">
       <button
       ng-class="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt ? 'btn btn-primary': 'btn'"
-      ng-show="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt"
       ng-disabled="!showFDecrypt&&!showPDecrypt&&!showMDecrypt&&!showParityDecrypt"
       ng-click="decryptWallet();"
       >Unlock</button>
     </div>
     <div class="form-group">
-      <a class="btn btn-primary btn-block"
+      <button class="btn btn-primary btn-block"
          ng-click="decryptAddressOnly()"
          ng-show="showAOnly"
          role="button"
@@ -315,34 +315,35 @@
   <!-- / Column 3 -The Unlock Button -->
 
   <!-- MODAL -->
-  <article class="modal fade" id="mnemonicModel" tabindex="-1" role="dialog" ng-show="showModal" aria-labelledby="Mnemonic Phrase Modal">
+  <article class="modal fade" id="mnemonicModel" ng-show="showModal">
     <section class="modal-dialog">
       <section class="modal-content">
         <div class="modal-body">
           <!-- Select HD Path -->
+            <h1>Wallet options</h1>
             <h2>HD derivation path</h2>
             <p class="alert alert-danger" ng-hide="ajaxReq.type=='ETH'||ajaxReq.type=='ETC'||ajaxReq.type=='ROPSTEN ETH'||ajaxReq.type=='RINKEBY ETH'||ajaxReq.type=='KOVAN ETH'||ajaxReq.type=='EXP'"> We do not know the correct path for this network. <a href="https://github.com/kvhnuke/etherwallet/issues" target="_blank" rel="noopener">Please open a github issue</a> so we can discuss / be enlightened.</p>
             <ul class="radio-group list-reset">
               <li>
-                <label class="row text-700">
-                  <input type="radio" name="hd-path" ng-click="onHDDPathChange()" ng-value="HDWallet.defaultDPath" ng-model="HDWallet.dPath"/>
-                  Jaxx, Metamask, Exodus, imToken - {{HDWallet.defaultDPath}}
+                <label class="row">
+                  <input type="radio" name="hd-path" class="w-4" ng-click="onHDDPathChange()" ng-value="HDWallet.defaultDPath" ng-model="HDWallet.dPath"/>
+                  Jaxx, Metamask, Exodus, imToken&#151 <span class="monospace">{{HDWallet.defaultDPath}}</span>
                 </label>
               </li>
               <li>
-                <label class="row text-700">
-                  <input type="radio" name="hd-path" ng-click="onHDDPathChange()" ng-value="HDWallet.ledgerPath" ng-model="HDWallet.dPath"/>
-                  Ledger (ETH) {{HDWallet.ledgerPath}}
+                <label class="row">
+                  <input type="radio" name="hd-path" class="w-4" ng-click="onHDDPathChange()" ng-value="HDWallet.ledgerPath" ng-model="HDWallet.dPath"/>
+                  Ledger (ETH)&#151 <span class="monospace">{{HDWallet.ledgerPath}}</span>
                 </label>
               </li>
               <li> 
-                <label class="row text-700">
-                  <input type="radio" name="hd-path" ng-click="onHDDPathChange()" ng-value="HDWallet.customPath" ng-model="HDWallet.dPath"/>
+                <label class="row">
+                  <input type="radio" name="hd-path" class="w-4" ng-click="onHDDPathChange()" ng-value="HDWallet.customPath" ng-model="HDWallet.dPath"/>
                   Custom path
                 </label>
               </li>
               <div class="input-group" ng-show="HDWallet.dPath == HDWallet.customPath">
-                <input type="text" class="text-700 col-md-4"
+                <input type="text" class="text-700 col-md-4 w-4"
                       ng-model="HDWallet.customDPath"
                       ng-change="onCustomHDDPathChange()"
                       placeholder="new-path"/>
@@ -350,17 +351,23 @@
             </ul>
             <h2>Address to use</h2>
             <form>
-            <ul class="radio-group list-reset">
-              <li ng-repeat="wallet in HDWallet.wallets track by $index">
+            <ul class="radio-group list-reset addresses">
+              <li ng-repeat="wallet in HDWallet.wallets track by $index" ng-class="HDWallet.id == $index ? 'selected-addr' : 'unselected-addr gray-light'">
                 <label class="row">
-                  <input type="radio" name="address-select" ng-value="$index" ng-model="HDWallet.id"/>
-                  <span class="address text-700">{{ wallet.getChecksumAddressString() }}</span> - {{wallet.getBalance()}} {{ajaxReq.type}}
+                  <input type="radio" name="address-select" class="w-4" ng-value="$index" ng-model="HDWallet.id"/>
+                  <span class="address text-700">{{ wallet.getChecksumAddressString() }}</span>
                 </label>
-                  <div class="address-links row">
-                    <a href="{{ajaxReq.blockExplorerAddr.replace('[[address]]', wallet.getAddressString())}}" class="col-md-offset-2 col-md-4" target="_blank" rel="noopener">
-                      etherscan.io
-                    </a>
-                    <a href="https://ethplorer.io/address/{{wallet.getAddressString()}}" class="col-md-4" target="_blank" rel="noopener" ng-click="removeTokenFromLocal(token.symbol)" ng-show="token.type!=='default'" title="https://ethplorer.io/address/{{wallet.getAddressString()}}">ethplorer.io</a>
+                  <div class="address-links ml-4">
+                    <div class="row">
+                      <span class="monospace col-md-3 text-700">{{wallet.getBalance()}} {{ajaxReq.type}}</span>
+                      <span class="wallet-detail col-md-1">View on</span>
+                      <a href="{{ajaxReq.blockExplorerAddr.replace('[[address]]', wallet.getAddressString())}}" class="col-md-4" target="_blank" rel="noopener">
+                        etherscan.io
+                      </a>
+                    </div>
+                    <div class="row">
+                      <a href="https://ethplorer.io/address/{{wallet.getAddressString()}}" class="col-md-offset-4 col-md-4" target="_blank" rel="noopener" ng-click="removeTokenFromLocal(token.symbol)" ng-show="token.type!=='default'" title="https://ethplorer.io/address/{{wallet.getAddressString()}}">ethplorer.io</a>
+                    </div>
                   </div>
               </li>
             </ul>

@@ -3,24 +3,23 @@
     <span id="" class="text-700 address">{{ wallet.getAddressString() }}</span>
     <h1>Your Urbit Wallet</h1>
     <div class="online" ng-show="!offline">
-      <section class="constitution-owner col-md-12" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
-        <ul class="h4 list-reset">
-          <li> <a href="" ng-click="path('state/creategalaxy')">Create Galaxy</a> </li>
-        </ul>
+      <section class="constitution-owner col-md-12 mb-6" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
+        <button class="btn-primary btn"
+          ng-click="path('state/creategalaxy')">
+          Create galaxy &#8594 
+        </button>
       </section>
-      <section class="sparks col-md-12">
+      <section class="sparks col-md-12 mb-6">
         <h4>Sparks:</h4>
         <div class="spark-bal row" ng-show="poolAddress">
             <i class="glyph green"></i>
             <span class="sparks h2 green">{{ balance }} </span><h2 class="green">{{ balance > 1 ? 'USP' : 'USP' }}</h2>
         </div>
-        <div class="no-spark-bal row" ng-show="!poolAddress">
-            <i class="glyph"></i>
-            <a href="" ng-click="showPool = !showPool" class="h4">Connect to pool to see USP balance</a>
-        </div>
-        <div class="pool-input row" ng-show="showPool">
-          <input type="text" class="text-code gray-light-hl text-700 address col-md-10" ng-model="tmpPool" placeholder="pool-address"/>
-          <button class="btn btn-primary" ng-click="setPoolAddress(tmpPool); readBalance(); showPool = false;">Save</button>
+        <div class="pool-input">
+          <div class="input-group">
+            <input type="text" class="monospace col-md-12" ng-model="tmpPool" placeholder="pool-address"/>
+          </div>
+          <button class="btn btn-primary" ng-click="setPoolAddress(tmpPool); readBalance(); showPool = false;">Connect</button>
         </div>
       </section>
       <section class="ships col-md-12">
@@ -32,59 +31,79 @@
           </div>
           <div class="ship-actions row">
             <div class="state-col col-md-2">
-              <div class="col-title">
+              <div class="col-title text-600 h-font">
                 State:
               </div>
-              <ul class="text-lh-sm list-reset state-label text-700">
+              <ul ng-class="ship.state == 1 ? 'red list-reset state-label text-700': 'green list-reset state-label text-700'" >
                 <li>
                   {{ shipStates[ship.state] }}
                 </li>
               </ul>
             </div>
-            <div class="latent-action-col col-md-2">
-              <div class="col-title">
+            <div class="live-action-col col-md-3" ng-switch="ship.state == 1">
+              <div class="col-title text-600 h-font">
                 Actions
               </div>
-              <ul class="text-lh-sm list-reset text-700">
+              <ul class="list-reset" ng-switch-when="true">
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/start')">Start</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/start')">Start</a>
                 </li>
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/transfer')">Transfer</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/transfer')">Transfer</a>
+                </li>
+                <li ng-show="ship.address < 65536">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/allowtransfer')">Allow transfer</a>
+                </li>
+                <li ng-show="ship.address < 65536">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/deposit')">Deposit</a>
                 </li>
                 <li ng-show="ship.address < 256">
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/vote')">Vote</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/vote')">Vote</a>
+                </li>
+              </ul>
+              <ul class="list-reset gray-light" ng-switch-when="false">
+                <li>
+                  <u>Start</u>
+                </li>
+                <li>
+                  <u>Transfer</u>
+                </li>
+                <li>
+                  <u>Allow transfer</u>
+                </li>
+                <li>
+                  <u>Deposit</u>
+                </li>
+                <li>
+                  <u>Vote</u>
                 </li>
               </ul>
             </div>
-            <div class="live-action-col col-md-3" ng-switch="ship.state > 1">
+            <div class="live-action-col col-md-3" ng-switch="ship.state == 2">
               <div class="col-title buffer">
                 00
               </div>
-              <ul class="text-lh-sm list-reset text-700" ng-switch-when="true">
+              <ul class="list-reset" ng-switch-when="true">
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/launch')">Launch child</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/launch')">Launch child</a>
                 </li>
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/launchrights')">Grand/revoke rights</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/launchrights')">Grand/revoke rights</a>
                 </li>
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/rekey')">Rekey</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/rekey')">Rekey</a>
                 </li>
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/escape')">Escape</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/escape')">Escape</a>
                 </li>
                 <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/adopt')">Adopt/reject</a>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/adopt')">Adopt/reject</a>
                 </li>
-                <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/allowtransfer')">Allow transfer</a>
-                </li>
-                <li>
-                  <a class="blue" href='' ng-click="path('state/' + ship.name + '/deposit')">Deposit</a>
+                <li ng-show="ship.address < 256">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/vote')">Vote</a>
                 </li>
               </ul>
-              <ul class="text-lh-sm list-reset text-700 gray-light" ng-switch-when="false">
+              <ul class="list-reset gray-light" ng-switch-when="false">
                 <li>
                   <u>Launch child</u>
                 </li>
@@ -101,10 +120,7 @@
                   <u>Adopt/reject</u>
                 </li>
                 <li>
-                  <u>Allow transfer</u>
-                </li>
-                <li>
-                  <u>Deposit</u>
+                  <u>Vote</u>
                 </li>
               </ul>
             </div>

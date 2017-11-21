@@ -25,8 +25,8 @@
       <button ng-class="!concrete ? 'btn btn-sm btn-primary' : 'btn btn-sm'" ng-click="concrete = !concrete">Abstract</button>
     </div>
     <div class="button-group slim-input-group input-group toggle-group" ng-init="voteYes=false">
-      <button ng-class="voteYes ? 'btn btn-sm btn-secondary' : 'btn btn-sm'" ng-click="voteYes = !voteYes">Concrete</button>
-      <button ng-class="!voteYes ? 'btn btn-sm btn-warning' : 'btn btn-sm'" ng-click="voteYes = !voteYes">Abstract</button>
+      <button ng-class="voteYes ? 'btn btn-sm btn-secondary' : 'btn btn-sm'" ng-click="voteYes = !voteYes">Yes</button>
+      <button ng-class="!voteYes ? 'btn btn-sm btn-warning' : 'btn btn-sm'" ng-click="voteYes = !voteYes">No</button>
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'" ng-show="concrete">
       <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="constitution-address">

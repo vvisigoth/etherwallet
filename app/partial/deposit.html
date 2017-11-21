@@ -7,7 +7,7 @@
   <section class="general-information">
     <h1 id="action-title row">Deposit</h1>
     <div class="help-text row">
-      <p class="col-md-8"><em>Note:</em> you must <a href="" ng-click="path('state/' + offline ? 'offline' : shipName '/allowtransfer')">allow transfer</a> of a ship before depositing it. Once you deposit a ship to a pool, you give up ownership of the ship and will be issued a Spark token (USP).
+      <p class="col-md-8"><em>Note:</em> you must <a href="" ng-click="path('state/' + offline ? 'offline' : shipName + '/allowtransfer')">allow transfer</a> of a ship before depositing it. Once you deposit a ship to a pool, you give up ownership of the ship and will be issued a Spark token (USP).
       </p>
       <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
@@ -78,7 +78,7 @@
     <!-- /show these offline -->
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="checked && !addressError && poolAddress ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
-      ng-click="checked && !addressError && poolAddress ? doTransferShip(ob.toAddress(shipName), poolAddress) : ''" >
+      ng-click="checked && !addressError && poolAddress ? doDeposit(ob.toAddress(shipName)) : ''" >
       Create
     </button>
   </section>

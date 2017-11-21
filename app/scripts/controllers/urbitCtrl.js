@@ -28,7 +28,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         nonce: null,
         gasPrice: null
     }
+
+    // Use these in lieu of tx.* for offline transaction generation
+    $scope.nonceDec;
+    $scope.gasPriceDec;
+
     $scope.shipStates = ['Latent', 'Locked', 'Living']; 
+
     $scope.contract = {
         address: globalFuncs.urlGet('address') != null && $scope.Validator.isValidAddress(globalFuncs.urlGet('address')) ? globalFuncs.urlGet('address') : '',
         abi: '',
@@ -49,6 +55,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     $scope.$watch('wallet', function(newVal, oldVal) {
       if (newVal) {
         $scope.readOwnedShips(newVal.getAddressString());
+        $scope.readBalance();
       }
     });
     $scope.$watch('visibility', function(newValue, oldValue) {
@@ -105,6 +112,34 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
             $scope.initContract();
         }, 50);
     }
+
+    $scope.generateTxOffline = function() {
+        if (!ethFuncs.validateEtherAddress($scope.tx.to)) {
+            $scope.notifier.danger(globalFuncs.errorMsgs[5]);
+            return;
+        }
+        var txData = uiFuncs.getTxData($scope);
+        txData.isOffline = true;
+        txData.nonce = ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.nonceDec));
+        txData.gasPrice = ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.gasPriceDec));
+        if ($scope.tokenTx.id != 'ether') {
+            txData.data = $scope.tokenObjs[$scope.tokenTx.id].getData($scope.tx.to, $scope.tx.value).data;
+            txData.to = $scope.tokenObjs[$scope.tokenTx.id].getContractAddress();
+            txData.value = '0x00';
+        }
+        uiFuncs.generateTx(txData, function(rawTx) {
+            if (!rawTx.isError) {
+                $scope.rawTx = rawTx.rawTx;
+                $scope.signedTx = rawTx.signedTx;
+                $scope.showRaw = true;
+            } else {
+                $scope.showRaw = false;
+                $scope.notifier.danger(rawTx.error);
+            }
+            if (!$scope.$$phase) $scope.$apply();
+        });
+    }
+
     $scope.generateTx = function() {
         try {
             if ($scope.wallet == null)
@@ -215,8 +250,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         }
         $scope.tx.data = $scope.getTxData();
         $scope.tx.to = $scope.contract.address;
-        //$scope.sendContractModal.open();
-        // just generate the transaction
         $scope.generateTx();
     }
     //
@@ -229,6 +262,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     }
     //NOTE value is expected in wei
     $scope.doTransaction = function(address, func, input, value) {
+      console.log(address, func, input, value);
       if ($scope.wallet == null) {
         return;
       }
@@ -242,9 +276,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         data: ethFuncs.sanitizeHex(data),
       }
       estObj.to = address;
+      console.log(estObj);
       ethFuncs.estimateGas(estObj, function(data) {
         if (data.error) {
           // Proper input validation should prevent this.
+          console.log('gas estimation failed');
         } else {
           // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
           //TODO 1.8 is a bit much though. consult experts on why this can be so
@@ -649,28 +685,14 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     // READ: fill fields with requested data
     //
     $scope.readShipData = function(ship) {
-      //var ship = document.getElementById("getShipData_ship").value;
       $scope.validateShip(ship, function() {
         $scope.getShipData(ship, put);
       });
       function put(data) {
         $scope.ownedShips[ship]['state'] = data[1];
-        // only use this to fill out ownedShips
-        //var output = [
-        //  $scope.shipData_pilot,
-        //  $scope.shipData_state,
-        //  $scope.shipData_locked,
-        //  $scope.shipData_key,
-        //  $scope.shipData_revision,
-        //  $scope.shipData_parent,
-        //  $scope.shipData_escape,
-        //];
-        //$scope.testShipData = data;
-        //for (var i in data) {
-        //  output[i] = data[i];
-        //}
       }
     }
+
     $scope.readOwnedShips = function(addr) {
       if (!addr) {
         return;
@@ -767,6 +789,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.getSparkBalance(function(data) {
           $scope.balance = data[0] / $scope.oneSpark;
         });
+      } else {
+        // throw an error here
       }
     }
     $scope.readAllowance = function() {
@@ -775,13 +799,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       })
     }
     $scope.readSaleData = function(addr) {
-      //var addr = document.getElementById("sale_address").value;
       $scope.validateAddress(addr, function() {
         $scope.getSalePrice(addr, putPrice);
         $scope.getSalePlanets(addr, putPlanets);
       });
       function putPrice(data) {
-        //document.getElementById("sale_price").value = $scope.toEther(data[0]);
         $scope.sale_price = $scope.toEther(data[0]);
       }
       function putPlanets(data) {
@@ -793,18 +815,15 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
     $scope.readAuctionData = function(addr) {
-      //var addr = document.getElementById("auction_address").value;
       $scope.validateAddress(addr, function() {
         $scope.getAuctionWhitelisted(addr, putWhitelisted);
         $scope.getAuctionEndTime(addr, putTime);
         $scope.getAuctionDeposit(addr, putDeposit);
       });
       function putWhitelisted(data) {
-        //document.getElementById("auction_whitelisted").checked = data[0];
         $scope.auction_whitelisted = data[0];
       }
       function putTime(data) {
-        //document.getElementById("auction_time").value = data[0];
         $scope.auction_time = data[0];
       }
       function putDeposit(data) {
@@ -921,6 +940,23 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         }
         $scope.doTransaction($scope.contracts.constitution,
           "claimStar(uint16)",
+          [star]
+        );
+      }
+    }
+    $scope.doDeposit = function(star) {
+      // only going to worry about liquidating own star for now
+      $scope.validateStar(star, function() {
+        if ($scope.offline) return transact();
+        $scope.checkOwnership(star, function() {
+            $scope.checkState(star, 1, transact);
+        });
+      });
+      function transact() {
+        // will this bork if you enter a new pool address on the deposit screen?
+        console.log('transact! deposit');
+        $scope.doTransaction($rootScope.poolAddress,
+          "deposit(uint16)",
           [star]
         );
       }
