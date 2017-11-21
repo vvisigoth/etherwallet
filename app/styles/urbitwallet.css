@@ -1,6 +1,8 @@
 html {
   /* set this to 6, since this was the original base.css size */
+  /*
   font-size: 6px;
+  */
 }
 
 header 
@@ -96,19 +98,6 @@ div.spark-action
   line-height: 5rem;
 }
 
-
-div.row
-{
-  /* reset this to baseline */
-  font-size: 3rem;
-  line-height: 5rem;
-  font-weight: initial
-}
-
-div.row.body
-{
-}
-
 .vote-toggle .checkbox
 {
   background-color: inherit;
@@ -152,8 +141,15 @@ section.transaction-params .sub-title
 }
 */
 
+.addresses span.address 
+{
+  cursor: pointer;
+}
+
+
 span.address,
-span.sparks
+span.sparks,
+.monospace
 {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 }
@@ -176,12 +172,20 @@ input[type=text].confirmed
 }
 
 .input-group {
+  /*
   margin: 0px 0 2rem;
   height: 14rem;
+  */
 }
 
-.slim-input-group {
+.slim-input-group
+{
   height: 9rem;
+}
+
+.pool-input input
+{
+  font-size: 4rem;
 }
 
 .radio-buttons
