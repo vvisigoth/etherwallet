@@ -612,6 +612,14 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         callback
       );
     }
+    $scope.getIsTransferrer = function(ship, address, callback) {
+      $scope.readContractData($scope.contracts.ships,
+        "isTransferrer(uint32,address)",
+        [ship, address],
+        ["bool"],
+        callback
+      );
+    }
     $scope.getIsLauncher = function(ship, address, callback) {
       $scope.readContractData($scope.contracts.ships,
         "isLauncher(uint16,address)",
@@ -801,7 +809,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.key = data[0];
       }
     }
-    $scope.readIsLauncher = function(ship, addre) {
+    $scope.readIsLauncher = function(ship, addr) {
       $scope.validateParent(ship, function() {
         $scope.validateAddress(addr, function () {
           $scope.getIsLauncher(ship, addr, put);
@@ -866,8 +874,16 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //
     $scope.checkOwnership = function(ship, next) {
       $scope.getIsPilot(ship, $scope.wallet.getAddressString(), function(data) {
+        console.log('check ownership ', data);
         if (data[0]) return next();
         $scope.notifier.danger("Not your ship. " + ship);
+      });
+    }
+    $scope.checkIsTransferrer = function(ship, addr, next) {
+      $scope.getIsTransferrer(ship, addr, function(data) {
+        console.log('isTransferrer ', data);
+        if (data[0]) return next();
+        $scope.notifier.danger("Ship is not the transferrable by " + addr);
       });
     }
     $scope.checkState = function(ship, state, next) {
@@ -975,16 +991,17 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
     $scope.doDeposit = function(star) {
-      // only going to worry about liquidating own star for now
       $scope.validateStar(star, function() {
         if ($scope.offline) return transact();
-        $scope.checkOwnership(star, function() {
-            $scope.checkState(star, 1, transact);
-        });
+          //TODO state enum (latent)
+          $scope.checkIsTransferrer(star, $rootScope.poolAddress, function() {
+            $scope.checkOwnership(star, function() {
+              $scope.checkState(star, 1, transact);
+            });
+          });
       });
       function transact() {
         // will this bork if you enter a new pool address on the deposit screen?
-        console.log('transact! deposit');
         $scope.doTransaction($rootScope.poolAddress,
           "deposit(uint16)",
           [star]
@@ -1244,75 +1261,75 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         );
       }
     }
-    $scope.doBuyPlanet = function(addr, ship, index) {
-      //var addr = document.getElementById("buy_address").value;
-      //var ship = document.getElementById("buy_ship").value;
-      //var index = document.getElementById("buy_index").value;
-      $scope.validateAddress(addr, function() {
-        $scope.validateChild(ship, function() {
-          if ($scope.offline) return transact();
-          $scope.getSalePlanets(addr, checkPlanet);
-        });
-      });
-      function checkPlanet(data) {
-        var found = false;
-        for (var i in data[0]) {
-          if (data[0][i] == ship) {
-            found = true;
-            index = i;
-            break;
-          }
-        }
-        if (!found) return $scope.notifier.danger("Planet not available.");
-        $scope.checkSale(ship, addr, transact);
-      }
-      function transact(price) {
-        $scope.doTransaction(addr,
-          "buySpecific(uint256,uint32)",
-          [index, ship],
-          price
-       );
-      }
-    }
-    $scope.doBuyAnyPlanet = function(addr) {
-      //var addr = document.getElementById("buy_address").value;
-      $scope.validateAddress(addr, function() {
-        if ($scope.offline) return transact();
-        $scope.getSalePlanets(addr, checkAvailable);
-      });
-      function checkAvailable(data) {
-        if (data[0].length == 0) return $scope.notifier.danger("No more planets for sale.");
-        $scope.checkSale(data[0][data[0].length-1], addr, transact);
-      }
-      function transact(price) {
-        $scope.doTransaction(addr,
-          "buyAny()",
-          [],
-          price
-        );
-      }
-    }
-    $scope.doDepositBid = function(addr, amount) {
-      //var addr = document.getElementById("bid_address").value;
-      //var amount = document.getElementById("bid_amount").value;
-      amount = $scope.toWei(amount);
-      $scope.validateAddress(addr, function() {
-        if ($scope.offline) return transact();
-        $scope.checkBalance(amount, function() {
-          $scope.getAuctionWhitelisted(addr, function(data) {
-            if (data[0]) return transact();
-            $scope.notifier.danger("Not whitelisted as participant.");
-          });
-        });
-      });
-      function transact() {
-        $scope.doTransaction(addr,
-          "deposit()",
-          [],
-          amount
-        );
-      }
-    }
+    //$scope.doBuyPlanet = function(addr, ship, index) {
+    //  //var addr = document.getElementById("buy_address").value;
+    //  //var ship = document.getElementById("buy_ship").value;
+    //  //var index = document.getElementById("buy_index").value;
+    //  $scope.validateAddress(addr, function() {
+    //    $scope.validateChild(ship, function() {
+    //      if ($scope.offline) return transact();
+    //      $scope.getSalePlanets(addr, checkPlanet);
+    //    });
+    //  });
+    //  function checkPlanet(data) {
+    //    var found = false;
+    //    for (var i in data[0]) {
+    //      if (data[0][i] == ship) {
+    //        found = true;
+    //        index = i;
+    //        break;
+    //      }
+    //    }
+    //    if (!found) return $scope.notifier.danger("Planet not available.");
+    //    $scope.checkSale(ship, addr, transact);
+    //  }
+    //  function transact(price) {
+    //    $scope.doTransaction(addr,
+    //      "buySpecific(uint256,uint32)",
+    //      [index, ship],
+    //      price
+    //   );
+    //  }
+    //}
+    //$scope.doBuyAnyPlanet = function(addr) {
+    //  //var addr = document.getElementById("buy_address").value;
+    //  $scope.validateAddress(addr, function() {
+    //    if ($scope.offline) return transact();
+    //    $scope.getSalePlanets(addr, checkAvailable);
+    //  });
+    //  function checkAvailable(data) {
+    //    if (data[0].length == 0) return $scope.notifier.danger("No more planets for sale.");
+    //    $scope.checkSale(data[0][data[0].length-1], addr, transact);
+    //  }
+    //  function transact(price) {
+    //    $scope.doTransaction(addr,
+    //      "buyAny()",
+    //      [],
+    //      price
+    //    );
+    //  }
+    //}
+    //$scope.doDepositBid = function(addr, amount) {
+    //  //var addr = document.getElementById("bid_address").value;
+    //  //var amount = document.getElementById("bid_amount").value;
+    //  amount = $scope.toWei(amount);
+    //  $scope.validateAddress(addr, function() {
+    //    if ($scope.offline) return transact();
+    //    $scope.checkBalance(amount, function() {
+    //      $scope.getAuctionWhitelisted(addr, function(data) {
+    //        if (data[0]) return transact();
+    //        $scope.notifier.danger("Not whitelisted as participant.");
+    //      });
+    //    });
+    //  });
+    //  function transact() {
+    //    $scope.doTransaction(addr,
+    //      "deposit()",
+    //      [],
+    //      amount
+    //    );
+    //  }
+    //}
 
 }
 module.exports = urbitCtrl;
