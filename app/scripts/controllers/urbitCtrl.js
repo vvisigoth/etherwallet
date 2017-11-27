@@ -250,6 +250,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         }
         $scope.tx.data = $scope.getTxData();
         $scope.tx.to = $scope.contract.address;
+        //$scope.sendContractModal.open();
+        // just generate the transaction
         $scope.generateTx();
     }
     //
@@ -270,45 +272,73 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       $scope.tx.data = data;
       $scope.tx.value = value || 0;
       $scope.tx.unit = "wei";
-      var estObj = {
-        from: $scope.wallet.getAddressString(),
-        value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.tx.value)),
-        data: ethFuncs.sanitizeHex(data),
-      }
-      estObj.to = address;
-      console.log(estObj);
-      ethFuncs.estimateGas(estObj, function(data) {
-        if (data.error) {
-          // Proper input validation should prevent this.
-          console.log('gas estimation failed');
-        } else {
-          // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
-          //TODO 1.8 is a bit much though. consult experts on why this can be so
-          //     unpredictable, and how to fix it.
-          $scope.tx.gasLimit = Math.round(data.data * 1.8);
-          try {
-            if ($scope.wallet == null)
-            { throw globalFuncs.errorMsgs[3]; }
-            else if (!ethFuncs.validateHexString($scope.tx.data))
-            { throw globalFuncs.errorMsgs[9]; }
-            else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0)
-            { throw globalFuncs.errorMsgs[8]; }
-            $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
-            ajaxReq.getTransactionData($scope.wallet.getAddressString(), function(data) {
-              if (data.error) $scope.notifier.danger(data.msg);
-              data = data.data;
-              $scope.tx.to = address;
-              $scope.tx.contractAddr = $scope.tx.to;
-              $scope.showRaw = false;
-              //$scope.sendContractModal.open();
-              // just generate transaction with default amount and gas
-              $scope.generateTx();
-            });
-          } catch (e) {
-            $scope.notifier.danger(e);
-          }
+      if (!$scope.offline) {
+        var estObj = {
+          from: $scope.wallet.getAddressString(),
+          value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.tx.value)),
+          data: ethFuncs.sanitizeHex(data),
         }
-      });
+        estObj.to = address;
+        console.log(estObj);
+        ethFuncs.estimateGas(estObj, function(data) {
+          if (data.error) {
+            // Proper input validation should prevent this.
+            console.log('gas estimation failed');
+          } else {
+            // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
+            //TODO 1.8 is a bit much though. consult experts on why this can be so
+            //     unpredictable, and how to fix it.
+            $scope.tx.gasLimit = Math.round(data.data * 1.8);
+            try {
+              if ($scope.wallet == null)
+              { throw globalFuncs.errorMsgs[3]; }
+              else if (!ethFuncs.validateHexString($scope.tx.data))
+              { throw globalFuncs.errorMsgs[9]; }
+              else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0)
+              { throw globalFuncs.errorMsgs[8]; }
+              $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
+              ajaxReq.getTransactionData($scope.wallet.getAddressString(), function(data) {
+                if (data.error) $scope.notifier.danger(data.msg);
+                data = data.data;
+                $scope.tx.to = address;
+                $scope.tx.contractAddr = $scope.tx.to;
+                $scope.showRaw = false;
+                //$scope.sendContractModal.open();
+                // just generate transaction with default amount and gas
+                $scope.generateTx();
+              });
+            } catch (e) {
+              $scope.notifier.danger(e);
+            }
+          }
+        });
+      } else {
+        $scope.tx.to = address;
+        //$scope.tx = {
+        //    gasLimit: globalFuncs.defaultTxGasLimit,
+        //    from: "",
+        //    data: "",
+        //    to: "",
+        //    unit: "ether",
+        //    value: '',
+        //    nonce: null,
+        //    gasPrice: null,
+        //    donate: false
+        //}
+        $scope.tokenTx = {
+            to: '',
+            value: 0,
+            id: 'ether',
+            gasLimit: 150000
+        };
+        $scope.localToken = {
+            contractAdd: "",
+            symbol: "",
+            decimals: "",
+            type: "custom",
+        };
+        $scope.generateTxOffline();
+      }
     }
     $scope.readContractData = function(address, func, input, outTypes, callback) {
         $scope.contract.address = address;
