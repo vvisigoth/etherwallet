@@ -4,7 +4,7 @@
   <span class="address row text-700">
     {{ wallet.getAddressString() }}
   </span>
-  <section class="general-information">
+  <section class="general-information mb-6">
     <h1 id="action-title row">Deposit</h1>
     <div class="help-text row">
       <p class="col-md-8"><em>Note:</em> you must <a href="" ng-click="path('state/' + offline ? 'offline' : shipName + '/allowtransfer')">allow transfer</a> of a ship before depositing it. Once you deposit a ship to a pool, you give up ownership of the ship and will be issued a Spark token (USP).
@@ -15,23 +15,17 @@
   </section>
   <section class="transaction-params">
     <div class="label-group">
-      <span class="sub-title text-700">Ship to deposit:</span>
+      <h4 class="sub-title">Ship to deposit:</h4>
       <h2 class="ship-name blue" ng-show="shipName != ''">
         {{ shipName[0] == '~' ? shipName : '~' + shipName }}
       </h2>
-    </div>
-    <div class="input-group row slim-input-group">
-      <div class="checkbox-container col-md-1">
-        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
-      </div>
-      <label class="action-confirmation">Yes I am sure</label>
     </div>
     <!-- show this offline -->
     <div ng-init="shipError = false" 
       ng-class="shipError ? 'error input-group' : 'input-group'" 
       ng-show="offline">
       <input type="text" 
-        class="gray-light-hl text-700 col-md-8" 
+        class="col-md-8" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 
         value="Star Name" 
@@ -41,7 +35,7 @@
     <!-- /show this offline -->
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
       <input type="text" 
-        class="gray-light-hl text-700 text-code col-md-12" 
+        class="monospace col-md-12" 
         ng-change="addressError = valAddress(poolAddress)" 
         ng-model="poolAddress" value="Address" placeholder="pool-address">
       <div class="error-label">Not a valid address</div>
@@ -51,7 +45,7 @@
       <div ng-init="gasLimitError = false" 
         ng-class="gasLimitError ? 'error input-group' : 'input-group'">
         <input type="text" 
-          class="gray-light-hl text-700 col-md-4" 
+          class="col-md-4" 
           ng-change="gasLimitError = tx.gasLimit > 3000000"
           ng-model="tx.gasLimit" 
           value="Gas Limit" 
@@ -61,40 +55,53 @@
       <div ng-init="nonceError = false" 
         ng-class="nonceError ? 'error input-group' : 'input-group'">
         <input type="text" 
-          class="gray-light-hl text-700 col-md-4" 
-          ng-model="tx.nonce" 
+          class="col-md-4" 
+          ng-model="nonceDec" 
           value="nonce" 
           placeholder="nonce">
       </div>
       <div ng-init="gasPriceError = false" 
         ng-class="gasPriceError ? 'error input-group' : 'input-group'">
         <input type="text" 
-          class="gray-light-hl text-700 col-md-4" 
-          ng-model="tx.gasPrice" 
+          class="col-md-4" 
+          ng-model="gasPriceDec" 
           value="gasPrice" 
           placeholder="gas-price">
       </div>
     </div>
     <!-- /show these offline -->
+    <div class="input-group row">
+      <div class="checkbox-container">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" 
+          ng-click="checked = checked == true ? false : true">
+        </div>
+      </div>
+      <label class="action-confirmation ml-4">Yes I am sure</label>
+    </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="checked && !addressError && poolAddress ? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+    <button ng-class="checked && !addressError && poolAddress ? 'btn btn-secondary' : 'btn disabled'" 
       ng-click="checked && !addressError && poolAddress ? doDeposit(ob.toAddress(shipName)) : ''" >
       Create
     </button>
   </section>
-  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
-    <label>Raw Tx</label>
-    <div class="raw-tx row col-md-8 text-code tx">
+  <section class="transaction-data" 
+    ng-show="rawTx" 
+    ng-init="sent = false">
+    <h4>Raw Tx</h4>
+    <div class="raw-tx row col-md-8 text-code tx input-group">
       {{ rawTx }}
     </div>
-    <label>Signed Tx</label>
-    <div class="signed-tx row col-md-8 text-code tx">
+    <h4>Signed Tx</h4>
+    <div class="signed-tx row col-md-8 text-code tx input-group">
       {{ signedTx }}
     </div>
-    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-show="!sent && !offline" 
-      class="btn btn-primary" 
-      ng-click="sendTx(); sent = true;">
+    <button class="btn btn-tetiary" 
+      ng-click="path('state')">
+      &#8592 Back
+    </button>
+    <button ng-show="!offline" ng-init="sent = false"
+      ng-class="!sent ? 'btn btn-primary' : 'btn disabled'"
+      ng-click="sendTx(); sent = true">
       Send
     </button>
   </section>

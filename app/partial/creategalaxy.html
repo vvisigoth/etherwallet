@@ -1,52 +1,116 @@
-<div id=create-galaxy" class="col-md-12 transaction" ng-init="loadAddresses();">
-  <span class="address row">{{ wallet.getAddressString() }}</span>
+<div id=create-galaxy" 
+  class="col-md-12 transaction" 
+  ng-init="loadAddresses();">
+  <span class="address row">
+    {{ wallet.getAddressString() }}
+  </span>
   <!-- GENERAL INFORMATION ABOUT TRANSACTION -->
-  <section class="general-information">
+  <section class="general-information mb-6">
     <h1 id="action-title row">Create galaxy</h1>
     <div class="help-text row">
       <p class="col-md-8"> As the constitution owner, you can create a galaxy.
+      </p>
+      <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
     </div>
   </section>
   <!-- TRANSACTION PARAMS -->
   <section class="transaction-params">
-    <!-- this section changes with transaction type -->
-    <div ng-init="galaxyError = false" ng-class="galaxyError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="galaxyError = valGalaxy(galaxy)" ng-model="galaxy" value="Galaxy Name" placeholder="galaxy">
+    <div ng-init="galaxyError = false" 
+      ng-class="galaxyError ? 'error input-group' : 'input-group'">
+      <input type="text" 
+        class="col-md-4" 
+        ng-change="galaxyError = valGalaxy(galaxy)" 
+        ng-model="galaxy" value="Galaxy Name" 
+        placeholder="galaxy">
       <div class="error-label">Ship {{ galaxy }} is not a galaxy</div>
     </div>
-    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(address)" ng-model="address" value="Galaxy Name" placeholder="new-address">
+    <div ng-init="addressError = false" 
+      ng-class="addressError ? 'error input-group' : 'input-group'">
+      <input type="text" 
+        class="col-md-12 monospace" 
+        ng-change="addressError = valAddress(address)" 
+        ng-model="address" value="Galaxy Name" 
+        placeholder="new-address">
       <div class="error-label">Not a valid address</div>
     </div>
-    <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
+    <div ng-init="lockTimeError = false" 
+      ng-class="lockTimeError ? 'error input-group' : 'input-group'">
+      <input type="text" 
+        class="col-md-4" 
+        ng-change="lockTimeError = valTimestamp(locktime)" 
+        ng-model="locktime" 
+        value="Lock Time" 
+        placeholder="lock-time">
       <div class="error-label">Lock time must be positive</div>
     </div>
-    <div ng-init="completeTimeError = false" ng-class="completeTimeError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="completeTimeError = valTimestamp(completetime)" ng-model="completetime" value="Complete Time" placeholder="complete-time">
+    <div ng-init="completeTimeError = false" 
+      ng-class="completeTimeError ? 'error input-group' : 'input-group'">
+      <input type="text" 
+        class="col-md-4" 
+        ng-change="completeTimeError = valTimestamp(completetime)" 
+        ng-model="completetime" 
+        value="Complete Time" 
+        placeholder="complete-time">
       <div class="error-label">Complete time must be positive</div>
     </div>
-    <!--
-    <button ng-class="btn btn-secondary" ng-click="doCreateGalaxy(galaxy, address, locktime, completetime)" >Create</button>
-    -->
-    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn btn-tetiary disabled'" 
+    <!-- show these offline -->
+    <div class="offline-params" ng-show="offline">
+      <div ng-init="gasLimitError = false" 
+        ng-class="gasLimitError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="col-md-4" 
+          ng-change="gasLimitError = tx.gasLimit > 3000000"
+          ng-model="tx.gasLimit" 
+          value="Gas Limit" 
+          placeholder="gas-limit">
+        <div class="error-label">{{ tx.gasLimit }} is too high</div>
+      </div>
+      <div ng-init="nonceError = false" 
+        ng-class="nonceError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="col-md-4" 
+          ng-model="nonceDec" 
+          value="nonce" 
+          placeholder="nonce">
+      </div>
+      <div ng-init="gasPriceError = false" 
+        ng-class="gasPriceError ? 'error input-group' : 'input-group'">
+        <input type="text" 
+          class="col-md-4" 
+          ng-model="gasPriceDec" 
+          value="gasPrice" 
+          placeholder="gas-price">
+      </div>
+    </div>
+    <!-- /show these offline -->
+    <button class="btn btn-tetiary" 
+      ng-click="path('state')">&#8592 Back</button>
+    <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn disabled'" 
       ng-click="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? doCreateGalaxy(galaxy, address, locktime, completetime): ''">
       Create
     </button>
   </section>
   <!-- RAW AND SIGNED TRANSACTIONS-->
-  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
-    <label>Raw Tx</label>
-    <div class="raw-tx row col-md-8 text-code tx">
+  <section class="transaction-data" 
+    ng-show="rawTx" 
+    ng-init="sent = false">
+    <h4>Raw Tx</h4>
+    <div class="raw-tx row col-md-8 text-code tx input-group">
       {{ rawTx }}
     </div>
-    <label>Signed Tx</label>
-    <div class="signed-tx row col-md-8 text-code tx">
+    <h4>Signed Tx</h4>
+    <div class="signed-tx row col-md-8 text-code tx input-group">
       {{ signedTx }}
     </div>
-    <button class="btn btn-primary" ng-click="sendTx()">Send</button>
-    <button class="btn btn-tetiary" ng-click="path('state'); sent = true" >&#8592 Back</button>
+    <button class="btn btn-tetiary" 
+      ng-click="path('state')">
+      &#8592 Back
+    </button>
+    <button ng-show="!offline" ng-init="sent = false"
+      ng-class="!sent ? 'btn btn-primary' : 'btn disabled'"
+      ng-click="sendTx(); sent = true">
+      Send
+    </button>
   </section>
 </div>

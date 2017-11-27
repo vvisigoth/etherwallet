@@ -4,7 +4,7 @@
     <h1 id="action-title row">Let's get started</h1>
   </section>
   <section class="tree-list online-mode" ng-show="uiState == 0">
-    <ul class="h4">
+    <ul class="">
       <li>
         <span class="gray" ng-click="setOffline(); path('state');"><u>Offline</u></span>
       </li>
@@ -14,7 +14,7 @@
     </ul>
   </section>
   <section class="tree-list node-select" ng-show="uiState == 1">
-    <ul class="h4">
+    <ul class="">
       <li>
         <span class="blue" ng-click="uiState = 2"><u>Add a new custom node</u></span>
       </li>
@@ -30,7 +30,7 @@
 
       <div class="input-group">
         <label>Node Name</label>
-        <input class="gray-light-hl text-700"
+        <input class=""
            type="text"
            placeholder="My ETH Node"
            ng-model="customNode.name"
@@ -38,7 +38,7 @@
       </div>
       <div class="clearfix col-xs-9">
         <label>URL</label>
-        <input class="gray-light-hl text-700"
+        <input class=""
           type="text" 
           placeholder="http://127.0.0.1" 
           ng-model="customNode.url" 
@@ -46,7 +46,7 @@
       </div>
       <div class="input-group">
         <label class="NODE_Port">Port</label>
-        <input class="gray-light-hl text-700"
+        <input class=""
           type="text" 
           placeholder="8545" 
           ng-model="customNode.port" 
@@ -62,14 +62,14 @@
       </div>
       <div class="input-group" ng-show="customNode.httpBasicAuth">
         <label>User</label>
-        <input class="gray-light-hl text-700"
+        <input class=""
           type="text" 
           ng-model="customNode.httpBasicAuth.user" 
           ng-class="customNode.httpBasicAuth &amp;&amp; customNode.httpBasicAuth.user.length > 0 ? 'is-valid' : 'is-invalid'">
       </div>
       <div class="input-group" ng-show="customNode.httpBasicAuth">
         <label>Password</label>
-        <input class="gray-light-hl text-700"
+        <input class=""
           type="password" 
           ng-model="customNode.httpBasicAuth.password" 
           ng-class="customNode.httpBasicAuth &amp;&amp; customNode.httpBasicAuth.password.length > 0 ? 'is-valid' : 'is-invalid'">

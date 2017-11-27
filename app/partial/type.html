@@ -51,7 +51,7 @@
       <h1 class="">Connect your Ledger</h1>
       <ol>
         <li class="red" ng-hide="isSSL">
-          You must access My Urbit Wallet via a secure(SSL / HTTPS) connection to connect to your Ledger device.
+          You must access this Urbit Wallet via a secure(SSL / HTTPS) connection to connect to your Ledger device. In order to do so, please read the README.md that came with this repo.
         </li>
         <li>
           Connect your Ledger Wallet
@@ -90,8 +90,9 @@
 
     <!-- if selected type MetaMask-->
     <div id="selectedTypeMetamask" ng-if="walletType=='metamask'">
+      <h1>Connect with MetaMask</h1>
       <p class="text-danger red" ng-hide="isSSL">
-          You must access MyEtherWallet via a secure(SSL / HTTPS) connection to connect.
+          You must access this Urbit Wallet via a secure(SSL / HTTPS) connection to connect to your MetaMask wallet. In order to do so, please read the README.md that came with this repo.
       </p>
       <div class="text-center">
         <h3>Help:</h3>
@@ -213,13 +214,13 @@
     <!-- if selected type digitalBitbox-->
     <div id="selectedTypeDigitalBitbox" ng-if="walletType=='digitalBitbox'&&!showModal">
       <div class="form-group">
-        <a tabindex="0" role="button" class="btn btn-primary btn-block" ng-click="scanDigitalBitbox()" translate="ADD_DigitalBitbox_scan">
+        <a tabindex="0" role="button" class="btn btn-primary btn-block" ng-click="scanDigitalBitbox()">
           SCAN
         </a>
       </div>
       <input class="form-control" aria-label="Enter the Digital Bitbox password" aria-describedby="selectedTypeDigitalBitbox" type="password" placeholder="Digital Bitbox password" spellcheck="false" value="" ng-model="HDWallet.digitalBitboxSecret" />
       <ol>
-        <li id="aria7" tabinex="0" translate="ADD_DigitalBitbox_0a" class="text-danger" ng-hide="isSSL">
+        <li id="aria7" tabinex="0" class="text-danger" ng-hide="isSSL">
           Re-open MyEtherWallet on a secure (SSL) connection
         </li>
       </ol>
@@ -240,7 +241,7 @@
 
     <!-- if selected addressOnly-->
     <div id="selectedTypeKey" ng-if="walletType=='addressOnly'">
-      <h4 translate="x_Address"> Your Address </h4>
+      <h4>Your Address</h4>
       <div class="form-group">
         <textarea rows="4"
                   id="aria8"
@@ -280,15 +281,17 @@
   <section class="col-md-4 col-sm-6" ng-show="showFDecrypt||showPDecrypt||showMDecrypt||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox'||showAOnly||showParityDecrypt">
   <section class="col-md-4 col-sm-6" ng-show="(showPDecrypt||showFDecrypt||walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
   -->
-  <section class="col-md-4 col-sm-6" ng-show="(walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
+  <section class="col-md-4 col-sm-6" ng-show="(walletType=='fileupload'||walletType=='pasteprivkey'||walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
     <!--
     <h4 id="uploadbtntxt-wallet" ng-show="showFDecrypt||showPDecrypt||showMDecrypt" translate="ADD_Label_6">
       Access Your Wallet:
     </h4>
     -->
     <div class="form-group">
+      <!--only show for mnemonic, priv-->
       <button
       ng-class="showFDecrypt||showPDecrypt||showMDecrypt||showParityDecrypt ? 'btn btn-primary': 'btn'"
+      ng-hide="walletType=='ledger'||walletType=='trezor'"
       ng-disabled="!showFDecrypt&&!showPDecrypt&&!showMDecrypt&&!showParityDecrypt"
       ng-click="decryptWallet();"
       >Unlock</button>
@@ -302,13 +305,10 @@
       >Unlock</a>
     </div>
     <div class="form-group">
-      <a class="btn btn-primary btn-block"
+      <button class="btn btn-primary btn-block"
          ng-click="scanLedger()"
          ng-show="walletType=='ledger'"
-         role="button"
-         tabindex="0"
-         translate="ADD_Ledger_scan"
-      > SCAN </a>
+      >Connect to Ledger</button>
     </div>
   </section>
 
@@ -374,9 +374,12 @@
             </form>
             <div class="">
               <button class="btn btn-primary pull-right"
-                      ng-click="setHDWallet()"> Access Wallet 
+                      ng-click="setHDWallet()"> 
+              Access Wallet 
               </button>
-              <button class="btn btn-default pull-right"> Cancel 
+              <button class="btn btn-default pull-right" 
+                ng-click="showModal = false"> 
+              Cancel 
               </button>
             </div>
         </div>

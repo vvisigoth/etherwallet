@@ -4,7 +4,7 @@
   <span class="address row text-700">
     {{ wallet.getAddressString() }}
   </span>
-  <section class="general-information">
+  <section class="general-information mb-6">
     <h1 id="action-title row">Launch</h1>
     <div class="help-text row">
       <p class="col-md-8">In order to launch a ship, the ship must be latent and you must be the owner of the ship's parent.
@@ -15,24 +15,18 @@
   </section>
   <section class="transaction-params">
       <div class="label-group" ng-show="ship">
-      <span class="sub-title text-700">Ship to launch:</span>
+      <h4 class="sub-title text-700">Ship to launch:</h4>
       <h2 class="ship-name blue">~{{ toShipName(ship) }}</h2>
     </div>
-    <div class="input-group row slim-input-group">
-      <div class="checkbox-container col-md-1">
-        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" ng-click="checked = checked == true ? false : true"></div>
-      </div>
-      <label class="action-confirmation">Yes I am sure</label>
-    </div>
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
-      <input type="text" ng-class="isState ? 'gray-light-hl text-700 confirmed col-md-8' : 'gray-light-hl text-700 col-md-8'" ng-change="shipError = valShip(ship); isState = false" ng-model="ship" value="Star Name" placeholder="ship">
+      <input type="text" ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" ng-change="shipError = valShip(ship); isState = false" ng-model="ship" value="Star Name" placeholder="ship">
     </div>
     <!-- show this offline -->
     <div ng-init="shipError = false" 
       ng-class="shipError ? 'error input-group' : 'input-group'" 
       ng-show="offline">
       <input type="text" 
-        class="gray-light-hl text-700 col-md-8" 
+        class="col-md-8" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 
         value="Star Name" 
@@ -41,15 +35,15 @@
     </div>
     <!-- /show this offline -->
     <div class="input-group">
-      <button class="btn btn-primary" ng-click="ship = getChildCandidate(ob.toAddress(shipName)); isState = false">Generate</button>
-      <button ng-show="!offline" ng-class="isState ? 'btn btn-tetiary' : 'btn btn-secondary'" ng-click="readIsState(ship, 0)">Confirm</button>
+      <button class="btn btn-primary" ng-click="ship = getChildCandidate(ob.toAddress(shipName)); isState = false">Suggest valid ship</button>
+      <button ng-show="!offline" ng-class="isState || !ship ? 'btn disabled' : 'btn btn-secondary'" ng-click="readIsState(ship, 0)">Confirm</button>
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-12 text-code" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="new-address">
+      <input type="text" class="col-md-12 monospace" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="new-address">
       <div class="error-label">Not a valid address</div>
     </div>
     <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700 col-md-4" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
+      <input type="text" class="col-md-4 monospace" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
       <div class="error-label">Lock time must be positive</div>
     </div>
     <!-- show these offline -->
@@ -57,7 +51,7 @@
       <div ng-init="gasLimitError = false" 
         ng-class="gasLimitError ? 'error input-group' : 'input-group'">
         <input type="text" 
-          class="gray-light-hl text-700 col-md-4" 
+          class="col-md-4" 
           ng-change="gasLimitError = tx.gasLimit > 3000000"
           ng-model="tx.gasLimit" 
           value="Gas Limit" 
@@ -67,40 +61,53 @@
       <div ng-init="nonceError = false" 
         ng-class="nonceError ? 'error input-group' : 'input-group'">
         <input type="text" 
-          class="gray-light-hl text-700 col-md-4" 
-          ng-model="tx.nonce" 
+          class="col-md-4" 
+          ng-model="nonceDec" 
           value="nonce" 
           placeholder="nonce">
       </div>
       <div ng-init="gasPriceError = false" 
         ng-class="gasPriceError ? 'error input-group' : 'input-group'">
         <input type="text" 
-          class="gray-light-hl text-700 col-md-4" 
-          ng-model="tx.gasPrice" 
+          class="col-md-4" 
+          ng-model="gasPriceDec" 
           value="gasPrice" 
           placeholder="gas-price">
       </div>
     </div>
     <!-- /show these offline -->
+    <div class="input-group row">
+      <div class="checkbox-container">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" 
+          ng-click="checked = checked == true ? false : true">
+        </div>
+      </div>
+      <label class="action-confirmation ml-4">Yes I am sure</label>
+    </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="checked && !shipError && ship && !addressError && address &&  !lockTimeError && locktime? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
       ng-click="checked && !shipError && ship && !addressError && address &&  !lockTimeError && locktime ? doLaunch(ship, address): ''">
       Create
     </button>
   </section>
-  <section class="transaction-data" ng-show="rawTx" ng-init="sent = false">
-    <label>Raw Tx</label>
-    <div class="raw-tx row col-md-8 text-code tx">
+  <section class="transaction-data" 
+    ng-show="rawTx" 
+    ng-init="sent = false">
+    <h4>Raw Tx</h4>
+    <div class="raw-tx row col-md-8 text-code tx input-group">
       {{ rawTx }}
     </div>
-    <label>Signed Tx</label>
-    <div class="signed-tx row col-md-8 text-code tx">
+    <h4>Signed Tx</h4>
+    <div class="signed-tx row col-md-8 text-code tx input-group">
       {{ signedTx }}
     </div>
-    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-show="!sent && !offline" 
-      class="btn btn-primary" 
-      ng-click="sendTx(); sent = true;">
+    <button class="btn btn-tetiary" 
+      ng-click="path('state')">
+      &#8592 Back
+    </button>
+    <button ng-show="!offline" ng-init="sent = false"
+      ng-class="!sent ? 'btn btn-primary' : 'btn disabled'"
+      ng-click="sendTx(); sent = true">
       Send
     </button>
   </section>
