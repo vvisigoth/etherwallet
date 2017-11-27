@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="css/urbitwallet.css">
 <!--
 <base href="/">
-<link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 -->
+<link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 <script type="text/javascript" src="js/urbitwallet-static.min.js"></script>
 <script type="text/javascript" src="js/urbitwallet-master.js"></script>
 <!--
@@ -26,13 +26,13 @@
 <section class="container" style="min-height: 50%" ng-controller='viewCtrl'>
   <ng-view></ng-view>
 
-  <div data-ng-repeat="alert in notifier.alerts">
+  <div data-ng-repeat="alert in notifier.alerts" ng-click="alert.close()">
     <div class="alert popup alert-{{alert.type}} animated-show-hide"
          style="bottom: {{85*$index}}px; z-index: {{999+$index}};">
       <div class="container">
-        <div class='alert-message' ng-bind-html="alert.message"></div>
+        <div class="alert-message col-md-10" ng-bind-html="alert.message">
+        </div>
       </div>
-      <i class="icon-close" ng-click="alert.close()"></i>
     </div>
   </div>
 
