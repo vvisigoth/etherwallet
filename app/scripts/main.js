@@ -158,6 +158,10 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.purchase,
             controller: 'urbitCtrl'
         })
+        .when('/state/withdraw', {
+            template: templateService.withdraw,
+            controller: 'urbitCtrl'
+        })
         .when('/state/creategalaxy', {
             template: templateService.createGalaxy,
             controller: 'urbitCtrl'
