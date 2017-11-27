@@ -1008,6 +1008,17 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         );
       }
     }
+    $scope.doWithdraw = function(star) {
+      $scope.validateStar(star, function() {
+        return transact();
+      });
+      function transact() {
+        $scope.doTransaction($rootScope.poolAddress,
+          "withdraw(uint16)",
+          [star]
+        );
+      }
+    }
     $scope.doLiquidateStar = function(star) {
       var parent = star % 256;
       $scope.validateStar(star, function() {
