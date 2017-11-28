@@ -28,3 +28,10 @@ Urbit constitution.
 6. In order to connect to your testnet, click the Node indicator in the header (usually defaults to ETH). Click through the wizard to set up a custom node. The placeholders will be the default for the testrpc node.
 10. You are now authenticated and can perform operations that require that. By default, your address is `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`. Go give yourself a galaxy.
 
+### Useful addresses
+Constitution owner (is allowed to create galaxies): `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`
+
+Test pool: `0xb71c0b6cee1bcae56dfe95cd9d3e41ddd7eafc43`
+
+
+
