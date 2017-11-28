@@ -1,7 +1,4 @@
-<!--
-<wallet-decrypt-drtv></wallet-decrypt-drtv>
--->
-
+<!-- tried to keep this as close to original as possible -->
 <article class="block decrypt-drtv clearfix" ng-controller='decryptWalletCtrl as $crtl'>
   <!-- Column 1 - Select Type of Key -->
   <section class="select-type" ng-init="walletType=''" ng-show="!walletType">
@@ -27,7 +24,9 @@
     <div id="selectedUploadKey" ng-if="walletType=='fileupload'">
       <h1>Select your wallet file</h1>
       <div class="input-group">
-        <input style="display:none;" type="file" on-read-file="showContent($fileContent)" id="fselector" />
+        <input style="display:none;" 
+          type="file" on-read-file="showContent($fileContent)" 
+          id="fselector" />
         <button class="btn btn-primary marg-v-sm"
            ng-click="openFileDialog()"
            
@@ -44,7 +43,6 @@
       </div>
     </div>
     <!-- /if selected keystore -->
-
 
     <!-- if selected type ledger-->
     <div id="selectedTypeLedger" ng-if="walletType=='ledger'&&!showModal">
@@ -218,7 +216,12 @@
           SCAN
         </a>
       </div>
-      <input class="form-control" aria-label="Enter the Digital Bitbox password" aria-describedby="selectedTypeDigitalBitbox" type="password" placeholder="Digital Bitbox password" spellcheck="false" value="" ng-model="HDWallet.digitalBitboxSecret" />
+      <input class="form-control" 
+        type="password" 
+        placeholder="Digital Bitbox password" 
+        spellcheck="false" 
+        value="" 
+        ng-model="HDWallet.digitalBitboxSecret" />
       <ol>
         <li id="aria7" tabinex="0" class="text-danger" ng-hide="isSSL">
           Re-open MyEtherWallet on a secure (SSL) connection
@@ -277,16 +280,7 @@
   <!-- / Column 2 - Unlock That Key -->
 
   <!-- Column 3 - The Unlock Button -->
-  <!--
-  <section class="col-md-4 col-sm-6" ng-show="showFDecrypt||showPDecrypt||showMDecrypt||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox'||showAOnly||showParityDecrypt">
-  <section class="col-md-4 col-sm-6" ng-show="(showPDecrypt||showFDecrypt||walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
-  -->
   <section class="col-md-4 col-sm-6" ng-show="(walletType=='fileupload'||walletType=='pasteprivkey'||walletType=='pastemnemonic'||walletType=='ledger'||walletType=='trezor'||walletType=='digitalBitbox')&&!showModal">
-    <!--
-    <h4 id="uploadbtntxt-wallet" ng-show="showFDecrypt||showPDecrypt||showMDecrypt" translate="ADD_Label_6">
-      Access Your Wallet:
-    </h4>
-    -->
     <div class="form-group">
       <!--only show for mnemonic, priv-->
       <button

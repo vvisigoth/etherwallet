@@ -4,12 +4,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     // add route params to scope
     $scope.$routeParams = $routeParams;
 
+    // ++  ob 
     $scope.ob = obService;
 
     //$scope.poolAddress;
     $scope.sparkBal = 0;
 
-    //Offline status done through rootScope
+    //Offline status and poolAddress done through rootScope for persistence
     $scope.offline = $rootScope.offline;
 
     $scope.poolAddress = $rootScope.poolAddress;
@@ -33,6 +34,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     $scope.nonceDec;
     $scope.gasPriceDec;
 
+    // Ship states for UI
     $scope.shipStates = ['Latent', 'Locked', 'Living']; 
 
     $scope.contract = {
@@ -264,7 +266,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     }
     //NOTE value is expected in wei
     $scope.doTransaction = function(address, func, input, value) {
-      console.log(address, func, input, value);
       if ($scope.wallet == null) {
         return;
       }
@@ -279,11 +280,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
           data: ethFuncs.sanitizeHex(data),
         }
         estObj.to = address;
-        console.log(estObj);
         ethFuncs.estimateGas(estObj, function(data) {
           if (data.error) {
             // Proper input validation should prevent this.
-            console.log('gas estimation failed');
           } else {
             // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
             //TODO 1.8 is a bit much though. consult experts on why this can be so
@@ -314,17 +313,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         });
       } else {
         $scope.tx.to = address;
-        //$scope.tx = {
-        //    gasLimit: globalFuncs.defaultTxGasLimit,
-        //    from: "",
-        //    data: "",
-        //    to: "",
-        //    unit: "ether",
-        //    value: '',
-        //    nonce: null,
-        //    gasPrice: null,
-        //    donate: false
-        //}
         $scope.tokenTx = {
             to: '',
             value: 0,
@@ -359,10 +347,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       $scope.contracts.votes = "0x0654b24a5da81f6ed1ac568e802a9d6b21483561";
       $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
       $scope.contracts.constitution = '0x56db68f29203ff44a803faa2404a44ecbb7a7480';
-      //$scope.getShipsOwner(function(data) {
-      //    $scope.contracts.constitution = data[0];
-      //  };
-      //});
     }
     ////
     //// VALIDATE: validate input data
@@ -454,8 +438,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
 
-
+    //
     //UI Conviences
+    //
     $scope.buildOwnedShips = function() {
       readOwnedShips();
     };
@@ -730,7 +715,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.ownedShips[ship]['state'] = data[1];
       }
     }
-
     $scope.readOwnedShips = function(addr) {
       if (!addr) {
         return;
@@ -820,9 +804,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
     $scope.readBalance = function() {
-      console.log('readbalance called');
-      console.log($rootScope.poolAddress);
-      console.log($scope.poolAddress);
       if ($rootScope.poolAddress) {
         $scope.getSparkBalance(function(data) {
           $scope.balance = data[0] / $scope.oneSpark;
@@ -874,14 +855,12 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //
     $scope.checkOwnership = function(ship, next) {
       $scope.getIsPilot(ship, $scope.wallet.getAddressString(), function(data) {
-        console.log('check ownership ', data);
         if (data[0]) return next();
         $scope.notifier.danger("Not your ship. " + ship);
       });
     }
     $scope.checkIsTransferrer = function(ship, addr, next) {
       $scope.getIsTransferrer(ship, addr, function(data) {
-        console.log('isTransferrer ', data);
         if (data[0]) return next();
         $scope.notifier.danger("Ship is not the transferrable by " + addr);
       });
