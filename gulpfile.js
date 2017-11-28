@@ -70,7 +70,6 @@ gulp.task('html', function(done) {
 });
 
 
-
 // styles: Compile and Minify Less / CSS Files
 let less_watchFolder = app + 'styles/**/*.less';
 let less_srcFile = app + 'styles/urbitwallet-master.less';
@@ -163,6 +162,13 @@ gulp.task('staticJS', function() {
 });
 
 
+// Copy CSS on update (we're not using less here)
+let cssSrcFolder = app + 'styles/*.css';
+
+gulp.task('copyCss', function() {
+    return gulp.src(cssSrcFolder)
+               .pipe(gulp.dest(dist + 'css'));
+});
 
 // Copy
 let imgSrcFolder = app + 'images/**/*';
@@ -173,7 +179,6 @@ let jQueryFile = app + 'scripts/staticJS/jquery-1.12.3.min.js';
 let bin = app + '/bin/*';
 let staticJSSrcFile = js_destFolderStatic + js_destFileStatic;
 let readMe = './README.md';
-
 
 gulp.task('copy', ['staticJS'], function() {
     gulp.src(imgSrcFolder)
@@ -387,6 +392,7 @@ gulp.task('watchJS',      function() { gulp.watch(js_watchFolder,   ['js']      
 gulp.task('watchJSDebug', function() { gulp.watch(js_watchFolder,   ['js-debug']      ) })
 gulp.task('watchJSProd',  function() { gulp.watch(js_watchFolder,   ['js-production'] ) })
 gulp.task('watchLess',    function() { gulp.watch(less_watchFolder, ['styles']        ) })
+gulp.task('watchCss',    function() { gulp.watch(cssSrcFolder) })
 gulp.task('watchPAGES',   function() { gulp.watch(htmlFiles,        ['html']          ) })
 gulp.task('watchTPL',     function() { gulp.watch(tplFiles,         ['html']          ) })
 gulp.task('watchCX',      function() { gulp.watch(cxSrcFiles,       ['copy']          ) })
@@ -405,10 +411,10 @@ gulp.task('zipit',  function(cb) { runSequence('clean', 'zip', cb);             
 
 gulp.task('commit', function(cb) { runSequence('add', 'commitV', 'tag', cb);                   });
 
-gulp.task('watch',     ['watchJS',     'watchLess', 'watchPAGES', 'watchTPL', 'watchCX'])
+gulp.task('watch',     ['watchJS',     'watchLess', 'watchPAGES', 'watchTPL', 'watchCss', 'watchCX'])
 gulp.task('watchProd', ['watchJSProd', 'watchLess', 'watchPAGES', 'watchTPL', 'watchCX'])
 
-gulp.task('build', ['js', 'html', 'styles', 'copy']);
+gulp.task('build', ['js', 'html', 'styles', 'copy', 'copyCss']);
 gulp.task('build-debug', ['js-debug', 'html', 'styles', 'watchJSDebug', 'watchLess', 'watchPAGES', 'watchTPL', 'watchCX'])
 
 gulp.task('default', ['build', 'watch']);
