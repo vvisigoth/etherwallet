@@ -14,15 +14,15 @@
     </div>
   </section>
   <section class="transaction-params">
-    <div class="label-group" ng-show="ship">
-      <h4 class="sub-title">Ship to adopt/reject:</h4>
-      <h2 class="ship-name blue">~{{ ship }}</h2>
-    </div>
     <div class="label-group" ng-show="parentShipName != '' && offline">
       <h4 class="sub-title">On behalf of:</h4>
       <h2 class="ship-name">
         {{ parentShipName[0] == '~' ? parentShipName : '~' + parentShipName }}
       </h2>
+    </div>
+    <div class="label-group" ng-show="ship">
+      <h4 class="sub-title">Ship to adopt/reject:</h4>
+      <h2 class="ship-name blue">~{{ ship }}</h2>
     </div>
     <div class="button-group input-group toggle-group" ng-init="adopt=true">
       <button ng-class="adopt ? 'btn btn-secondary' : 'btn'" ng-click="adopt = true">Adopt</button>
@@ -88,7 +88,7 @@
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="checked && ship ? 'btn btn-secondary' : 'btn disabled'" 
-      ng-click="checked && ship ? adopt ? doAdopt(ob.toAddress(parentShipName), ship) : doReject(ob.toAddress(parentShipName), ship) : ''" >
+      ng-click="checked && ship ? adopt ? doAdopt(ob.toAddress(parentShipName), ob.toAddress(ship)) : doReject(ob.toAddress(parentShipName), ob.toAddress(ship)) : ''" >
       Create
     </button>
   </section>
