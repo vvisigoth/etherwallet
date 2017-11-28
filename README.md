@@ -8,6 +8,8 @@ development environment.
 
 ## Running Wallet locally
 
+## Development
+
 ### Build wallet
 1. cd into the repo directory and `npm install`
 2. `npm run dev`
