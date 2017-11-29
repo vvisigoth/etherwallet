@@ -2,7 +2,7 @@
 <html lang="en" ng-app="mewApp">
 <head>
 <meta charset="utf-8">
-<title>My Urbit Wallet</title>
+<title>Urbit Wallet</title>
 <meta name="description" content="My Urbit Wallet is a tool for managing your Urbit ships via the Ethereum blockchain">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="css/base.css">
@@ -26,11 +26,14 @@
 <section class="container" style="min-height: 50%" ng-controller='viewCtrl'>
   <ng-view></ng-view>
 
-  <div data-ng-repeat="alert in notifier.alerts" ng-click="alert.close()">
+  <div data-ng-repeat="alert in notifier.alerts">
     <div class="alert popup alert-{{alert.type}} animated-show-hide"
          style="bottom: {{85*$index}}px; z-index: {{999+$index}};">
       <div class="container">
-        <div class="alert-message col-md-10" ng-bind-html="alert.message">
+        <div class="row">
+          <div class="alert-message col-md-11" ng-bind-html="alert.message">
+          </div>
+          <div class="close-icon col-md-1" ng-click="alert.close()">X</div>
         </div>
       </div>
     </div>
