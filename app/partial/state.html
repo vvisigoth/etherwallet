@@ -89,7 +89,7 @@
                 00
               </div>
               <ul class="list-reset" ng-switch-when="true">
-                <li>
+                <li ng-show="ship.address < 65536">
                   <a class="" href='' ng-click="path('state/' + ship.name + '/launch')">Launch child</a>
                 </li>
                 <li>
