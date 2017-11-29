@@ -286,7 +286,7 @@ uiFuncs.notifier = {
         this.alerts[id] = alert
         var that = this;
         if (duration > 0) { // Support permanent messages
-            setTimeout(alert.close, duration);
+            //setTimeout(alert.close, duration);
         }
         if (!this.scope.$$phase) this.scope.$apply();
     },
