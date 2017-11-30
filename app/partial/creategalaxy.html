@@ -15,9 +15,9 @@
     </div>
   </section>
   <!-- TRANSACTION PARAMS -->
-  <div class="label-group" ng-show="galaxy">
+  <div class="label-group">
     <h4 class="sub-title text-700">Galaxy to create:</h4>
-    <h2 class="ship-name monospace blue">{{ formatShipName(galaxy) }}</h2>
+    <h2 class="ship-name monospace blue" ng-show="galaxy">{{ formatShipName(galaxy) }}</h2>
   </div>
   <section class="transaction-params">
     <div ng-init="galaxyError = false" 

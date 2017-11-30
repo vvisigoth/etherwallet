@@ -14,9 +14,9 @@
     </div>
   </section>
   <section class="transaction-params">
-    <div class="label-group" ng-show="ship">
+    <div class="label-group">
       <h4 class="sub-title text-700">Ship to launch:</h4>
-      <h2 class="ship-name blue monospace">{{ formatShipName(ship) }}</h2>
+      <h2 class="ship-name blue monospace" ng-show="ship">{{ formatShipName(ship) }}</h2>
     </div>
     <div ng-init="shipError = false" 
       ng-class="shipError ? 'error input-group' : 'input-group'">

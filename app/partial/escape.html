@@ -34,7 +34,11 @@
     </div>
     <!-- /show this offline -->
     <div ng-init="parentError = false" ng-class="parentError ? 'error input-group' : 'input-group'">
-      <input type="text" class="col-md-8" ng-change="parentError = valShip(parent)" ng-model="parent" value="Address" placeholder="new-parent">
+      <input type="text" 
+        class="col-md-8 monospace" 
+        ng-change="parentError = valShip(ob.toAddress(parent))" 
+        ng-model="parent" value="Address" 
+        placeholder="new-parent">
       <div class="error-label">Not a valid ship</div>
     </div>
     <!-- show these offline -->
@@ -77,7 +81,7 @@
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="checked && !parentError && parent ? 'btn btn-secondary' : 'btn disabled'" 
-      ng-click="checked && !parentError && parent ? doEscape(toAddress(shipName), parent): ''">
+      ng-click="checked && !parentError && parent ? doEscape(toAddress(ob.toAddress(shipName)), parent): ''">
       Create
     </button>
   </section>
