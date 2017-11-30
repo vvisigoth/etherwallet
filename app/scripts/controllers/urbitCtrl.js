@@ -400,7 +400,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     // UI Validators
     //
     $scope.valGalaxy = function(galaxy) {
-      if (galaxy < 0 || galaxy > 255) {
+      if (galaxy < 0 || galaxy > 255 || !galaxy) {
         return true;
       } else {
         return false;
@@ -408,14 +408,14 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     }
 
     $scope.valStar = function(star) {
-      if (star < 256 || star > 65535) {
+      if (star < 256 || star > 65535 || !star) {
         return true;
       } else {
         return false;
       }
     }
     $scope.valShip = function(ship) {
-      if (ship < 0 || ship > 4294967295) {
+      if (ship < 0 || ship > 4294967295 || !ship) {
         return true;
       } else {
         return false;
