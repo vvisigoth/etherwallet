@@ -15,12 +15,16 @@
     </div>
   </section>
   <!-- TRANSACTION PARAMS -->
+  <div class="label-group" ng-show="galaxy">
+    <h4 class="sub-title text-700">Galaxy to create:</h4>
+    <h2 class="ship-name blue">{{ formatShipName(galaxy) }}</h2>
+  </div>
   <section class="transaction-params">
     <div ng-init="galaxyError = false" 
       ng-class="galaxyError ? 'error input-group' : 'input-group'">
       <input type="text" 
         class="col-md-4" 
-        ng-change="galaxyError = valGalaxy(galaxy)" 
+        ng-change="galaxyError = valGalaxy(ob.toAddress(galaxy))" 
         ng-model="galaxy" value="Galaxy Name" 
         placeholder="galaxy">
       <div class="error-label">Ship {{ galaxy }} is not a galaxy</div>
@@ -87,7 +91,7 @@
     <button class="btn btn-tetiary" 
       ng-click="path('state')">&#8592 Back</button>
     <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn disabled'" 
-      ng-click="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? doCreateGalaxy(galaxy, address, locktime, completetime): ''">
+      ng-click="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? doCreateGalaxy(ob.toAddress(galaxy), address, locktime, completetime): ''">
       Create
     </button>
   </section>

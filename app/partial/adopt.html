@@ -22,7 +22,7 @@
     </div>
     <div class="label-group" ng-show="ship">
       <h4 class="sub-title">Ship to adopt/reject:</h4>
-      <h2 class="ship-name blue">~{{ ship }}</h2>
+      <h2 class="ship-name blue">{{ formatShipName(ship) }}</h2>
     </div>
     <div class="button-group input-group toggle-group" ng-init="adopt=true">
       <button ng-class="adopt ? 'btn btn-secondary' : 'btn'" ng-click="adopt = true">Adopt</button>
@@ -42,14 +42,13 @@
     </div>
     <!-- /show this offline -->
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
-      <input type="text" ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" ng-model="ship" value="Star Name" placeholder="ship-to-adopt">
+      <input type="text" 
+        ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" 
+        ng-model="ship" 
+        ng-change="shipError = valShip(ob.toAddress(ship))"
+        value="Star Name" 
+        placeholder="ship-to-adopt">
     </div>
-    <!--
-    <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
-      <input type="text" class="gray-light-hl text-700" ng-change="shipError = valShip(ship)" ng-model="ship" value="Star Name" placeholder="ship">
-      <div class="error-label">{{ ship }} is not a ship</div>
-    </div>
-    -->
     <!-- show these offline -->
     <div class="offline-params" ng-show="offline">
       <div ng-init="gasLimitError = false" 
