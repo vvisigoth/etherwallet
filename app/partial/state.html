@@ -13,7 +13,6 @@
         <h4>Sparks:</h4>
         <div class="spark-ops" ng-show="poolAddress">
           <div class="spark-bal row">
-            <i class="glyph green"></i>
             <span class="sparks h2 green">{{ balance }} </span>
             <h2 class="green col-md-10">{{ balance > 1 ? 'USP' : 'USP' }}</h2>
           </div>
@@ -31,8 +30,7 @@
         <h4>Ships:</h4>
         <div class="ship-entry" ng-repeat="ship in ownedShips">
           <div class="ship-name row">
-            <i class="glyph"></i>
-            <h2>{{ ship.name }}</h2>
+            <h2 class="monospace">{{ ship.name }}</h2>
           </div>
           <div class="ship-actions row">
             <div class="state-col col-md-2">

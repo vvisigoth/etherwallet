@@ -16,7 +16,7 @@
   <section class="transaction-params">
     <div class="label-group" ng-show="ship">
       <h4 class="sub-title">Launch ships on behalf of:</h4>
-      <h2 class="ship-name blue" ng-show="shipName != ''">
+      <h2 class="ship-name blue monospace" ng-show="shipName != ''">
         {{ shipName[0] == '~' ? shipName : '~' + shipName }}
       </h2>
     </div>
@@ -29,7 +29,7 @@
       ng-class="shipError ? 'error input-group' : 'input-group'" 
       ng-show="offline">
       <input type="text" 
-        class="col-md-8" 
+        class="col-md-8 monospace" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 
         value="Ship Name" 
@@ -37,8 +37,14 @@
       <div class="error-label">{{ shipName }} is not a ship</div>
     </div>
     <!-- /show this offline -->
-    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
-      <input type="text" class="monospace col-md-12" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="address">
+    <div ng-init="addressError = false" 
+      ng-class="addressError ? 'error input-group' : 'input-group'">
+      <input type="text" 
+        class="monospace col-md-12" 
+        ng-change="addressError = valAddress(address)" 
+        ng-model="address" 
+        value="Address" 
+        placeholder="address">
       <div class="error-label">Not a valid address</div>
     </div>
     <!-- show these offline -->

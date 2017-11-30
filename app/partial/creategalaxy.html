@@ -17,13 +17,13 @@
   <!-- TRANSACTION PARAMS -->
   <div class="label-group" ng-show="galaxy">
     <h4 class="sub-title text-700">Galaxy to create:</h4>
-    <h2 class="ship-name blue">{{ formatShipName(galaxy) }}</h2>
+    <h2 class="ship-name monospace blue">{{ formatShipName(galaxy) }}</h2>
   </div>
   <section class="transaction-params">
     <div ng-init="galaxyError = false" 
       ng-class="galaxyError ? 'error input-group' : 'input-group'">
       <input type="text" 
-        class="col-md-4" 
+        class="col-md-4 monospace" 
         ng-change="galaxyError = valGalaxy(ob.toAddress(galaxy))" 
         ng-model="galaxy" value="Galaxy Name" 
         placeholder="galaxy">

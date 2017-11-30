@@ -16,7 +16,7 @@
   <section class="transaction-params">
     <div class="label-group">
       <h4 class="sub-title">Ship to deposit:</h4>
-      <h2 class="ship-name blue" ng-show="shipName != ''">
+      <h2 class="ship-name blue monospace" ng-show="shipName != ''">
         {{ shipName[0] == '~' ? shipName : '~' + shipName }}
       </h2>
     </div>
@@ -25,7 +25,7 @@
       ng-class="shipError ? 'error input-group' : 'input-group'" 
       ng-show="offline">
       <input type="text" 
-        class="col-md-8" 
+        class="col-md-8 monospace" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 
         value="Star Name" 

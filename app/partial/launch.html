@@ -16,17 +16,23 @@
   <section class="transaction-params">
     <div class="label-group" ng-show="ship">
       <h4 class="sub-title text-700">Ship to launch:</h4>
-      <h2 class="ship-name blue">{{ formatShipName(ship) }}</h2>
+      <h2 class="ship-name blue monospace">{{ formatShipName(ship) }}</h2>
     </div>
-    <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
-      <input type="text" ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" ng-change="shipError = valShip(ob.toAddress(ship)); isState = false" ng-model="ship" value="Star Name" placeholder="ship">
+    <div ng-init="shipError = false" 
+      ng-class="shipError ? 'error input-group' : 'input-group'">
+      <input type="text" 
+        ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" 
+        ng-change="shipError = valShip(ob.toAddress(ship)); isState = false" 
+        ng-model="ship" 
+        value="Star Name" 
+        placeholder="ship">
     </div>
     <!-- show this offline -->
     <div ng-init="shipError = false" 
       ng-class="shipError ? 'error input-group' : 'input-group'" 
       ng-show="offline">
       <input type="text" 
-        class="col-md-8" 
+        class="col-md-8 monospace" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 
         value="Star Name" 

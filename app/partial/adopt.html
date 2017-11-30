@@ -16,13 +16,13 @@
   <section class="transaction-params">
     <div class="label-group" ng-show="parentShipName != '' && offline">
       <h4 class="sub-title">On behalf of:</h4>
-      <h2 class="ship-name">
+      <h2 class="ship-name monospace">
         {{ parentShipName[0] == '~' ? parentShipName : '~' + parentShipName }}
       </h2>
     </div>
     <div class="label-group" ng-show="ship">
       <h4 class="sub-title">Ship to adopt/reject:</h4>
-      <h2 class="ship-name blue">{{ formatShipName(ship) }}</h2>
+      <h2 class="ship-name monospace blue">{{ formatShipName(ship) }}</h2>
     </div>
     <div class="button-group input-group toggle-group" ng-init="adopt=true">
       <button ng-class="adopt ? 'btn btn-secondary' : 'btn'" ng-click="adopt = true">Adopt</button>
@@ -33,7 +33,7 @@
       ng-class="parentShipError ? 'error input-group' : 'input-group'" 
       ng-show="offline">
       <input type="text" 
-        class="col-md-8" 
+        class="col-md-8 monospace" 
         ng-change="parentShipError = valShip(ob.toAddress(parentShipName))" 
         ng-model="parentShipName" 
         value="Star Name" 
@@ -43,7 +43,7 @@
     <!-- /show this offline -->
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
       <input type="text" 
-        ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" 
+        ng-class="isState ? 'confirmed col-md-8 monospace' : 'col-md-8 monospace'" 
         ng-model="ship" 
         ng-change="shipError = valShip(ob.toAddress(ship))"
         value="Star Name" 

@@ -16,7 +16,7 @@
   <section class="transaction-params">
       <div class="label-group" ng-show="ship">
       <h4 class="sub-title text-700">Ship to withdraw from pool:</h4>
-      <h2 class="ship-name blue">~{{ toShipName(ship) }}</h2>
+      <h2 class="ship-name blue monospace">~{{ toShipName(ship) }}</h2>
     </div>
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group' : 'input-group'">
       <input type="text" class="col-md-8" ng-change="shipError = valStar(ship)" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
