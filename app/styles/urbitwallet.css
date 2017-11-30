@@ -224,24 +224,19 @@ textarea.is-valid
 }
 .alert.popup 
 {
-  background-color: black;
-  color: white;
+  background-color: white;
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
-  right: 0;
-  padding: 12px;
-  margin: 0;
+  width: 100%;
+  height: 100%;
 }
 .alert.popup a
 {
-  color: white;
 }
 
 .alert.popup .container 
 {
-  position: relative;
-  padding: 0 10rem 0 5rem;
 }
 
 /* THESE ARE OVERRIDES OF BASE, PR THESE */
@@ -288,4 +283,10 @@ body {
   /*
   color: #FF4444;
   */
+}
+
+.close-icon
+{
+  color: white;
+  cursor: pointer;
 }
