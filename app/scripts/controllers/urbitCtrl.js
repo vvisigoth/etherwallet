@@ -442,6 +442,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //UI Conviences
     //
     $scope.formatShipName = function(ship) {
+      if (ship.length < 2) {
+        return ship;
+      }
       if (ship[0] != '~') {
         return '~' + ship;
       } else {
