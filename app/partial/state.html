@@ -1,18 +1,18 @@
 <div 
     ng-init="loadAddresses();">
     <span id="" class="text-700 address">{{ wallet.getAddressString() }}</span>
-    <h1>Your Urbit Wallet</h1>
+    <h1 class="mt-20">Your Urbit Wallet</h1>
     <div class="online" ng-show="!offline">
-      <section class="constitution-owner col-md-12 mb-6" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
+      <section class="constitution-owner col-md-12 mb-8" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
         <button class="btn-primary btn"
           ng-click="path('state/creategalaxy')">
           Create galaxy &#8594 
         </button>
       </section>
-      <section class="sparks col-md-12 mb-6">
+      <section class="sparks col-md-12 mb-8">
         <h4>Sparks:</h4>
         <div class="spark-ops" ng-show="poolAddress">
-          <div class="spark-bal row">
+          <div class="spark-bal row mb-4">
             <span class="sparks h2 green">{{ balance }} </span>
             <h2 class="green col-md-10">{{ balance > 1 ? 'USP' : 'USP' }}</h2>
           </div>
@@ -20,7 +20,7 @@
           <button class="btn btn-primary" ng-click="path('state/withdraw')" ng-show="balance > 1">Withdraw star</button>
         </div>
         <div class="pool-input" ng-show="!poolAddress">
-          <div class="input-group">
+          <div class="input-group mb-4">
             <input type="text" class="monospace col-md-12" ng-model="tmpPool" placeholder="pool-address"/>
           </div>
           <button class="btn btn-primary" ng-click="setPoolAddress(tmpPool); readBalance(); showPool = false;">Connect</button>
