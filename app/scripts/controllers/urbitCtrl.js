@@ -585,6 +585,14 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         callback
       );
     }
+    $scope.getPoolAssets = function(callback) {
+      $scope.readContractData($rootScope.poolAddress,
+        "getAllAssets()",
+        [],
+        ["uint16[]"],
+        callback
+      );
+    }
     $scope.getLocked = function(ship, callback) {
       $scope.readContractData($scope.contracts.ships,
         "getLocked(uint32)",
@@ -784,6 +792,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.locked = data[0];
       }
     }
+    $scope.readPoolAssets = function() {
+      $scope.getPoolAssets(put);
+      function put(data) {
+        console.log('pool assets', data);
+        $scope.poolAssets = data.split('\n');
+      };
+    };
     $scope.readParent = function(ship) {
       //var ship = document.getElementById("getParent_ship").value;
       $scope.validateChild(ship, function() {
