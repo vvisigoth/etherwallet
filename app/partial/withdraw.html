@@ -14,12 +14,12 @@
     </div>
     <div class="label-group">
       <h4 class="sub-title text-700">Ship to withdraw from pool:</h4>
-      <h2 class="ship-name blue monospace mt-0" ng-show="ship">~{{ toShipName(ship) }}</h2>
+      <h2 class="ship-name blue monospace mt-0" ng-show="ship">{{ formatShipName(ship) }}</h2>
     </div>
   </section>
   <section class="transaction-params mb-8">
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
-      <input type="text" class="col-md-8" ng-change="shipError = valStar(ship)" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
+      <input type="text" class="col-md-8" ng-change="shipError = valStar(ob.toAddress(ship))" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
@@ -68,7 +68,7 @@
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="!loading && checked && !shipError && ship && !addressError && poolAddress ? 'btn btn-secondary' : 'btn disabled'" 
-      ng-click="checked && !shipError && ship && !addressError && poolAddress ? doWithdraw(ship): ''">
+      ng-click="checked && !shipError && ship && !addressError && poolAddress ? doWithdraw(ob.toAddress(ship)): ''">
       Create
     </button>
   </section>
