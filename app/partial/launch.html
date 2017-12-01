@@ -4,7 +4,7 @@
   <span class="address row text-700">
     {{ wallet.getAddressString() }}
   </span>
-  <section class="general-information mb-6">
+  <section class="general-information mb-8 mt-20">
     <h1 id="action-title row">Launch</h1>
     <div class="help-text row">
       <p class="col-md-8">In order to launch a ship, the ship must be latent and you must be the owner of the ship's parent. "Locktime" is the number of seconds until the ship can be unlocked. Input <code>0</code> to make the ship available immediately.
@@ -12,14 +12,14 @@
       <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
     </div>
-  </section>
-  <section class="transaction-params">
     <div class="label-group">
       <h4 class="sub-title text-700">Ship to launch:</h4>
-      <h2 class="ship-name blue monospace" ng-show="ship">{{ formatShipName(ship) }}</h2>
+      <h2 class="ship-name blue monospace mt-0" ng-show="ship">{{ formatShipName(ship) }}</h2>
     </div>
+  </section>
+  <section class="transaction-params mb-8">
     <div ng-init="shipError = false" 
-      ng-class="shipError ? 'error input-group' : 'input-group'">
+      ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         ng-class="isState ? 'confirmed col-md-8' : 'col-md-8'" 
         ng-change="shipError = valShip(ob.toAddress(ship)); isState = false" 
@@ -29,7 +29,7 @@
     </div>
     <!-- show this offline -->
     <div ng-init="shipError = false" 
-      ng-class="shipError ? 'error input-group' : 'input-group'" 
+      ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'" 
       ng-show="offline">
       <input type="text" 
         class="col-md-8 monospace" 
@@ -40,22 +40,22 @@
       <div class="error-label">{{ shipName }} is not a ship</div>
     </div>
     <!-- /show this offline -->
-    <div class="input-group">
+    <div class="input-group mb-4">
       <button class="btn btn-primary" ng-click="ship = toShipName(getChildCandidate(ob.toAddress(shipName))); isState = false">Suggest valid ship</button>
       <button ng-show="!offline" ng-class="isState || !ship ? 'btn disabled' : 'btn btn-secondary'" ng-click="readIsState(ob.toAddress(ship), 0)">Confirm</button>
     </div>
-    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" class="col-md-12 monospace" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="new-address">
       <div class="error-label">Not a valid address</div>
     </div>
-    <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group' : 'input-group'">
+    <div ng-init="lockTimeError = false" ng-class="lockTimeError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" class="col-md-4 monospace" ng-change="lockTimeError = valTimestamp(locktime)" ng-model="locktime" value="Lock Time" placeholder="lock-time">
       <div class="error-label">Lock time must be positive</div>
     </div>
     <!-- show these offline -->
     <div class="offline-params" ng-show="offline">
       <div ng-init="gasLimitError = false" 
-        ng-class="gasLimitError ? 'error input-group' : 'input-group'">
+        ng-class="gasLimitError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-change="gasLimitError = tx.gasLimit > 3000000"
@@ -65,7 +65,7 @@
         <div class="error-label">{{ tx.gasLimit }} is too high</div>
       </div>
       <div ng-init="nonceError = false" 
-        ng-class="nonceError ? 'error input-group' : 'input-group'">
+        ng-class="nonceError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-model="nonceDec" 
@@ -73,7 +73,7 @@
           placeholder="nonce">
       </div>
       <div ng-init="gasPriceError = false" 
-        ng-class="gasPriceError ? 'error input-group' : 'input-group'">
+        ng-class="gasPriceError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-model="gasPriceDec" 
@@ -82,7 +82,7 @@
       </div>
     </div>
     <!-- /show these offline -->
-    <div class="input-group row">
+    <div class="input-group mb-4 row">
       <div class="checkbox-container">
         <div ng-class="checked ? 'checkbox checked' : 'checkbox'" 
           ng-click="checked = checked == true ? false : true">
@@ -100,11 +100,11 @@
     ng-show="rawTx" 
     ng-init="sent = false">
     <h4>Raw Tx</h4>
-    <div class="raw-tx row col-md-8 text-code tx input-group">
+    <div class="raw-tx row col-md-8 text-code tx input-group mb-4">
       {{ rawTx }}
     </div>
     <h4>Signed Tx</h4>
-    <div class="signed-tx row col-md-8 text-code tx input-group">
+    <div class="signed-tx row col-md-8 text-code tx input-group mb-4">
       {{ signedTx }}
     </div>
     <button class="btn btn-tetiary" 

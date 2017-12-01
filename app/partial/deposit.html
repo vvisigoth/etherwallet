@@ -4,7 +4,7 @@
   <span class="address row text-700">
     {{ wallet.getAddressString() }}
   </span>
-  <section class="general-information mb-6">
+  <section class="general-information mb-8 mt-20">
     <h1 id="action-title row">Deposit</h1>
     <div class="help-text row">
       <p class="col-md-8"><em>Note:</em> you must <a href="" ng-click="path('state/' + offline ? 'offline' : shipName + '/allowtransfer')">allow transfer</a> of a ship before depositing it. Once you deposit a ship to a pool, you give up ownership of the ship and will be issued a Spark token (USP).
@@ -12,17 +12,17 @@
       <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
     </div>
-  </section>
-  <section class="transaction-params">
     <div class="label-group">
       <h4 class="sub-title">Ship to deposit:</h4>
-      <h2 class="ship-name blue monospace" ng-show="shipName != ''">
+      <h2 class="ship-name blue monospace mt-0" ng-show="shipName != ''">
         {{ shipName[0] == '~' ? shipName : '~' + shipName }}
       </h2>
     </div>
+  </section>
+  <section class="transaction-params mb-8">
     <!-- show this offline -->
     <div ng-init="shipError = false" 
-      ng-class="shipError ? 'error input-group' : 'input-group'" 
+      ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'" 
       ng-show="offline">
       <input type="text" 
         class="col-md-8 monospace" 
@@ -33,7 +33,7 @@
       <div class="error-label">{{ shipName }} is not a ship</div>
     </div>
     <!-- /show this offline -->
-    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group' : 'input-group'">
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         class="monospace col-md-12" 
         ng-change="addressError = valAddress(poolAddress)" 
@@ -43,7 +43,7 @@
     <!-- show these offline -->
     <div class="offline-params" ng-show="offline">
       <div ng-init="gasLimitError = false" 
-        ng-class="gasLimitError ? 'error input-group' : 'input-group'">
+        ng-class="gasLimitError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-change="gasLimitError = tx.gasLimit > 3000000"
@@ -53,7 +53,7 @@
         <div class="error-label">{{ tx.gasLimit }} is too high</div>
       </div>
       <div ng-init="nonceError = false" 
-        ng-class="nonceError ? 'error input-group' : 'input-group'">
+        ng-class="nonceError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-model="nonceDec" 
@@ -61,7 +61,7 @@
           placeholder="nonce">
       </div>
       <div ng-init="gasPriceError = false" 
-        ng-class="gasPriceError ? 'error input-group' : 'input-group'">
+        ng-class="gasPriceError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-model="gasPriceDec" 
@@ -70,7 +70,7 @@
       </div>
     </div>
     <!-- /show these offline -->
-    <div class="input-group row">
+    <div class="input-group mb-4 row">
       <div class="checkbox-container">
         <div ng-class="checked ? 'checkbox checked' : 'checkbox'" 
           ng-click="checked = checked == true ? false : true">
@@ -88,11 +88,11 @@
     ng-show="rawTx" 
     ng-init="sent = false">
     <h4>Raw Tx</h4>
-    <div class="raw-tx row col-md-8 text-code tx input-group">
+    <div class="raw-tx row col-md-8 text-code tx input-group mb-4">
       {{ rawTx }}
     </div>
     <h4>Signed Tx</h4>
-    <div class="signed-tx row col-md-8 text-code tx input-group">
+    <div class="signed-tx row col-md-8 text-code tx input-group mb-4">
       {{ signedTx }}
     </div>
     <button class="btn btn-tetiary" 

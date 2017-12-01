@@ -5,7 +5,7 @@
     {{ wallet.getAddressString() }}
   </span>
   <!-- GENERAL INFORMATION ABOUT TRANSACTION -->
-  <section class="general-information mb-6">
+  <section class="general-information mb-8 mt-20">
     <h1 id="action-title row">Create galaxy</h1>
     <div class="help-text row">
       <p class="col-md-8"> As the constitution owner, you can create a galaxy.
@@ -13,15 +13,15 @@
       <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
       </p>
     </div>
+    <div class="label-group">
+      <h4 class="sub-title text-700">Galaxy to create:</h4>
+      <h2 class="ship-name monospace blue mt-0" ng-show="galaxy">{{ formatShipName(galaxy) }}</h2>
+    </div>
   </section>
   <!-- TRANSACTION PARAMS -->
-  <div class="label-group">
-    <h4 class="sub-title text-700">Galaxy to create:</h4>
-    <h2 class="ship-name monospace blue" ng-show="galaxy">{{ formatShipName(galaxy) }}</h2>
-  </div>
-  <section class="transaction-params">
+  <section class="transaction-params mb-8">
     <div ng-init="galaxyError = false" 
-      ng-class="galaxyError ? 'error input-group' : 'input-group'">
+      ng-class="galaxyError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         class="col-md-4 monospace" 
         ng-change="galaxyError = valGalaxy(ob.toAddress(galaxy))" 
@@ -30,7 +30,7 @@
       <div class="error-label">Ship {{ galaxy }} is not a galaxy</div>
     </div>
     <div ng-init="addressError = false" 
-      ng-class="addressError ? 'error input-group' : 'input-group'">
+      ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         class="col-md-12 monospace" 
         ng-change="addressError = valAddress(address)" 
@@ -39,7 +39,7 @@
       <div class="error-label">Not a valid address</div>
     </div>
     <div ng-init="lockTimeError = false" 
-      ng-class="lockTimeError ? 'error input-group' : 'input-group'">
+      ng-class="lockTimeError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         class="col-md-4" 
         ng-change="lockTimeError = valTimestamp(locktime)" 
@@ -49,7 +49,7 @@
       <div class="error-label">Lock time must be positive</div>
     </div>
     <div ng-init="completeTimeError = false" 
-      ng-class="completeTimeError ? 'error input-group' : 'input-group'">
+      ng-class="completeTimeError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         class="col-md-4" 
         ng-change="completeTimeError = valTimestamp(completetime)" 
@@ -61,7 +61,7 @@
     <!-- show these offline -->
     <div class="offline-params" ng-show="offline">
       <div ng-init="gasLimitError = false" 
-        ng-class="gasLimitError ? 'error input-group' : 'input-group'">
+        ng-class="gasLimitError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-change="gasLimitError = tx.gasLimit > 3000000"
@@ -71,7 +71,7 @@
         <div class="error-label">{{ tx.gasLimit }} is too high</div>
       </div>
       <div ng-init="nonceError = false" 
-        ng-class="nonceError ? 'error input-group' : 'input-group'">
+        ng-class="nonceError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-model="nonceDec" 
@@ -79,7 +79,7 @@
           placeholder="nonce">
       </div>
       <div ng-init="gasPriceError = false" 
-        ng-class="gasPriceError ? 'error input-group' : 'input-group'">
+        ng-class="gasPriceError ? 'error input-group mb-4' : 'input-group mb-4'">
         <input type="text" 
           class="col-md-4" 
           ng-model="gasPriceDec" 
@@ -100,11 +100,11 @@
     ng-show="rawTx" 
     ng-init="sent = false">
     <h4>Raw Tx</h4>
-    <div class="raw-tx row col-md-8 text-code tx input-group">
+    <div class="raw-tx row col-md-8 text-code tx input-group mb-4">
       {{ rawTx }}
     </div>
     <h4>Signed Tx</h4>
-    <div class="signed-tx row col-md-8 text-code tx input-group">
+    <div class="signed-tx row col-md-8 text-code tx input-group mb-4">
       {{ signedTx }}
     </div>
     <button class="btn btn-tetiary" 
