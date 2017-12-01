@@ -91,7 +91,7 @@
       <label class="action-confirmation ml-4">Yes I am sure</label>
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="checked && !shipError && ship && !addressError && address &&  !lockTimeError && locktime? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
+    <button ng-class="!loading && checked && !shipError && ship && !addressError && address &&  !lockTimeError && locktime? 'btn btn-secondary' : 'btn btn-tetiary disabled'" 
       ng-click="checked && !shipError && ship && !addressError && address &&  !lockTimeError && locktime ? doLaunch(ob.toAddress(ship), address): ''">
       Create
     </button>

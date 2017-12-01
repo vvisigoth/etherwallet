@@ -86,7 +86,7 @@
       <label class="action-confirmation ml-4">Yes I am sure</label>
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="checked && ship ? 'btn btn-secondary' : 'btn disabled'" 
+    <button ng-class="!loading && checked && ship ? 'btn btn-secondary' : 'btn disabled'" 
       ng-click="checked && ship ? adopt ? doAdopt(ob.toAddress(parentShipName), ob.toAddress(ship)) : doReject(ob.toAddress(parentShipName), ob.toAddress(ship)) : ''" >
       Create
     </button>

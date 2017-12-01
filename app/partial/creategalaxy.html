@@ -90,7 +90,7 @@
     <!-- /show these offline -->
     <button class="btn btn-tetiary" 
       ng-click="path('state')">&#8592 Back</button>
-    <button ng-class="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? 'btn btn-secondary': 'btn disabled'" 
+    <button ng-class="!loading && !galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime && !loading? 'btn btn-secondary': 'btn disabled'" 
       ng-click="!galaxyError && galaxy && !addressError && address && !lockTimeError && locktime && !completeTimeError && completetime ? doCreateGalaxy(ob.toAddress(galaxy), address, locktime, completetime): ''">
       Create
     </button>

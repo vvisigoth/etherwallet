@@ -74,7 +74,7 @@
       <label class="action-confirmation ml-4">Yes I am sure</label>
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="checked && !addressError && poolAddress ? 'btn btn-secondary' : 'btn disabled'" 
+    <button ng-class="!loading && checked && !addressError && poolAddress ? 'btn btn-secondary' : 'btn disabled'" 
       ng-click="checked && !addressError && poolAddress ? doAllowTransferBy(ob.toAddress(shipName), poolAddress) : ''" >
       Create
     </button>
