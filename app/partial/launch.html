@@ -42,7 +42,7 @@
     <!-- /show this offline -->
     <div class="input-group mb-4">
       <button class="btn btn-primary" ng-click="ship = toShipName(getChildCandidate(ob.toAddress(shipName))); isState = false">Suggest valid ship</button>
-      <button ng-show="!offline" ng-class="isState || !ship ? 'btn disabled' : 'btn btn-secondary'" ng-click="readIsState(ob.toAddress(ship), 0)">Confirm</button>
+      <button ng-show="!offline" ng-class="isState || !ship ? 'btn disabled' : 'btn btn-secondary'" ng-click="readIsState(ob.toAddress(ship), 0)">Confirm availability</button>
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" class="col-md-12 monospace" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="new-address">
