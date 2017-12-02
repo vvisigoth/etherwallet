@@ -1,6 +1,5 @@
 'use strict';
 var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, walletService, obService) {
-//var urbitCtrl = function($scope, $sce, $routeParams, $location, walletService) {
     // add route params to scope
     $scope.$routeParams = $routeParams;
 
@@ -795,12 +794,19 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     $scope.readPoolAssets = function() {
       $scope.getPoolAssets(put);
       function put(data) {
-        console.log('pool assets', data);
-        $scope.poolAssets = data.split('\n');
+        var t = [];
+        for (var i = 0; i < data[0].length; i++) {
+            t.push($scope.formatShipName($scope.toShipName(data[0][i].toFixed(0))));
+        }
+        $scope.poolAssets = t;
+        if ($scope.poolAssets.length > 0) {
+          $scope.ship = $scope.poolAssets[0];
+        } else {
+          // trigger an error?
+        }
       };
-    };
+    }
     $scope.readParent = function(ship) {
-      //var ship = document.getElementById("getParent_ship").value;
       $scope.validateChild(ship, function() {
         $scope.getParent(ship, put);
       });
@@ -824,7 +830,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.getKey(ship, put);
       });
       function put(data) {
-        //document.getElementById("key").value = data[0];
         $scope.key = data[0];
       }
     }
@@ -1228,8 +1233,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     }
     $scope.doReject = function(parent, ship) {
       $scope.loading = true;
-      //var parent = document.getElementById("reject_parent").value;
-      //var ship = document.getElementById("reject_ship").value;
       $scope.validateParent(parent, function() {
         $scope.validateChild(ship, function () {
           if ($scope.offline) return transact();
@@ -1247,9 +1250,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     }
     $scope.doCastConcreteVote = function(galaxy, addr, vote) {
       $scope.loading = true;
-      //var galaxy = document.getElementById("conVote_galaxy").value;
-      //var addr = document.getElementById("conVote_address").value;
-      //var vote = document.getElementById("conVote_vote").checked;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateAddress(addr, function() {
           if ($scope.offline) return transact();
@@ -1274,9 +1274,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     }
     $scope.doCastAbstractVote = function(galaxy, prop, vote) {
       $scope.loading = true;
-      //var galaxy = document.getElementById("absVote_galaxy").value;
-      //var prop = document.getElementById("absVote_proposal").value;
-      //var vote = document.getElementById("absVote_vote").checked;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateBytes32(prop, function() {
           if ($scope.offline) return transact();
