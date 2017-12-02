@@ -19,7 +19,7 @@
   </section>
   <section class="transaction-params mb-8">
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
-      <input type="text" class="col-md-8" ng-change="shipError = valStar(ob.toAddress(ship))" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
+      <input type="text" class="col-md-8 monospace" ng-change="shipError = valStar(ob.toAddress(ship))" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
     </div>
     <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
