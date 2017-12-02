@@ -256,6 +256,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+button {
+  border-radius: 0;
+}
+
 /* END OF BASE OVERRIDES */
 
 .toggle-group
