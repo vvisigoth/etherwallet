@@ -18,6 +18,19 @@
     </div>
   </section>
   <section class="transaction-params mb-8">
+    <div class="input-group mb-4" >
+      <div ng-show="poolAssets">
+        <label>Available stars</label>
+        <div class="select-dropdown col-md-8">
+          <select ng-options="asset as asset for asset in poolAssets" name="pool-assets" ng-model="ship"></select>
+            <!--
+            <option ng-repeat="asset in poolAssets" ng-change="ship = toShipName(asset)">{{ formatShipName(toShipName(asset)) }}</option>
+            -->
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" ng-show="!poolAssets" ng-click="readPoolAssets()">List available stars</button>
+    </div>
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" class="col-md-8 monospace" ng-change="shipError = valStar(ob.toAddress(ship))" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
     </div>
