@@ -1,8 +1,6 @@
 'use strict';
 const state = require('../../partial/state.html');
-const liquidate = require('../../partial/liquidate.html');
 const start = require('../../partial/start.html');
-const purchase = require('../../partial/buy.html');
 const launch = require('../../partial/launch.html');
 const mode = require('../../partial/mode.html');
 const launchRights = require('../../partial/launchrights.html');
@@ -27,11 +25,9 @@ var templateService = {
     launchRights: launchRights,
     allowTransfer: allowTransfer,
     deposit: deposit,
-    liquidate: liquidate,
     start: start,
     adopt: adopt,
     vote: vote,
-    purchase: purchase,
     launch: launch,
     escape: escape,
     createGalaxy: createGalaxy
