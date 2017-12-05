@@ -1,7 +1,7 @@
 # Urbit Wallet
 
 Wallet is a fork of [MyEtherWallet](https://www.MyEtherWallet.com) that allows 
-you to manage various aspects of your ships, such as launching, starting, 
+you to manage various aspects of your Urbit ships, such as launching, starting, 
 depositing, transferring, voting, etc. through the Etheruem PKI. In this README, 
 you will find a guide for running the application locally and for setting up a 
 development environment.
@@ -15,8 +15,9 @@ on what kind of Ethereum wallet you'd like to connect to.
 
 ### Basic setup
 
-1. If you're using a mnemonic, a private key or a UTC keystore file, you can merely 
-click on the index.html file found at /dist/index.html.
+1. If you're using a mnemonic, a private key or a UTC keystore file to connect to 
+an Ethereum wallet, you can merely click on the index.html file found at /dist/index.html 
+in this repo.
 
 If you're using a hardware wallet or Metamask, you have to run a simple webserver 
 using the script provided at /bin/serve.py. In order to run it, cd into the `/bin` 
@@ -25,12 +26,12 @@ directory and run the following commands
 1. `openssl req -new -x509 -keyout localhost.pem -out localhost.pem -days 3650 -nodes`
 2. `python ./serve.py ./localhost.pem`
 
-Once you open your Wallet, you'll want to connect your ethereum wallet, following the 
+Once you open Wallet, you'll want to connect your Ethereum wallet, following the 
 appropriate flow on the homepage.
 
 The address to which Wallet is connected will be indicated at the header of the page. 
 By default, Wallet is connected to an Ethereum node provided by MyEtherWallet. To 
-chance this, click on the "node" indicator in the header. If you'd prefer to create 
+change this, click on the "node" indicator in the header. If you'd prefer to create 
 your transactions Offline, this option is also available in the node dialogue.
 
 ### Online mode
@@ -43,7 +44,7 @@ is connected, you will see your address' Spark balance.
 ![Urbit Wallet State](https://i.imgur.com/5GjDw5W.png)
 
 Below each ship, you will see a list of actions that corresponds to that ship's type 
-(Galaxy, Star, Planet) and state (Locked or Living). In Online mode (the default) 
+(Galaxy, Star, Planet) and state (Locked or Living). In the default online mode 
 clicking on an action will take you to a transaction screen, where you will be asked 
 to provide additional information for that transaction. For example, if you'd like 
 to launch a child ship, say a planet from your star, then you will be asked which 
