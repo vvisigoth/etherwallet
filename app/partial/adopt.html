@@ -32,7 +32,7 @@
     <div ng-init="parentShipError = false" 
       ng-class="parentShipError ? 'error input-group mb-4' : 'input-group mb-4'" 
       ng-show="offline">
-      <input type="text" 
+      <input sig type="text" 
         class="col-md-8 monospace" 
         ng-change="parentShipError = valShip(ob.toAddress(parentShipName))" 
         ng-model="parentShipName" 
@@ -42,7 +42,7 @@
     </div>
     <!-- /show this offline -->
     <div ng-init="shipError = false" ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
-      <input type="text" 
+      <input sig type="text" 
         ng-class="isState ? 'confirmed col-md-8 monospace' : 'col-md-8 monospace'" 
         ng-model="ship" 
         ng-change="shipError = valShip(ob.toAddress(ship))"

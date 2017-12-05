@@ -29,12 +29,20 @@
           </select>
         </div>
       </div>
-      <button class="btn btn-primary" ng-show="!poolAssets" ng-click="readPoolAssets()">List available stars</button>
+      <button class="btn btn-primary" 
+        ng-show="!poolAssets" 
+        ng-click="readPoolAssets()">List available stars</button>
     </div>
-    <div ng-init="shipError = false" ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
-      <input type="text" class="col-md-8 monospace" ng-change="shipError = valStar(ob.toAddress(ship))" ng-model="ship" value="Star Name" placeholder="star-to-withdraw">
+    <div ng-init="shipError = false" 
+      ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'">
+      <input sig type="text" 
+        class="col-md-8 monospace" 
+        ng-change="shipError = valStar(ob.toAddress(ship))" 
+        ng-model="ship" value="Star Name" 
+        placeholder="star-to-withdraw">
     </div>
-    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
+    <div ng-init="addressError = false" 
+      ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'">
       <input type="text" 
         class="monospace col-md-12" 
         ng-change="addressError = valAddress(poolAddress)" 

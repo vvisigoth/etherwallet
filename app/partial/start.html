@@ -14,7 +14,7 @@
     </div>
     <div class="label-group">
       <h4 class="sub-title">Ship to start:</h4>
-      <h2 class="ship-name blue monospace mt-0" ng-show="shipName != ' mt-0">
+      <h2 class="ship-name blue monospace mt-0" ng-show="shipName != ''">
         {{ shipName[0] == '~' ? shipName : '~' + shipName }}
       </h2>
     </div>
@@ -24,7 +24,7 @@
     <div ng-init="shipError = false" 
       ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'" 
       ng-show="offline">
-      <input type="text" 
+      <input sig type="text" 
         class="col-md-8 monospace" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 

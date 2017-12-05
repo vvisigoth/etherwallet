@@ -24,7 +24,7 @@
     <div ng-init="shipError = false" 
       ng-class="shipError ? 'error input-group mb-4' : 'input-group mb-4'" 
       ng-show="offline">
-      <input type="text" 
+      <input sig type="text" 
         class="col-md-8 monospace" 
         ng-change="shipError = valShip(ob.toAddress(shipName))" 
         ng-model="shipName" 
