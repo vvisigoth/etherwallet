@@ -102,6 +102,29 @@ app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$l
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
 app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', '$rootScope', 'walletService', 'obService', urbitCtrl]);
+app.directive("sig", function(){
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModelController) {
+      console.log('directive triggered');
+      ngModelController.$parsers.push(function(data) {
+        //convert data from view format to model format
+        return data;
+      });
+      ngModelController.$formatters.push(function(data) {
+        if (!data) {
+        return '~'
+        }
+        if (data[0] === '~') {
+          return data
+        }
+        else {
+          return '~' + data
+        }
+      });
+      }
+    };
+});
 app.config(['$routeProvider', '$locationProvider', 
     function($routeProvider, $locationProvider) {
     console.log('templateService', templateService);
