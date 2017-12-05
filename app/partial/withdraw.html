@@ -22,11 +22,9 @@
       <div ng-show="poolAssets">
         <label>Available stars</label>
         <div class="select-dropdown col-md-8">
-          <select ng-options="asset as asset for asset in poolAssets" name="pool-assets" ng-model="ship"></select>
-            <!--
-            <option ng-repeat="asset in poolAssets" ng-change="ship = toShipName(asset)">{{ formatShipName(toShipName(asset)) }}</option>
-            -->
+          <select ng-options="asset as asset for asset in poolAssets" class="monospace"name="pool-assets" ng-model="ship"></select>
           </select>
+          <div class="triangle-base triangle-down"></div>
         </div>
       </div>
       <button class="btn btn-primary" 
