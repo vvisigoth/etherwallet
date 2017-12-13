@@ -41,7 +41,7 @@ with actions available for that Ship. It will also allow you to connect to a Poo
 which is an exchange for exchanging Stars for Spark Tokens and vice versa. If a Pool 
 is connected, you will see your address' Spark balance.
 
-![Urbit Wallet State](https://i.imgur.com/5GjDw5W.png)
+<img src="./app/images/muw_state_border.png" width="50%"/>
 
 Below each ship, you will see a list of actions that corresponds to that ship's type 
 (Galaxy, Star, Planet) and state (Locked or Living). In the default online mode 
@@ -61,7 +61,7 @@ the hash of the transaction.
 
 When you're done, you can navigate back to the State screen to execute other transactions.
 
-![Transaction](https://i.imgur.com/zvH6p8T.png)
+<img src="./app/images/muw_launch_border.png" width="50%"/>
 
 ### Offline Mode
 
@@ -107,6 +107,5 @@ Urbit constitution.
 Constitution owner (is allowed to create galaxies): `0x6deffb0cafdb11d175f123f6891aa64f01c24f7d`
 
 Test pool: `0xb71c0b6cee1bcae56dfe95cd9d3e41ddd7eafc43`
-
 
 
