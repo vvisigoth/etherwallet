@@ -41,7 +41,10 @@ with actions available for that Ship. It will also allow you to connect to a Poo
 which is an exchange for exchanging Stars for Spark Tokens and vice versa. If a Pool 
 is connected, you will see your address' Spark balance.
 
-<img src="./app/images/muw_state_border.png" width="50%"/>
+<div style="text-align: center">
+  <img src="./app/images/muw_state_border.png" width="50%"/>
+</div>
+<br/>
 
 Below each ship, you will see a list of actions that corresponds to that ship's type 
 (Galaxy, Star, Planet) and state (Locked or Living). In the default online mode 
@@ -57,11 +60,14 @@ creates and signs the transaction. The display will show both the signed and
 unsigned transactions for approval. Once you've created a transaction, you can press 
 "Send," which will send the transaction to the Ethereum node to which your wallet 
 is connected and you'll be shown a confirmation (or warning) dialogue, giving you 
-the hash of the transaction.
+the hash of the transaction. 
 
 When you're done, you can navigate back to the State screen to execute other transactions.
 
-<img src="./app/images/muw_launch_border.png" width="50%"/>
+<div style="text-align: center">
+  <img src="./app/images/muw_launch_border.png" width="50%"/>
+</div>
+<br/>
 
 ### Offline Mode
 
