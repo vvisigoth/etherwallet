@@ -11,10 +11,10 @@
       </section>
       <section class="sparks col-md-12 mb-8">
         <h4>Sparks:</h4>
-        <div class="spark-ops" ng-show="poolAddress">
+       <div class="spark-ops" ng-init="poolAddress = '0xb71c0b6cee1bcae56dfe95cd9d3e41ddd7eafc43'; balance = 12" ng-show="poolAddress">
           <div class="spark-bal row">
-            <span class="sparks h2 green">{{ balance }} </span>
-            <h2 class="green ">{{ balance > 1 ? 'USP' : 'USP' }}</h2>
+            <span class="sparks h2 green">{{ balance }} USP</span>
+            <span class="sparks pool-address"> @ {{ poolAddress }}</span>
           </div>
           <button class="btn btn-tetiary" ng-click="tmpPool = poolAddress; poolAddress = ''">Change pool</button>
           <button class="btn btn-primary" ng-click="path('state/withdraw')" ng-show="balance > 1">Withdraw star</button>

@@ -182,6 +182,13 @@ input[type=text].confirmed
   font-size: 4rem;
 }
 
+span.pool-address
+{
+  margin-top: 4rem;
+  line-height: 13rem;
+  font-size: 6rem;
+}
+
 .radio-buttons
 {
   margin: 2rem 0 2rem 0;
