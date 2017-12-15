@@ -1,11 +1,52 @@
-
-@@include('../includes/header.tpl')
+<!DOCTYPE html>
+<html lang="en" ng-app="mewApp">
+<head>
+<meta charset="utf-8">
+<title>Urbit Wallet</title>
+<meta name="description" content="My Urbit Wallet is a tool for managing your Urbit ships via the Ethereum blockchain">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/urbitwallet.css">
+<!--
+<base href="/">
+-->
+<link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+<script type="text/javascript" src="js/urbitwallet-static.min.js"></script>
+<script type="text/javascript" src="js/urbitwallet-master.js"></script>
+<!--
+<link rel="manifest" href="images/fav/manifest.json">
+-->
+<meta property="og:url" content="https://urbit.org" />
+<meta property="og:title" content="My Urbit Wallet"/>
+<link rel="shortcut icon" href="images/fav/favicon.ico">
+</head>
+<body>
+<muw-header></muw-header>
 
 <section class="container" style="min-height: 50%" ng-controller='viewCtrl'>
+  <ng-view></ng-view>
 
-  @@include('../includes/urbit.tpl')
-  @@include('../includes/alerts.tpl')
+  <div data-ng-repeat="alert in notifier.alerts" ng-init="titles = {success: 'Success!', 'info': 'FYI', warning: 'Warning', danger: 'Danger'}">
+    <div class="alert popup alert-{{alert.type}} animated-show-hide"
+         style="bottom: {{85*$index}}px; z-index: {{999+$index}};">
+      <div class="container">
+        <h1 class="mt-35">{{ titles[alert.type] }}</h1>
+        <div class="">
+          <p class="alert-message col-md-6" ng-bind-html="alert.message">
+          </p>
+          <!--
+          <div class="close-icon col-md-1" ng-click="alert.close()">X</div>
+          -->
+          <button class="btn btn-primary mt-8" ng-click="alert.close()">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </section>
 
-@@include('../includes/footer.tpl')
+<section class="tmp" style="height: 200px;"></section>
+
+</main>
+</body>
+</html>

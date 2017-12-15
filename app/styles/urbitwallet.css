@@ -1,0 +1,323 @@
+
+header 
+{
+  padding: 1rem;
+}
+
+header a 
+{
+}
+
+section.tree-list li > span 
+{
+  cursor: pointer;
+}
+
+header .mode-label .mode-indicator
+{
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 1000px;
+  display: inline-block;
+  margin: 2.15rem 0.8rem 0 0;
+}
+
+header .mode .mode-indicator.off
+{
+  /*background-color: #fffba7;*/
+}
+
+
+i.glyph
+{
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: black;
+  border-radius: 10000px;
+  margin: 9rem 4rem 0 0;
+}
+
+.no-spark-bal i.glyph
+{
+  margin: 4rem 4rem 0 0;
+}
+
+.spark-bal i.glyph.green
+{
+   background-color: #8FEE9D;
+}
+
+.ship-actions
+{
+  margin-left: 5.2rem;
+}
+
+.ship-actions ul {
+  line-height: 4rem;
+}
+
+.buffer
+{
+  color: transparent
+}
+
+/*
+li.spark-bal:extend(h3, .green)
+{
+}
+
+.spark-action a
+{
+  &:extend(.blue);
+}
+
+
+span#address:extend(.text-700)
+{
+}
+
+span.ship-name
+{
+}
+
+li.ship-list:extend(h3)
+{
+}
+*/
+
+div.spark-action
+{
+  font-size: 3rem;
+  line-height: 5rem;
+}
+
+.vote-toggle .checkbox
+{
+  background-color: inherit;
+  border: 0.5rem solid #FF4444;
+}
+
+.vote-toggle .checkbox.checked
+{
+  background-color: #8fee9d;
+  border: 0.5rem solid #8fee9d;
+}
+
+input[type=password]
+{
+  border: 2px solid #000;
+  padding: 12px;
+}
+
+.transaction btn
+{
+  padding: 3rem 12px;
+}
+
+.checkbox
+{
+  cursor: pointer;
+  height: 6rem;
+  width: 6rem;
+  background-color: #d4d4d4;
+}
+
+.checkbox.checked
+{
+  /*background-color: #5b5b5b; */
+  background-color: #8FEE9D;
+}
+
+/*
+section.transaction-params .sub-title
+{
+  &:extend(.text-700);
+}
+*/
+
+.addresses span.address 
+{
+  cursor: pointer;
+}
+
+
+span.address,
+span.sparks,
+.monospace
+{
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+}
+
+span.sparks
+{
+  white-space: pre;
+  font-size:  12rem;
+}
+
+input[type=text].confirmed
+{
+  border-color: #8FEE9D;
+}
+
+.transaction .input[type=text]
+{
+  border-color: #d4d4d4;
+  padding: 3rem 12px;
+}
+
+.input-group {
+  /*
+  margin: 0px 0 2rem;
+  height: 14rem;
+  */
+}
+
+.slim-input-group
+{
+  height: 9rem;
+}
+
+.pool-input input
+{
+  font-size: 4rem;
+}
+
+span.pool-address
+{
+  margin-top: 4rem;
+  line-height: 13rem;
+  font-size: 6rem;
+}
+
+.radio-buttons
+{
+  margin: 2rem 0 2rem 0;
+}
+
+.node-options
+{
+  margin-top: 0;
+}
+
+.transaction .tx 
+{
+  word-break: break-all;
+  background-color: #f1f1f1;
+  padding: 3rem 12px 3rem 12px;
+}
+
+button.disabled {
+  cursor: initial;
+  color: gray;
+} 
+
+input.is-valid,
+textarea.is-valid
+{
+  border-color: #8fee9d;
+}
+
+/* wallet selection  */
+.unselected-addr a
+{
+  color: #d4d4d4;
+}
+
+#selectedTypeMnemonic textarea,
+#selectedTypeKey textarea 
+{
+  padding: 12px;
+}
+.alert.popup 
+{
+  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.alert.popup a
+{
+}
+
+.alert.popup .container 
+{
+}
+
+/* THESE ARE OVERRIDES OF BASE, PR THESE */
+
+.button-group .btn
+{
+  margin-left: -0.6rem;
+  margin-right: -0.6rem;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+@font-face {
+font-family: "Source Code Pro";
+src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-extralight.woff");
+font-weight: 200; }
+
+@font-face {
+font-family: "Source Code Pro";
+src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-light.woff");
+font-weight: 300; }
+
+@font-face {
+font-family: "Source Code Pro";
+src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-regular.woff");
+font-weight: 400; }
+
+@font-face {
+font-family: "Source Code Pro";
+src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-medium.woff");
+font-weight: 500; }
+
+@font-face {
+font-family: "Source Code Pro";
+src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-bold.woff");
+font-weight: 600; }
+
+@font-face {
+font-family: "Source Code Pro";
+src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-black.woff");
+font-weight: 700; }
+
+/* END OF BASE OVERRIDES */
+
+.toggle-group
+{
+  margin-left: 0.6rem;
+}
+
+.alert-info
+{
+  /*
+  color: #577CFF;
+  */
+}
+
+.alert-success
+{
+  /*
+  color: #8FEE9D;
+  */
+}
+
+.alert-danger,
+.alert-warning,
+{
+  /*
+  color: #FF4444;
+  */
+}
+
+.close-icon
+{
+  color: white;
+  cursor: pointer;
+}

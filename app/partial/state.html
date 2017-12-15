@@ -1,0 +1,172 @@
+<div 
+    ng-init="loadAddresses();">
+    <span id="" class="text-700 address">{{ wallet.getAddressString() }}</span>
+    <h1 class="mt-20">Your Urbit Wallet</h1>
+    <div class="online" ng-show="!offline">
+      <section class="constitution-owner col-md-12 mb-8" ng-show="wallet.getAddressString() == '0x6deffb0cafdb11d175f123f6891aa64f01c24f7d'">
+        <button class="btn-primary btn"
+          ng-click="path('state/creategalaxy')">
+          Create galaxy &#8594 
+        </button>
+      </section>
+      <section class="sparks col-md-12 mb-8">
+        <h4>Sparks:</h4>
+       <div class="spark-ops" ng-init="poolAddress = '0xb71c0b6cee1bcae56dfe95cd9d3e41ddd7eafc43'; balance = 12" ng-show="poolAddress">
+          <div class="spark-bal row">
+            <span class="sparks h2 green">{{ balance }} USP</span>
+            <span class="sparks pool-address"> @ {{ poolAddress }}</span>
+          </div>
+          <button class="btn btn-tetiary" ng-click="tmpPool = poolAddress; poolAddress = ''">Change pool</button>
+          <button class="btn btn-primary" ng-click="path('state/withdraw')" ng-show="balance > 1">Withdraw star</button>
+        </div>
+        <div class="pool-input" ng-show="!poolAddress">
+          <div class="input-group mb-4">
+            <input type="text" class="monospace col-md-12" ng-model="tmpPool" placeholder="pool-address"/>
+          </div>
+          <button class="btn btn-primary" ng-click="setPoolAddress(tmpPool); readBalance(); showPool = false;">Connect</button>
+        </div>
+      </section>
+      <section class="ships col-md-12">
+        <h4>Ships:</h4>
+        <div class="ship-entry" ng-repeat="ship in ownedShips">
+          <div class="ship-name row">
+            <h2 class="monospace">{{ ship.name }}</h2>
+          </div>
+          <div class="ship-actions row">
+            <div class="state-col col-md-2">
+              <div class="col-title text-600 h-font">
+                State:
+              </div>
+              <ul ng-class="ship.state == 1 ? 'red list-reset state-label text-700': 'green list-reset state-label text-700'" >
+                <li>
+                  {{ shipStates[ship.state] }}
+                </li>
+              </ul>
+            </div>
+            <div class="live-action-col col-md-3" ng-switch="ship.state == 1">
+              <div class="col-title text-600 h-font">
+                Actions
+              </div>
+              <ul class="list-reset" ng-switch-when="true">
+                <li>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/start')">Start</a>
+                </li>
+                <li>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/transfer')">Transfer</a>
+                </li>
+                <li ng-show="ship.address < 65536">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/allowtransfer')">Allow transfer</a>
+                </li>
+                <li ng-show="ship.address < 65536">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/deposit')">Deposit</a>
+                </li>
+                <li ng-show="ship.address < 256">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/vote')">Vote</a>
+                </li>
+              </ul>
+              <ul class="list-reset gray-light" ng-switch-when="false">
+                <li>
+                  <u>Start</u>
+                </li>
+                <li>
+                  <u>Transfer</u>
+                </li>
+                <li>
+                  <u>Allow transfer</u>
+                </li>
+                <li>
+                  <u>Deposit</u>
+                </li>
+                <li>
+                  <u>Vote</u>
+                </li>
+              </ul>
+            </div>
+            <div class="live-action-col col-md-3" ng-switch="ship.state == 2">
+              <div class="col-title buffer">
+                00
+              </div>
+              <ul class="list-reset" ng-switch-when="true">
+                <li ng-show="ship.address < 65536">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/launch')">Launch child</a>
+                </li>
+                <li>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/launchrights')">Grand/revoke rights</a>
+                </li>
+                <li>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/rekey')">Rekey</a>
+                </li>
+                <li>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/escape')">Escape</a>
+                </li>
+                <li>
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/adopt')">Adopt/reject</a>
+                </li>
+                <li ng-show="ship.address < 256">
+                  <a class="" href='' ng-click="path('state/' + ship.name + '/vote')">Vote</a>
+                </li>
+              </ul>
+              <ul class="list-reset gray-light" ng-switch-when="false">
+                <li>
+                  <u>Launch child</u>
+                </li>
+                <li>
+                  <u>Grant/revoke rights</u>
+                </li>
+                <li>
+                  <u>Rekey</u>
+                </li>
+                <li>
+                  <u>Escape</u>
+                </li>
+                <li>
+                  <u>Adopt/reject</u>
+                </li>
+                <li>
+                  <u>Vote</u>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="offline" ng-show="offline">
+      <h2>Offline transactions</h2>
+        <ul class="">
+          <li> 
+            <a href="" ng-click="path('state/creategalaxy')">Create Galaxy</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/start')">Start</a>
+          </li>
+          <li>
+            <a class="" href="" ng-click="path('state/offline/transfer')">Transfer</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/vote')">Vote</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/launch')">Launch child</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/launchrights')">Grant rights</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/rekey')">Rekey</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/escape')">Escape</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/adopt')">Adopt</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/allowtransfer')">Allow transfer</a>
+          </li>
+          <li> 
+            <a class="" href="" ng-click="path('state/offline/deposit')">Deposit</a>
+          </li>
+        </ul>
+    </div>
+</div>

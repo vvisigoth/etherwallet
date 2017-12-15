@@ -1,0 +1,119 @@
+<div id="vote" 
+  class="col-md-12 transaction" 
+  ng-init="loadAddresses(); shipName = $routeParams.p != 'offline' ? $routeParams.p : ''">
+  <span class="address row text-700">
+    {{ wallet.getAddressString() }}
+  </span>
+  <section class="general-information mb-8 mt-20">
+    <h1 id="action-title row">Vote</h1>
+    <div class="help-text row">
+      <p class="col-md-8">You have one vote per galaxy owned. If you would like to vote on an abstract proposal, check the appropriate box and enter the proposal hash. To vote on a new constitution contract, enter the new proposed constitution address and your vote. Once a concrete constitution attains a majority vote, ownership of all data contracts is transferred to the proposed address and the current Constitution is destroyed.
+      </p>
+      <p class="col-md-8 red" ng-show="offline">You are in offline mode. Please copy and paste the transaction below into an appropriate client.
+      </p>
+    </div>
+    <div class="label-group">
+      <h4 class="sub-title">Vote on behalf of:</h4>
+      <h2 class="ship-name blue monospace mt-0" ng-show="shipName != ''">
+        {{ shipName[0] == '~' ? shipName : '~' + shipName }}
+      </h2>
+    </div>
+  </section>
+  <section class="transaction-params mb-8">
+    <!-- show this offline -->
+    <div ng-init="parentShipError = false" 
+      ng-class="parentShipError ? 'error input-group mb-4' : 'input-group mb-4'" 
+      ng-show="offline">
+      <input sig type="text" 
+        class="col-md-8 monospace" 
+        ng-change="parentShipError = valShip(ob.toAddress(shipName))" 
+        ng-model="shipName" 
+        value="Star Name" 
+        placeholder="parent-ship">
+      <div class="error-label">{{ shipName }} is not a ship</div>
+    </div>
+    <!-- /show this offline -->
+    <div class="button-group input-group mb-4 toggle-group" ng-init="concrete=true">
+      <button ng-class="concrete ? 'btn btn-primary' : 'btn'" ng-click="concrete = true">Concrete</button>
+      <button ng-class="!concrete ? 'btn btn-primary' : 'btn'" ng-click="concrete = false">Abstract</button>
+    </div>
+    <div class="button-group input-group mb-4 toggle-group" ng-init="voteYes=false">
+      <button ng-class="voteYes ? 'btn btn-secondary' : 'btn'" ng-click="voteYes = true">Yes</button>
+      <button ng-class="!voteYes ? 'btn btn-warning' : 'btn'" ng-click="voteYes = false">No</button>
+    </div>
+    <div ng-init="addressError = false" ng-class="addressError ? 'error input-group mb-4' : 'input-group mb-4'" ng-show="concrete">
+      <input type="text" class="col-md-12 monospace" ng-change="addressError = valAddress(address)" ng-model="address" value="Address" placeholder="constitution-address">
+      <div class="error-label">Not a valid address</div>
+    </div>
+    <div ng-init="hashError = false" ng-class="hashError ? 'error input-group mb-4' : 'input-group mb-4'" ng-show="!concrete">
+      <input type="text" class="col-md-12 monospace" ng-change="" ng-model="hash" value="Address" placeholder="proposal-hash">
+      <div class="error-label">Not a valid hash</div>
+    </div>
+    <div>
+    </div>
+    <!-- show these offline -->
+    <div class="offline-params" ng-show="offline">
+      <div ng-init="gasLimitError = false" 
+        ng-class="gasLimitError ? 'error input-group mb-4' : 'input-group mb-4'">
+        <input type="text" 
+          class="col-md-4" 
+          ng-change="gasLimitError = tx.gasLimit > 3000000"
+          ng-model="tx.gasLimit" 
+          value="Gas Limit" 
+          placeholder="gas-limit">
+        <div class="error-label">{{ manualGas }} is too high</div>
+      </div>
+      <div ng-init="nonceError = false" 
+        ng-class="nonceError ? 'error input-group mb-4' : 'input-group mb-4'">
+        <input type="text" 
+          class="col-md-4" 
+          ng-model="nonceDec" 
+          value="nonce" 
+          placeholder="nonce">
+      </div>
+      <div ng-init="gasPriceError = false" 
+        ng-class="gasPriceError ? 'error input-group mb-4' : 'input-group mb-4'">
+        <input type="text" 
+          class="col-md-4" 
+          ng-model="gasPriceDec" 
+          value="gasPrice" 
+          placeholder="gas-price">
+      </div>
+    </div>
+    <!-- /show these offline -->
+    <div class="input-group mb-4 row">
+      <div class="checkbox-container">
+        <div ng-class="checked ? 'checkbox checked' : 'checkbox'" 
+          ng-click="checked = checked == true ? false : true">
+        </div>
+      </div>
+      <label class="action-confirmation ml-4">Yes I am sure</label>
+    </div>
+    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+    <button ng-class="!locked && (address || hash) && checked ? 'btn btn-secondary' : 'btn disabled'" 
+      ng-click="(address || hash) && checked ? concrete ? doCastConcreteVote(ob.toAddress(shipName), address, voteYes) : doCastAbstractVote(ob.toAddress(shipName), hash, voteYes) : ''" >
+      Create
+    </button>
+  </section>
+  <section class="transaction-data" 
+    ng-show="rawTx" 
+    ng-init="sent = false">
+    <h4>Raw Tx</h4>
+    <div class="raw-tx row col-md-8 text-code tx input-group mb-4">
+      {{ rawTx }}
+    </div>
+    <h4>Signed Tx</h4>
+    <div class="signed-tx row col-md-8 text-code tx input-group mb-4">
+      {{ signedTx }}
+    </div>
+    <button class="btn btn-tetiary" 
+      ng-click="path('state')">
+      &#8592 Back
+    </button>
+    <button ng-show="!offline" ng-init="sent = false"
+      ng-class="!sent ? 'btn btn-primary' : 'btn disabled'"
+      ng-click="sendTx(); sent = true">
+      Send
+    </button>
+  </section>
+</div>

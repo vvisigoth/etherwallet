@@ -1,5 +1,61 @@
 'use strict';
-var tabsCtrl = function($scope, globalService, $translate, $sce) {
+var tabsCtrl = function($scope, globalService, $translate, $sce, $location, $rootScope, walletService) {
+
+    // Urbit Conveniences
+    $scope.path = function(p) {
+      if (!p) {
+        return $location.path();
+      } else {
+        return $location.path(p);
+      }
+    };
+
+    $scope.wallet = walletService.wallet;
+
+    //Offline status done through rootScope
+    $scope.setOffline = function() {
+      $scope.offline = true;
+      $rootScope.offline = true;
+    };
+
+    $scope.toggleHttpView = function() {
+      //"true" state is empty params for user
+      //and pw
+      //"false" state is null
+      if (!$scope.customNode.httpBasicAuth) {
+        $scope.customNode.httpBasicAuth = {};
+        $scope.customNode.httpBasicAuth.user = '';
+        $scope.customNode.httpBasicAuth.password = '';
+      } else {
+        $scope.customNode.httpBasicAuth = null;
+      }
+    }
+
+    $scope.navDisplayDict = {
+      'creategalaxy': 'Create galaxy',
+      'launchrights': 'Launch rights',
+      'allowtransfer': 'Allow transfer',
+      'withdraw': 'Withdraw star',
+      'deposit': 'Deposit',
+      'launch': 'Launch',
+      'transfer': 'Transfer',
+      'rekey': 'Rekey',
+      'escape': 'Escape',
+      'adopt': 'Adopt',
+      'vote': 'Vote',
+      'start': 'Start'
+    };
+
+    // This is dependent on URL handling
+    $scope.isTransaction = function(pathString) {
+      var r = pathString.split('/');
+      if (r[1] == 'state' && r.length > 2) {
+        return $scope.navDisplayDict[r[r.length - 1]];
+      } else {
+        return;
+      }
+    };
+
     $scope.gService = globalService;
     $scope.tabNames = $scope.gService.tabs;
     $scope.curLang = 'English';
@@ -94,7 +150,9 @@ var tabsCtrl = function($scope, globalService, $translate, $sce) {
                 $scope.notifier.info( globalFuncs.successMsgs[5] + '— Now, check the URL: <strong>' + window.location.href + '.</strong> <br /> Network: <strong>' + $scope.nodeType + ' </strong> provided by <strong>' + $scope.nodeService + '.</strong>', 5000)
             }
         });
-        networkHasChanged && window.setTimeout(function() {location.reload() }, 250)
+        networkHasChanged && window.setTimeout(function() {location.reload() }, 250);
+        // set offline to false
+        $rootScope.offline = false;
     }
     $scope.checkNodeUrl = function(nodeUrl) {
         return $scope.Validator.isValidURL(nodeUrl);
@@ -163,7 +221,7 @@ var tabsCtrl = function($scope, globalService, $translate, $sce) {
         $scope.addCustomNodeToList(customNode);
         $scope.changeNode('cus_' + customNode.options + '_' + ($scope.customNodeCount - 1));
         globalFuncs.localStorage.setItem("localNodes", JSON.stringify(localNodes));
-        $scope.customNodeModal.close();
+        //$scope.customNodeModal.close();
         $scope.customNode = { options: 'eth', name: '', url: '', port: '', httpBasicAuth: null, eip155: false, chainId: '' };
     }
 

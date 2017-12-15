@@ -1,0 +1,35 @@
+<header class="{{curNode.name}} {{curNode.service}} {{curNode.service}} nav-index-{{gService.currentTab}}" aria-label="header" ng-controller='tabsCtrl' >
+
+<div class="container">
+  <div class="row">
+    <div class="path text-600 col-md-10">
+      <span ng-show="path() == '/type' || path() == '/'">
+        Wallet
+      </span>
+      <span ng-show="path() == '/type/mode'">
+        <a href="" ng-click="path('type')" >Wallet</a> / Mode
+      </span>
+      <span ng-show="path() == '/state'">
+        <a href="" ng-click="path('type')">Wallet</a> / 
+        <span class="mode-label">
+          <div ng-class="!offline ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+          </div>
+        <a href="" ng-click="path('type/mode')">{{"  "}}{{ !offline ? curNode.name : "Offline"}}</a>
+        </span>
+        / State
+      </span>
+      <span ng-show="isTransaction(path())">
+        <a href="" ng-click="path('type')">Wallet</a> / 
+        <span class="mode-label">
+          <div ng-class="!offline ? 'on green-hl mode-indicator' : 'off red-hl mode-indicator'">
+          </div>
+        <a href="" ng-click="path('type/mode')">{{"  "}}{{ !offline ? curNode.name : "Offline"}}</a>
+        </span>
+        / <a href="" ng-click="path('state')">State</a> / {{ isTransaction(path()) }}
+      </span>
+    </div>
+    <!-- dummy indicator, link to urbitCtrl -->
+  </div>
+</div>
+
+</header>

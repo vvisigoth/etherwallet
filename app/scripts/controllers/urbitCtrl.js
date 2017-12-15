@@ -1,9 +1,25 @@
 'use strict';
-var urbitCtrl = function($scope, $sce, walletService) {
+var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, walletService, obService) {
+    // add route params to scope
+    $scope.$routeParams = $routeParams;
+
+    // ++  ob 
+    $scope.ob = obService;
+
+    //$scope.poolAddress;
+    $scope.sparkBal = 0;
+
+    //Offline status and poolAddress done through rootScope for persistence
+    $scope.offline = $rootScope.offline;
+
+    $scope.poolAddress = $rootScope.poolAddress;
+
+
+    //Is creating/signing tx
+    $scope.loading = false;
+
     $scope.ajaxReq = ajaxReq;
-    walletService.wallet = null;
     $scope.visibility = "interactView";
-    $scope.sendContractModal = new Modal(document.getElementById('sendContract'));
     $scope.showReadWrite = false;
     $scope.Validator = Validator;
     $scope.oneSpark = 1000000000000000000;
@@ -16,13 +32,21 @@ var urbitCtrl = function($scope, $sce, walletService) {
         nonce: null,
         gasPrice: null
     }
+
+    // Use these in lieu of tx.* for offline transaction generation
+    $scope.nonceDec;
+    $scope.gasPriceDec;
+
+    // Ship states for UI
+    $scope.shipStates = ['Latent', 'Locked', 'Living']; 
+
     $scope.contract = {
         address: globalFuncs.urlGet('address') != null && $scope.Validator.isValidAddress(globalFuncs.urlGet('address')) ? globalFuncs.urlGet('address') : '',
         abi: '',
         functions: [],
         selectedFunc: null
     }
-    $scope.selectedAbi = ajaxReq.abiList[0];
+    //$scope.selectedAbi = ajaxReq.abiList[0];
     $scope.showRaw = false;
     $scope.$watch(function() {
         if (walletService.wallet == null) return null;
@@ -32,7 +56,12 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.wallet = walletService.wallet;
         $scope.wd = true;
         $scope.tx.nonce = 0;
-
+    });
+    $scope.$watch('wallet', function(newVal, oldVal) {
+      if (newVal) {
+        $scope.readOwnedShips(newVal.getAddressString());
+        $scope.readBalance();
+      }
     });
     $scope.$watch('visibility', function(newValue, oldValue) {
         $scope.tx = {
@@ -56,6 +85,24 @@ var urbitCtrl = function($scope, $sce, walletService) {
             }
         }
     });
+    $scope.$watch('ownedShips', function(newVal, oldVal) {
+      if (newVal == oldVal) {
+        return;
+      }
+      var k = Object.keys(newVal);
+      for (var i = 0; i < k.length; i ++) {
+        $scope.readShipData(k[i]);
+      };
+    });
+    $scope.$watch('rawTx', function(newVal, oldVal) {
+      if (newVal == oldVal) {
+        return;
+      }
+      $scope.loading = false;
+    });
+    $scope.path = function(path) {
+      $location.path(path);
+    }
     $scope.toWei = function(ether) {
       return etherUnits.toWei(ether, "ether");
     }
@@ -76,6 +123,34 @@ var urbitCtrl = function($scope, $sce, walletService) {
             $scope.initContract();
         }, 50);
     }
+
+    $scope.generateTxOffline = function() {
+        if (!ethFuncs.validateEtherAddress($scope.tx.to)) {
+            $scope.notifier.danger(globalFuncs.errorMsgs[5]);
+            return;
+        }
+        var txData = uiFuncs.getTxData($scope);
+        txData.isOffline = true;
+        txData.nonce = ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.nonceDec));
+        txData.gasPrice = ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.gasPriceDec));
+        if ($scope.tokenTx.id != 'ether') {
+            txData.data = $scope.tokenObjs[$scope.tokenTx.id].getData($scope.tx.to, $scope.tx.value).data;
+            txData.to = $scope.tokenObjs[$scope.tokenTx.id].getContractAddress();
+            txData.value = '0x00';
+        }
+        uiFuncs.generateTx(txData, function(rawTx) {
+            if (!rawTx.isError) {
+                $scope.rawTx = rawTx.rawTx;
+                $scope.signedTx = rawTx.signedTx;
+                $scope.showRaw = true;
+            } else {
+                $scope.showRaw = false;
+                $scope.notifier.danger(rawTx.error);
+            }
+            if (!$scope.$$phase) $scope.$apply();
+        });
+    }
+
     $scope.generateTx = function() {
         try {
             if ($scope.wallet == null)
@@ -99,7 +174,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
                     } else {
                         $scope.showRaw = false;
                         $scope.notifier.danger(rawTx.error);
-                        console.error(rawTx.error);
                     }
                     if (!$scope.$$phase) $scope.$apply();
                 });
@@ -109,7 +183,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }
     }
     $scope.sendTx = function() {
-        $scope.sendContractModal.close();
+        // need some way to show error or success
         uiFuncs.sendTx($scope.signedTx, function(resp) {
             if (!resp.isError) {
                 var bExStr = $scope.ajaxReq.type != nodes.nodeTypes.Custom ? "<a href='" + $scope.ajaxReq.blockExplorerTX.replace("[[txHash]]", resp.data) + "' target='_blank' rel='noopener'> View your transaction </a>" : '';
@@ -187,7 +261,9 @@ var urbitCtrl = function($scope, $sce, walletService) {
         }
         $scope.tx.data = $scope.getTxData();
         $scope.tx.to = $scope.contract.address;
-        $scope.sendContractModal.open();
+        //$scope.sendContractModal.open();
+        // just generate the transaction
+        $scope.generateTx();
     }
     //
     $scope.buildTransactionData = function(func, input) {
@@ -200,52 +276,66 @@ var urbitCtrl = function($scope, $sce, walletService) {
     //NOTE value is expected in wei
     $scope.doTransaction = function(address, func, input, value) {
       if ($scope.wallet == null) {
-        console.error("no wallet");
         return;
       }
       var data = $scope.buildTransactionData(func, input);
       $scope.tx.data = data;
       $scope.tx.value = value || 0;
       $scope.tx.unit = "wei";
-      var estObj = {
-        from: $scope.wallet.getAddressString(),
-        value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.tx.value)),
-        data: ethFuncs.sanitizeHex(data),
-      }
-      estObj.to = address;
-      ethFuncs.estimateGas(estObj, function(data) {
-        if (data.error) {
-          console.log("on contract " + address);
-          console.log("calling " + func + " " + input);
-          console.log("sending " + value + " wei");
-          // Proper input validation should prevent this.
-          console.error("Gas estimation failed. Probably invalid transaction. Are your parameters correct?");
-        } else {
-          // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
-          //TODO 1.8 is a bit much though. consult experts on why this can be so
-          //     unpredictable, and how to fix it.
-          $scope.tx.gasLimit = Math.round(data.data * 1.8);
-          try {
-            if ($scope.wallet == null)
-            { throw globalFuncs.errorMsgs[3]; }
-            else if (!ethFuncs.validateHexString($scope.tx.data))
-            { throw globalFuncs.errorMsgs[9]; }
-            else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0)
-            { throw globalFuncs.errorMsgs[8]; }
-            $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
-            ajaxReq.getTransactionData($scope.wallet.getAddressString(), function(data) {
-              if (data.error) $scope.notifier.danger(data.msg);
-              data = data.data;
-              $scope.tx.to = address;
-              $scope.tx.contractAddr = $scope.tx.to;
-              $scope.showRaw = false;
-              $scope.sendContractModal.open();
-            });
-          } catch (e) {
-            $scope.notifier.danger(e);
-          }
+      if (!$scope.offline) {
+        var estObj = {
+          from: $scope.wallet.getAddressString(),
+          value: ethFuncs.sanitizeHex(ethFuncs.decimalToHex($scope.tx.value)),
+          data: ethFuncs.sanitizeHex(data),
         }
-      });
+        estObj.to = address;
+        ethFuncs.estimateGas(estObj, function(data) {
+          if (data.error) {
+            // Proper input validation should prevent this.
+          } else {
+            // to not fall victim to inaccurate estimates, allow slightly more gas to be used.
+            //TODO 1.8 is a bit much though. consult experts on why this can be so
+            //     unpredictable, and how to fix it.
+            $scope.tx.gasLimit = Math.round(data.data * 1.8);
+            try {
+              if ($scope.wallet == null)
+              { throw globalFuncs.errorMsgs[3]; }
+              else if (!ethFuncs.validateHexString($scope.tx.data))
+              { throw globalFuncs.errorMsgs[9]; }
+              else if (!globalFuncs.isNumeric($scope.tx.gasLimit) || parseFloat($scope.tx.gasLimit) <= 0)
+              { throw globalFuncs.errorMsgs[8]; }
+              $scope.tx.data = ethFuncs.sanitizeHex($scope.tx.data);
+              ajaxReq.getTransactionData($scope.wallet.getAddressString(), function(data) {
+                if (data.error) $scope.notifier.danger(data.msg);
+                data = data.data;
+                $scope.tx.to = address;
+                $scope.tx.contractAddr = $scope.tx.to;
+                $scope.showRaw = false;
+                //$scope.sendContractModal.open();
+                // just generate transaction with default amount and gas
+                $scope.generateTx();
+              });
+            } catch (e) {
+              $scope.notifier.danger(e);
+            }
+          }
+        });
+      } else {
+        $scope.tx.to = address;
+        $scope.tokenTx = {
+            to: '',
+            value: 0,
+            id: 'ether',
+            gasLimit: 150000
+        };
+        $scope.localToken = {
+            contractAdd: "",
+            symbol: "",
+            decimals: "",
+            type: "custom",
+        };
+        $scope.generateTxOffline();
+      }
     }
     $scope.readContractData = function(address, func, input, outTypes, callback) {
         $scope.contract.address = address;
@@ -265,13 +355,11 @@ var urbitCtrl = function($scope, $sce, walletService) {
       $scope.contracts.ships = "0xe0834579269eac6beca2882a6a21f6fb0b1d7196";
       $scope.contracts.votes = "0x0654b24a5da81f6ed1ac568e802a9d6b21483561";
       $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
-      $scope.getShipsOwner(function(data) {
-        $scope.contracts.constitution = data[0];
-      });
+      $scope.contracts.constitution = '0x56db68f29203ff44a803faa2404a44ecbb7a7480';
     }
-    //
-    // VALIDATE: validate input data
-    //
+    ////
+    //// VALIDATE: validate input data
+    ////
     $scope.validateShip = function(ship, next) {
       if (ship < 0 || ship > 4294967295)
         return $scope.notifier.danger("Ship " + ship + " not a galaxy, star or planet.");
@@ -317,6 +405,106 @@ var urbitCtrl = function($scope, $sce, walletService) {
         return $scope.notifier.danger("Input too long: " + bytes);
       return next();
     }
+    //
+    // UI Validators
+    //
+    $scope.valGalaxy = function(galaxy) {
+      if (galaxy < 0 || galaxy > 255 || !galaxy) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.valStar = function(star) {
+      if (star < 256 || star > 65535 || !star) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    $scope.valShip = function(ship) {
+      if (ship < 0 || ship > 4294967295 || !ship) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.valAddress = function(address) {
+      if (!ethFuncs.validateEtherAddress(address)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.valTimestamp = function(timestamp) {
+      if (timestamp < 0 || timestamp > 4200000000) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    //
+    //UI Conviences
+    //
+    $scope.formatShipName = function(ship) {
+      if (!ship) {
+        return ship;
+      } 
+      if (ship.length < 2) {
+        return ship;
+      }
+      if (ship[0] != '~') {
+        return '~' + ship;
+      } else {
+        return ship;
+      }
+    }
+    $scope.buildOwnedShips = function() {
+      readOwnedShips();
+    };
+
+    $scope.setPoolAddress = function(x) {
+      $rootScope.poolAddress = x;
+      $scope.poolAddress = $rootScope.poolAddress;
+    }
+
+    $scope.toShipName = function(address) {
+      if (address > -1 && address < 256) {
+        return $scope.ob.toGalaxyName(address);
+      } else if (address > 255 && address < 65536) {
+        return $scope.ob.toStarName(address);
+      } else {
+        return $scope.ob.toPlanetName(address);
+      }
+    };
+
+    $scope.getChildCandidate = function(address) {
+      var candidate;
+      if (address > -1 && address < 256) {
+        candidate = ((Math.floor(Math.random() * 255) + 1) * 256 + address);
+        return candidate;
+      } else if (address > 255 && address < 65536) {
+        candidate = ((Math.floor(Math.random() * 65535) + 1) * 65536 + address);
+        return candidate;
+      } else {
+        return;
+      }
+    };
+
+    $scope.generateShipList = function(shipListString) {
+      var t = shipListString.split('\n');
+      var r = {};
+      for (var i = 0; i < t.length; i ++) {
+        if (t[i]) {
+          r[t[i]] = { address: t[i], name: '~' + $scope.toShipName(t[i])};
+        }
+      };
+      return r;
+    };
     //
     // GET: read contract data, pass the result to callback
     //
@@ -367,10 +555,10 @@ var urbitCtrl = function($scope, $sce, walletService) {
         callback
       );
     }
-    $scope.getOwnedShips = function(callback) {
+    $scope.getOwnedShips = function(addr, callback) {
       $scope.readContractData($scope.contracts.ships,
-        "getOwnedShips()",
-        [],
+        "getOwnedShips(address)",
+        [addr],
         ["uint32[]"],
         callback
       );
@@ -396,6 +584,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         "isState(uint32,uint8)",
         [ship, state],
         ["bool"],
+        callback
+      );
+    }
+    $scope.getPoolAssets = function(callback) {
+      $scope.readContractData($rootScope.poolAddress,
+        "getAllAssets()",
+        [],
+        ["uint16[]"],
         callback
       );
     }
@@ -431,6 +627,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         callback
       );
     }
+    $scope.getIsTransferrer = function(ship, address, callback) {
+      $scope.readContractData($scope.contracts.ships,
+        "isTransferrer(uint32,address)",
+        [ship, address],
+        ["bool"],
+        callback
+      );
+    }
     $scope.getIsLauncher = function(ship, address, callback) {
       $scope.readContractData($scope.contracts.ships,
         "isLauncher(uint16,address)",
@@ -440,7 +644,7 @@ var urbitCtrl = function($scope, $sce, walletService) {
       );
     }
     $scope.getSparkBalance = function(callback) {
-      $scope.readContractData($scope.contracts.spark,
+      $scope.readContractData($rootScope.poolAddress,
         "balanceOf(address)",
         [$scope.wallet.getAddressString()],
         ["uint256"],
@@ -533,162 +737,160 @@ var urbitCtrl = function($scope, $sce, walletService) {
     //
     // READ: fill fields with requested data
     //
-    $scope.readShipData = function() {
-      var ship = document.getElementById("getShipData_ship").value;
+    $scope.readShipData = function(ship) {
       $scope.validateShip(ship, function() {
         $scope.getShipData(ship, put);
       });
       function put(data) {
-        var output = [
-          document.getElementById("shipData_pilot"),
-          document.getElementById("shipData_state"),
-          document.getElementById("shipData_locked"),
-          document.getElementById("shipData_key"),
-          document.getElementById("shipData_revision"),
-          document.getElementById("shipData_parent"),
-          document.getElementById("shipData_escape")
-        ];
-        for (var i in data) {
-          output[i].value = data[i];
-        }
+        $scope.ownedShips[ship]['state'] = data[1];
       }
     }
-    $scope.readOwnedShips = function() {
-      $scope.getOwnedShips(function(data) {
+    $scope.readOwnedShips = function(addr) {
+      if (!addr) {
+        return;
+      }
+      $scope.getOwnedShips(addr, function(data) {
         var res = "";
         for (var i in data[0]) {
           res = res + data[0][i] + "\n";
         }
-        document.getElementById("ownedShips").value = res;
+        $scope.ownedShips = $scope.generateShipList(res);
       });
     }
-    $scope.readHasPilot = function() {
-      var ship = document.getElementById("getHasPilot_ship").value;
+    $scope.readHasPilot = function(ship) {
       $scope.validateShip(ship, function() {
         $scope.getHasPilot(ship, put);
       });
       function put(data) {
-        document.getElementById("hasPilot").checked = data[0];
+        $scope.hasPilot = data[0];
       }
     }
-    $scope.readIsPilot = function() {
-      var ship = document.getElementById("getIsPilot_ship").value;
-      var addr = document.getElementById("getIsPilot_address").value;
+    $scope.readIsPilot = function(ship, addr) {
       $scope.validateShip(ship, function() {
         $scope.validateAddress(addr, function() {
           $scope.getIsPilot(ship, addr, put);
         });
       });
       function put(data) {
-        document.getElementById("isPilot").checked = data[0];
+        // not 100% that this is bool
+        $scope.isPilot = data[0];
       }
     }
-    $scope.readIsState = function() {
-      var ship = document.getElementById("getIsState_ship").value;
-      var stat = document.getElementById("getIsState_state").value;
+    $scope.readIsState = function(ship, stat) {
       $scope.validateShip(ship, function() {
         $scope.validateState(stat, function() {
           $scope.getIsState(ship, stat, put);
         });
       });
       function put(data) {
-        document.getElementById("isState").checked = data[0];
+        $scope.isState = data[0];
       }
     }
-    $scope.readLocked = function() {
-      var ship = document.getElementById("getLocked_ship").value;
+    $scope.readLocked = function(ship) {
       $scope.validateShip(ship, function() {
         $scope.getLocked(ship, put);
       });
       function put(data) {
-        document.getElementById("locked").value = data[0];
+        $scope.locked = data[0];
       }
     }
-    $scope.readParent = function() {
-      var ship = document.getElementById("getParent_ship").value;
+    $scope.readPoolAssets = function() {
+      $scope.getPoolAssets(put);
+      function put(data) {
+        var t = [];
+        for (var i = 0; i < data[0].length; i++) {
+            t.push($scope.formatShipName($scope.toShipName(data[0][i].toFixed(0))));
+        }
+        $scope.poolAssets = t;
+        if ($scope.poolAssets.length > 0) {
+          $scope.ship = $scope.poolAssets[0];
+        } else {
+          // trigger an error?
+        }
+      };
+    }
+    $scope.readParent = function(ship) {
       $scope.validateChild(ship, function() {
         $scope.getParent(ship, put);
       });
       function put(data) {
-        document.getElementById("parent").value = data[0];
+        // changed 'parent' to 'parentShip'
+        $scope.parentShip = data[0];
       }
     }
-    $scope.readIsEscape = function() {
-      var ship = document.getElementById("getIsEscape_ship").value;
-      var escp = document.getElementById("getIsEscape_escape").value;
+    $scope.readIsEscape = function(ship, escape) {
       $scope.validateChild(ship, function() {
         $scope.validateParent(escp, function () {
           $scope.getIsEscape(ship, escp, put);
         });
       });
       function put(data) {
-        document.getElementById("isEscape").checked = data[0];
+        $scope.isEscape = data[0];
       }
     }
-    $scope.readKey = function() {
-      var ship = document.getElementById("getKey_ship").value;
+    $scope.readKey = function(ship) {
       $scope.validateShip(ship, function() {
         $scope.getKey(ship, put);
       });
       function put(data) {
-        document.getElementById("key").value = data[0];
+        $scope.key = data[0];
       }
     }
-    $scope.readIsLauncher = function() {
-      var ship = document.getElementById("getIsLauncher_ship").value;
-      var addr = document.getElementById("getIsLauncher_address").value;
+    $scope.readIsLauncher = function(ship, addr) {
       $scope.validateParent(ship, function() {
         $scope.validateAddress(addr, function () {
           $scope.getIsLauncher(ship, addr, put);
         });
       });
       function put(data) {
-        document.getElementById("isLauncher").checked = data[0];
+        $scope.isLauncher = data[0];
       }
     }
     $scope.readBalance = function() {
-      $scope.getSparkBalance(function(data) {
-        document.getElementById("balance").value = data[0] / $scope.oneSpark;
-      });
+      if ($rootScope.poolAddress) {
+        $scope.getSparkBalance(function(data) {
+          $scope.balance = data[0] / $scope.oneSpark;
+        });
+      } else {
+        // throw an error here
+      }
     }
     $scope.readAllowance = function() {
       $scope.getAllowance(function(data) {
-        document.getElementById("allowance").value = data[0] / $scope.oneSpark;
+        $scope.allowance = data[0] / $scope.oneSpark;
       })
     }
-    $scope.readSaleData = function() {
-      var addr = document.getElementById("sale_address").value;
+    $scope.readSaleData = function(addr) {
       $scope.validateAddress(addr, function() {
         $scope.getSalePrice(addr, putPrice);
         $scope.getSalePlanets(addr, putPlanets);
       });
       function putPrice(data) {
-        document.getElementById("sale_price").value = $scope.toEther(data[0]);
+        $scope.sale_price = $scope.toEther(data[0]);
       }
       function putPlanets(data) {
         var res = "";
         for (var i in data[0]) {
           res = res + data[0][i] + "\n";
         }
-        document.getElementById("sale_planets").value = res;
+        $scope.sale_planets = res;
       }
     }
-    $scope.readAuctionData = function() {
-      var addr = document.getElementById("auction_address").value;
+    $scope.readAuctionData = function(addr) {
       $scope.validateAddress(addr, function() {
         $scope.getAuctionWhitelisted(addr, putWhitelisted);
         $scope.getAuctionEndTime(addr, putTime);
         $scope.getAuctionDeposit(addr, putDeposit);
       });
       function putWhitelisted(data) {
-        document.getElementById("auction_whitelisted").checked = data[0];
+        $scope.auction_whitelisted = data[0];
       }
       function putTime(data) {
-        document.getElementById("auction_time").value = data[0];
+        $scope.auction_time = data[0];
       }
       function putDeposit(data) {
         var eth = $scope.toEther(data[0]);
-        document.getElementById("auction_deposit").value = eth;
+        $scope.auction_deposit = eth;
       }
     }
     //
@@ -698,6 +900,12 @@ var urbitCtrl = function($scope, $sce, walletService) {
       $scope.getIsPilot(ship, $scope.wallet.getAddressString(), function(data) {
         if (data[0]) return next();
         $scope.notifier.danger("Not your ship. " + ship);
+      });
+    }
+    $scope.checkIsTransferrer = function(ship, addr, next) {
+      $scope.getIsTransferrer(ship, addr, function(data) {
+        if (data[0]) return next();
+        $scope.notifier.danger("Ship is not the transferrable by " + addr);
       });
     }
     $scope.checkState = function(ship, state, next) {
@@ -736,8 +944,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
     //
     // DO: do transactions that modify the blockchain
     //
-    $scope.doSetAllowance = function() {
-      var amount = document.getElementById("allowance_amount").value;
+    $scope.doSetAllowance = function(amount) {
+      $scope.loading = true;
       if (amount < 0) return $scope.notifier.danger("Can't set negative allowance.");
       amount = amount * $scope.oneSpark;
       if ($scope.offline) return transact();
@@ -753,11 +961,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doCreateGalaxy = function() {
-      var galaxy = document.getElementById("createGalaxy_galaxy").value;
-      var address = document.getElementById("createGalaxy_owner").value;
-      var locktime = document.getElementById("createGalaxy_locktime").value;
-      var completetime = document.getElementById("createGalaxy_completetime").value;
+    $scope.doCreateGalaxy = function(galaxy, address, locktime, completetime) {
+      $scope.loading = true;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateAddress(address, function() {
           $scope.validateTimestamp(locktime, function() {
@@ -785,8 +990,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doClaimStar = function() {
-      var star = document.getElementById("claim_star").value;
+    $scope.doClaimStar = function(star) {
+      $scope.loading = true;
       $scope.validateStar(star, function() {
         if ($scope.offline) return transact();
         $scope.getSparkBalance(checkBalance);
@@ -809,8 +1014,74 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doLiquidateStar = function() {
-      var star = document.getElementById("liquidate_star").value;
+    $scope.doDeposit = function(star) {
+      $scope.loading = true;
+      $scope.validateStar(star, function() {
+        if ($scope.offline) return transact();
+          //TODO state enum (latent)
+          $scope.checkIsTransferrer(star, $rootScope.poolAddress, function() {
+            $scope.checkOwnership(star, function() {
+              $scope.checkState(star, 1, transact);
+            });
+          });
+      });
+      function transact() {
+        // will this bork if you enter a new pool address on the deposit screen?
+        $scope.doTransaction($rootScope.poolAddress,
+          "deposit(uint16)",
+          [star]
+        );
+      }
+    }
+    $scope.doWithdraw = function(star) {
+      $scope.loading = true;
+      $scope.validateStar(star, function() {
+        return transact();
+      });
+      function transact() {
+        $scope.doTransaction($rootScope.poolAddress,
+          "withdraw(uint16)",
+          [star]
+        );
+      }
+    }
+    $scope.doLaunch = function(ship, addr, locktime) {
+      $scope.loading = true;
+      var parent = ship % 256;
+      if (ship > 65535) parent = ship % 65536;
+      $scope.validateShip(ship, function() {
+        $scope.validateAddress(addr, function() {
+          $scope.validateTimestamp(locktime, function() {
+            if ($scope.offline) return transact();
+            // ship needs to be latent
+            //TODO state enum (latent)
+            $scope.checkState(ship, 0, checkParent);
+          });
+        });
+      });
+      // ship needs to be galaxy, or its parent needs to be living
+      function checkParent() {
+        if (ship < 256) return checkRights();
+        //TODO state enum (living)
+        $scope.checkState(parent, 2, checkRights);
+      }
+      // user needs to be pilot of parent or launcher of parent
+      function checkRights() {
+        $scope.getIsLauncher(parent, $scope.wallet.getAddressString(),
+        function(data) {
+          if (data[0]) return transact();
+          $scope.checkOwnership(parent, transact);
+        });
+      }
+      function transact() {
+        $scope.doTransaction($scope.contracts.constitution,
+          "launch(uint32,address,uint64)",
+          [ship, addr, locktime]
+        );
+      }
+    }
+    $scope.doLiquidateStar = function(star) {
+      $scope.loading = true;
       var parent = star % 256;
       $scope.validateStar(star, function() {
         if ($scope.offline) return transact();
@@ -829,49 +1100,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doLaunch = function() {
-      var ship = document.getElementById("launch_ship").value;
-      var addr = document.getElementById("launch_address").value;
-      var parent = ship % 256;
-      if (ship > 65535) parent = ship % 65536;
-      $scope.validateShip(ship, function() {
-        $scope.validateAddress(addr, function() {
-          if ($scope.offline) return transact();
-          // ship needs to be latent
-          //TODO state enum (latent)
-          $scope.checkState(ship, 0, checkParent);
-        });
-      });
-      // ship needs to be galaxy, or its parent needs to be living
-      function checkParent() {
-        if (ship < 256) return checkRights();
-        //TODO state enum (living)
-        $scope.checkState(parent, 3, checkRights);
-      }
-      // user needs to be pilot of parent or launcher of parent
-      function checkRights() {
-        $scope.getIsLauncher(parent, $scope.wallet.getAddressString(),
-        function(data) {
-          if (data[0]) return transact();
-          $scope.checkOwnership(parent, transact);
-        });
-      }
-      function transact() {
-        $scope.doTransaction($scope.contracts.constitution,
-          "launch(uint32,address)",
-          [ship, addr]
-        );
-      }
-    }
-    $scope.doGrantLaunchRights = function() {
-      var star = document.getElementById("grantLaunch_star").value;
-      var addr = document.getElementById("grantLaunch_address").value;
+    $scope.doGrantLaunchRights = function(star, addr) {
+      $scope.loading = true;
       $scope.validateParent(star, function() {
         $scope.validateAddress(addr, function() {
           if ($scope.offline) return transact();
           $scope.checkOwnership(star, function() {
             //TODO state enum (living)
-            $scope.checkState(star, 3, transact);
+            $scope.checkState(star, 2, transact);
           });
         });
       });
@@ -882,9 +1118,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doRevokeLaunchRights = function() {
-      var star = document.getElementById("revokeLaunch_star").value;
-      var addr = document.getElementById("revokeLaunch_address").value;
+    $scope.doRevokeLaunchRights = function(star, addr) {
+      $scope.loading = true;
       $scope.validateParent(star, function() {
         $scope.validateAddress(addr, function() {
           if ($scope.offline) return transact();
@@ -898,14 +1133,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doStart = function() {
-      var ship = document.getElementById("start_ship").value;
-      var key = document.getElementById("start_key").value;
+    $scope.doStart = function(ship, key) {
+      $scope.loading = true;
       $scope.validateShip(ship, function() {
         $scope.validateBytes32(key, function() {
           if ($scope.offline) return transact();
           $scope.checkOwnership(ship, function() {
-            $scope.checkState(ship, 2, function() {
+            // have to update all these states to reflect changes in contract
+            $scope.checkState(ship, 1, function() {
               $scope.getLocked(ship, checkLocktime);
             });
           });
@@ -922,10 +1157,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doTransferShip = function() {
-      var ship = document.getElementById("transfer_ship").value;
-      var addr = document.getElementById("transfer_address").value;
-      var reset = document.getElementById("transfer_reset").checked;
+    $scope.doTransferShip = function(ship, addr, reset) {
+      $scope.loading = true;
       $scope.validateShip(ship, function() {
         $scope.validateAddress(addr, function() {
           if ($scope.offline) return transact();
@@ -939,9 +1172,23 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doRekey = function() {
-      var ship = document.getElementById("rekey_ship").value;
-      var key = document.getElementById("rekey_key").value;
+    $scope.doAllowTransferBy = function(ship, addr) {
+      $scope.loading = true;
+      $scope.validateShip(ship, function() {
+        $scope.validateAddress(addr, function() {
+          if ($scope.offline) return transact();
+          $scope.checkOwnership(ship, transact);
+        });
+      });
+      function transact() {
+        $scope.doTransaction($scope.contracts.constitution,
+          "allowTransferBy(uint32,address)",
+          [ship, addr]
+        );
+      }
+    }
+    $scope.doRekey = function(ship, key) {
+      $scope.loading = true;
       $scope.validateShip(ship, function() {
         $scope.validateBytes32(key, function() {
           if ($scope.offline) return transact();
@@ -955,9 +1202,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doEscape = function() {
-      var ship = document.getElementById("escape_ship").value;
-      var parent = document.getElementById("escape_parent").value;
+    $scope.doEscape = function(ship, parent) {
+      $scope.loading = true;
       $scope.validateChild(ship, function() {
         $scope.validateParent(parent, function() {
           if ($scope.offline) return transact();
@@ -971,9 +1217,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doAdopt = function() {
-      var parent = document.getElementById("adopt_parent").value;
-      var ship = document.getElementById("adopt_ship").value;
+    $scope.doAdopt = function(parent, ship) {
+      $scope.loading = true;
       $scope.validateParent(parent, function() {
         $scope.validateChild(ship, function () {
           if ($scope.offline) return transact();
@@ -989,9 +1234,8 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doReject = function() {
-      var parent = document.getElementById("reject_parent").value;
-      var ship = document.getElementById("reject_ship").value;
+    $scope.doReject = function(parent, ship) {
+      $scope.loading = true;
       $scope.validateParent(parent, function() {
         $scope.validateChild(ship, function () {
           if ($scope.offline) return transact();
@@ -1007,16 +1251,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doCastConcreteVote = function() {
-      var galaxy = document.getElementById("conVote_galaxy").value;
-      var addr = document.getElementById("conVote_address").value;
-      var vote = document.getElementById("conVote_vote").checked;
+    $scope.doCastConcreteVote = function(galaxy, addr, vote) {
+      $scope.loading = true;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateAddress(addr, function() {
           if ($scope.offline) return transact();
           $scope.checkOwnership(galaxy, function() {
             //TODO state enum (living)
-            $scope.checkState(galaxy, 3, function() {
+            $scope.checkState(galaxy, 2, function() {
               $scope.getConcreteVote(galaxy, addr, checkVote);
             });
           });
@@ -1033,16 +1275,14 @@ var urbitCtrl = function($scope, $sce, walletService) {
         );
       }
     }
-    $scope.doCastAbstractVote = function() {
-      var galaxy = document.getElementById("absVote_galaxy").value;
-      var prop = document.getElementById("absVote_proposal").value;
-      var vote = document.getElementById("absVote_vote").checked;
+    $scope.doCastAbstractVote = function(galaxy, prop, vote) {
+      $scope.loading = true;
       $scope.validateGalaxy(galaxy, function() {
         $scope.validateBytes32(prop, function() {
           if ($scope.offline) return transact();
           $scope.checkOwnership(galaxy, function() {
             //TODO state enum (living)
-            $scope.checkState(galaxy, 3, function() {
+            $scope.checkState(galaxy, 2, function() {
               $scope.getIsAbstractMajority(prop, checkMajority);
             });
           });
@@ -1060,75 +1300,6 @@ var urbitCtrl = function($scope, $sce, walletService) {
         $scope.doTransaction($scope.contracts.constitution,
           "castVote(uint8,bytes32,bool)",
           [galaxy, prop, vote]
-        );
-      }
-    }
-    $scope.doBuyPlanet = function() {
-      var addr = document.getElementById("buy_address").value;
-      var ship = document.getElementById("buy_ship").value;
-      var index = document.getElementById("buy_index").value;
-      $scope.validateAddress(addr, function() {
-        $scope.validateChild(ship, function() {
-          if ($scope.offline) return transact();
-          $scope.getSalePlanets(addr, checkPlanet);
-        });
-      });
-      function checkPlanet(data) {
-        var found = false;
-        for (var i in data[0]) {
-          if (data[0][i] == ship) {
-            found = true;
-            index = i;
-            break;
-          }
-        }
-        if (!found) return $scope.notifier.danger("Planet not available.");
-        $scope.checkSale(ship, addr, transact);
-      }
-      function transact(price) {
-        $scope.doTransaction(addr,
-          "buySpecific(uint256,uint32)",
-          [index, ship],
-          price
-        );
-      }
-    }
-    $scope.doBuyAnyPlanet = function() {
-      var addr = document.getElementById("buy_address").value;
-      $scope.validateAddress(addr, function() {
-        if ($scope.offline) return transact();
-        $scope.getSalePlanets(addr, checkAvailable);
-      });
-      function checkAvailable(data) {
-        if (data[0].length == 0) return $scope.notifier.danger("No more planets for sale.");
-        $scope.checkSale(data[0][data[0].length-1], addr, transact);
-      }
-      function transact(price) {
-        $scope.doTransaction(addr,
-          "buyAny()",
-          [],
-          price
-        );
-      }
-    }
-    $scope.doDepositBid = function() {
-      var addr = document.getElementById("bid_address").value;
-      var amount = document.getElementById("bid_amount").value;
-      amount = $scope.toWei(amount);
-      $scope.validateAddress(addr, function() {
-        if ($scope.offline) return transact();
-        $scope.checkBalance(amount, function() {
-          $scope.getAuctionWhitelisted(addr, function(data) {
-            if (data[0]) return transact();
-            $scope.notifier.danger("Not whitelisted as participant.");
-          });
-        });
-      });
-      function transact() {
-        $scope.doTransaction(addr,
-          "deposit()",
-          [],
-          amount
         );
       }
     }

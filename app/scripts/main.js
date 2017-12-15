@@ -5,6 +5,7 @@ var angularTranslate         = require('angular-translate');
 var angularTranslateErrorLog = require('angular-translate-handler-log');
 var angularSanitize          = require('angular-sanitize');
 var angularAnimate           = require('angular-animate');
+var angularRoute             = require('angular-route');
 var bip39                    = require('bip39');
 var HDKey                    = require('hdkey');
 window.hd                    = { bip39: bip39, HDKey: HDKey };
@@ -65,14 +66,21 @@ var viewCtrl                 = require('./controllers/viewCtrl');
 var decryptWalletCtrl        = require('./controllers/decryptWalletCtrl');
 var globalService            = require('./services/globalService');
 var walletService            = require('./services/walletService');
+var templateService          = require('./services/templateService');
+var obService                = require('./services/nom.js');
 var addressFieldDrtv         = require('./directives/addressFieldDrtv');
 var QRCodeDrtv               = require('./directives/QRCodeDrtv');
 var walletDecryptDrtv        = require('./directives/walletDecryptDrtv');
+var muwHeader                = require('./directives/muwHeader');
 var fileReaderDrtv           = require('./directives/fileReaderDrtv');
 var urbitCtrl                = require('./controllers/urbitCtrl');
-var app = angular.module('mewApp', ['pascalprecht.translate', 'ngSanitize','ngAnimate']);
+console.log('obService', obService);
+var app = angular.module('mewApp', ['pascalprecht.translate', 'ngSanitize','ngAnimate', 'ngRoute']);
 app.config(['$compileProvider', function($compileProvider) {
-  $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|mailto):/);
+  //$compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|mailto):/);
+  //add http to whitelist just for dev
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|https|http|mailto):/);
+
 }]);
 app.config(['$translateProvider', function($translateProvider) {
   $translateProvider.useMissingTranslationHandlerLog();
@@ -83,11 +91,115 @@ app.config(['$animateProvider', function($animateProvider) {
 }]);
 app.factory('globalService', ['$http', '$httpParamSerializerJQLike', globalService]);
 app.factory('walletService', walletService);
+app.factory('templateService', templateService);
+app.factory('obService', function() {return obService});
 app.directive('addressField', ['$compile', addressFieldDrtv]);
 app.directive('qrCode', QRCodeDrtv);
 app.directive('onReadFile', fileReaderDrtv);
 app.directive('walletDecryptDrtv', walletDecryptDrtv);
-app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', tabsCtrl]);
+app.directive('muwHeader', muwHeader);
+app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', '$rootScope', 'walletService', tabsCtrl]);
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
-app.controller('decryptWalletCtrl', ['$scope', '$sce', 'walletService', decryptWalletCtrl]);
-app.controller('urbitCtrl', ['$scope', '$sce', 'walletService', urbitCtrl]);
+app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
+app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', '$rootScope', 'walletService', 'obService', urbitCtrl]);
+app.directive("sig", function(){
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModelController) {
+      console.log('directive triggered');
+      ngModelController.$parsers.push(function(data) {
+        //convert data from view format to model format
+        return data;
+      });
+      ngModelController.$formatters.push(function(data) {
+        if (!data) {
+        return '~'
+        }
+        if (data[0] === '~') {
+          return data
+        }
+        else {
+          return '~' + data
+        }
+      });
+      }
+    };
+});
+app.config(['$routeProvider', '$locationProvider', 
+    function($routeProvider, $locationProvider) {
+    console.log('templateService', templateService);
+    $routeProvider
+        .when('/', {
+            template: templateService.type,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/liquidate', {
+            template: templateService.liquidate,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/launch', {
+            template: templateService.launch,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/start', {
+            template: templateService.start,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/escape', {
+            template: templateService.escape,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/adopt', {
+            template: templateService.adopt,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/vote', {
+            template: templateService.vote,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/rekey', {
+            template: templateService.rekey,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/launchrights', {
+            template: templateService.launchRights,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/allowtransfer', {
+            template: templateService.allowTransfer,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/deposit', {
+            template: templateService.deposit,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/transfer', {
+            template: templateService.transfer,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/:p/purchase', {
+            template: templateService.purchase,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/withdraw', {
+            template: templateService.withdraw,
+            controller: 'urbitCtrl'
+        })
+        .when('/state/creategalaxy', {
+            template: templateService.createGalaxy,
+            controller: 'urbitCtrl'
+        })
+        .when('/type', {
+            template: templateService.type
+        })
+        .when('/type/mode', {
+            template: templateService.mode,
+            controller: 'tabsCtrl'
+        })
+        .when('/state', {
+            template: templateService.state,
+            controller: 'urbitCtrl'
+        })
+    //$locationProvider.html5Mode(true);
+    //$locationProvider.hashPrefix('!');
+}]);
