@@ -905,7 +905,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     $scope.checkIsTransferrer = function(ship, addr, next) {
       $scope.getIsTransferrer(ship, addr, function(data) {
         if (data[0]) return next();
-        $scope.notifier.danger("Ship is not the transferrable by " + addr);
+        $scope.notifier.danger("Ship is not transferable by " + addr);
       });
     }
     $scope.checkState = function(ship, state, next) {
