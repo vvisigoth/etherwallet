@@ -96,7 +96,7 @@
                 <li>
                   <a class="" href='' ng-click="path('state/' + ship.name + '/rekey')">Rekey</a>
                 </li>
-                <li>
+                <li ng-show="ship.address > 255">
                   <a class="" href='' ng-click="path('state/' + ship.name + '/escape')">Escape</a>
                 </li>
                 <li>
@@ -116,7 +116,7 @@
                 <li>
                   <u>Rekey</u>
                 </li>
-                <li>
+                <li ng-show="ship.address > 255">
                   <u>Escape</u>
                 </li>
                 <li>
