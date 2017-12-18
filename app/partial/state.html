@@ -37,9 +37,12 @@
               <div class="col-title text-600 h-font">
                 State:
               </div>
-              <ul ng-class="ship.state == 1 ? 'red list-reset state-label text-700': 'green list-reset state-label text-700'" >
+              <ul ng-class="ship.state > 1 ? 'green list-reset state-label text-700' : ship.locktime > 0 ? 'red list-reset state-label text-700' : 'list-reset state-label text-700'">
                 <li>
-                  {{ shipStates[ship.state] }}
+                {{ ship.state > 1 ? 'Living' : ship.locktime > 0 ? 'Locked' : 'Unlocked' }}
+                </li>
+                <li ng-show="ship.locktime > 0">
+                {{ '(' + secToString(ship.locktime) + ')' }}
                 </li>
               </ul>
             </div>
