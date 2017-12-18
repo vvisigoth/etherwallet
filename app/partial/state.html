@@ -41,8 +41,8 @@
                 <li>
                 {{ ship.state > 1 ? 'Living' : ship.locktime > 0 ? 'Locked' : 'Unlocked' }}
                 </li>
-                <li ng-show="ship.locktime > 0">
-                {{ '(' + secToString(ship.locktime) + ')' }}
+                <li ng-show="ship.locktime > 0" class="black">
+                {{ secToString(ship.locktime) }}
                 </li>
               </ul>
             </div>
