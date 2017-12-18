@@ -505,7 +505,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         var sec = tup[1];
         return str + ' ' + sec + 's';
       }
-      return fs(fm(fh(fd(fw(fy(secs))))));
+      return fs(fm(fh(fd(fw(fy(secs)))))).trim();
     }
 
     $scope.formatShipName = function(ship) {
