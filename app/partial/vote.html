@@ -89,11 +89,17 @@
       </div>
       <label class="action-confirmation ml-4" ng-click="checked = checked == true ? false : true">Yes I am sure</label>
     </div>
-    <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
-    <button ng-class="!locked && (address || hash) && checked ? 'btn btn-secondary' : 'btn disabled'" 
-      ng-click="(address || hash) && checked ? concrete ? doCastConcreteVote(ob.toAddress(shipName), address, voteYes) : doCastAbstractVote(ob.toAddress(shipName), hash, voteYes) : ''" >
-      Create
-    </button>
+    <div ng-switch="concrete">
+      <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
+      <button ng-switch-when="true" ng-class="!locked && address && checked ? 'btn btn-secondary' : 'btn disabled'" 
+        ng-click="address && checked ? doCastConcreteVote(ob.toAddress(shipName), address, voteYes) : ''">
+        Create
+      </button>
+      <button ng-switch-when="false" ng-class="!locked && hash && checked ? 'btn btn-secondary' : 'btn disabled'" 
+        ng-click="hash && checked ? doCastAbstractVote(ob.toAddress(shipName), hash, voteYes) : ''" >
+        Create
+      </button>
+    </div>
   </section>
   <section class="transaction-data" 
     ng-show="rawTx" 

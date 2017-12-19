@@ -1350,7 +1350,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
       function transact() {
         $scope.doTransaction($scope.contracts.constitution,
-          "castVote(uint8,address,bool)",
+          "castConcreteVote(uint8,address,bool)",
           [galaxy, addr, vote]
         );
       }
@@ -1378,7 +1378,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
       function transact() {
         $scope.doTransaction($scope.contracts.constitution,
-          "castVote(uint8,bytes32,bool)",
+          "castAbstractVote(uint8,bytes32,bool)",
           [galaxy, prop, vote]
         );
       }
