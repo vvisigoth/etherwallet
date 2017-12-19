@@ -3,6 +3,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     // add route params to scope
     $scope.$routeParams = $routeParams;
 
+    $rootScope.loadShips = true;
+
     // ++  ob 
     $scope.ob = obService;
 
@@ -86,6 +88,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         }
     });
     $scope.$watch('ownedShips', function(newVal, oldVal) {
+      console.log('watch triggered');
       if (newVal == oldVal) {
         return;
       }
@@ -451,7 +454,22 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //
     //UI Conviences
     //
+    $scope.isPast = function(secs) {
+      if (!secs) {
+        return false
+      }
+      console.log('is past ' + secs);
+      return secs <= (Date.now() / 1000);
+    }
+    $scope.remainingSecs = function(secs) {
+      console.log('remaining ' + secs);
+      return secs - (Date.now() / 1000);
+    }
     $scope.secToString = function(secs) {
+      if (secs <= 0) {
+        return 'Completed';
+      }
+      secs = Math.round(secs)
       var min = 60;
       var hour = 60 * min;
       var day = 24 * hour;
@@ -800,8 +818,10 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.getShipData(ship, put);
       });
       function put(data) {
+        console.log('ship data ' + data);
         $scope.ownedShips[ship]['state'] = data[1];
         $scope.ownedShips[ship]['locktime'] = data[2];
+        console.log($scope.ownedShips[ship]);
       }
     }
     $scope.readOwnedShips = function(addr) {
@@ -1105,6 +1125,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
     $scope.doLaunch = function(ship, addr, locktime) {
+      console.log('starting with locktime ' + locktime);
       $scope.loading = true;
       var parent = ship % 256;
       if (ship > 65535) parent = ship % 65536;

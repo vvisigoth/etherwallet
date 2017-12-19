@@ -37,13 +37,18 @@
               <div class="col-title text-600 h-font">
                 State:
               </div>
-              <ul ng-class="ship.state > 1 ? 'green list-reset state-label text-700' : ship.locktime > 0 ? 'red list-reset state-label text-700' : 'list-reset state-label text-700'">
-                <li>
-                {{ ship.state > 1 ? 'Living' : ship.locktime > 0 ? 'Locked' : 'Unlocked' }}
+              <ul class="list-reset state-label text-700" ng-switch="ship.state == 1">
+                <li ng-switch-when="false" class="list-reset green">
+                  Living
                 </li>
-                <li ng-show="ship.locktime > 0" class="black">
-                {{ secToString(ship.locktime) }}
-                </li>
+                <div ng-switch-when="true" class="" ng-switch="isPast(ship.locktime)">
+                  <li ng-switch-when="true" class="list-reset">
+                    Unlocked
+                  </li>
+                  <li ng-switch-when="false" class="red list-reset">
+                    {{ secToString(remainingSecs(ship.locktime)) }}
+                  </li>
+                </div>
               </ul>
             </div>
             <div class="live-action-col col-md-3" ng-switch="ship.state == 1">
