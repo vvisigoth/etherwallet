@@ -81,7 +81,7 @@
     </div>
     <button class="btn btn-tetiary" ng-click="path('state')" >&#8592 Back</button>
     <button ng-class="!loading && checked && !parentError && parent ? 'btn btn-secondary' : 'btn disabled'" 
-      ng-click="checked && !parentError && parent ? doEscape(toAddress(ob.toAddress(shipName)), parent): ''">
+      ng-click="checked && !parentError && parent ? doEscape(ob.toAddress(shipName), ob.toAddress(parent)): ''">
       Create
     </button>
   </section>
