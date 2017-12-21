@@ -101,7 +101,7 @@ app.directive('muwHeader', muwHeader);
 app.controller('tabsCtrl', ['$scope', 'globalService', '$translate', '$sce', '$location', '$rootScope', 'walletService', tabsCtrl]);
 app.controller('viewCtrl', ['$scope', 'globalService', '$sce', viewCtrl]);
 app.controller('decryptWalletCtrl', ['$scope', '$sce', '$location', 'walletService', decryptWalletCtrl]);
-app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', '$rootScope', 'walletService', 'obService', urbitCtrl]);
+app.controller('urbitCtrl', ['$scope', '$sce', '$routeParams', '$location', '$rootScope', '$timeout', 'walletService', 'obService', urbitCtrl]);
 app.directive("sig", function(){
   return {
     require: 'ngModel',
@@ -130,64 +130,60 @@ app.config(['$routeProvider', '$locationProvider',
     console.log('templateService', templateService);
     $routeProvider
         .when('/', {
-            template: templateService.type,
-            controller: 'urbitCtrl'
-        })
-        .when('/state/:p/liquidate', {
-            template: templateService.liquidate,
-            controller: 'urbitCtrl'
+            template: templateService.type
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/launch', {
-            template: templateService.launch,
-            controller: 'urbitCtrl'
+            template: templateService.launch
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/start', {
-            template: templateService.start,
-            controller: 'urbitCtrl'
+            template: templateService.start
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/escape', {
-            template: templateService.escape,
-            controller: 'urbitCtrl'
+            template: templateService.escape
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/adopt', {
-            template: templateService.adopt,
-            controller: 'urbitCtrl'
+            template: templateService.adopt
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/vote', {
-            template: templateService.vote,
-            controller: 'urbitCtrl'
+            template: templateService.vote
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/rekey', {
-            template: templateService.rekey,
-            controller: 'urbitCtrl'
+            template: templateService.rekey
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/launchrights', {
-            template: templateService.launchRights,
-            controller: 'urbitCtrl'
+            template: templateService.launchRights
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/allowtransfer', {
-            template: templateService.allowTransfer,
-            controller: 'urbitCtrl'
+            template: templateService.allowTransfer
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/deposit', {
-            template: templateService.deposit,
-            controller: 'urbitCtrl'
+            template: templateService.deposit
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/transfer', {
-            template: templateService.transfer,
-            controller: 'urbitCtrl'
+            template: templateService.transfer
+            //controller: 'urbitCtrl'
         })
         .when('/state/:p/purchase', {
-            template: templateService.purchase,
-            controller: 'urbitCtrl'
+            template: templateService.purchase
+            //controller: 'urbitCtrl'
         })
         .when('/state/withdraw', {
-            template: templateService.withdraw,
-            controller: 'urbitCtrl'
+            template: templateService.withdraw
+            //controller: 'urbitCtrl'
         })
         .when('/state/creategalaxy', {
-            template: templateService.createGalaxy,
-            controller: 'urbitCtrl'
+            template: templateService.createGalaxy
+            //controller: 'urbitCtrl'
         })
         .when('/type', {
             template: templateService.type
@@ -197,8 +193,8 @@ app.config(['$routeProvider', '$locationProvider',
             controller: 'tabsCtrl'
         })
         .when('/state', {
-            template: templateService.state,
-            controller: 'urbitCtrl'
+            template: templateService.state
+            //controller: 'urbitCtrl'
         })
     //$locationProvider.html5Mode(true);
     //$locationProvider.hashPrefix('!');

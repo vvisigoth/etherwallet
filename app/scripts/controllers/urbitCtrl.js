@@ -1,5 +1,5 @@
 'use strict';
-var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, walletService, obService) {
+var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $timeout, walletService, obService) {
     // add route params to scope
     $scope.$routeParams = $routeParams;
 
@@ -16,9 +16,26 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
 
     $scope.poolAddress = $rootScope.poolAddress;
 
+    (function tick() {
+        console.log('TICK!');
+        if (!angular.equals($scope.ownedShips, $scope.tempOwnedShips) && $scope.tempOwnedShips && $scope.ownedShips) {
+          console.log('updating!');
+          angular.copy($scope.tempOwnedShips, $scope.ownedShips);
+        }
+        if ($scope.wallet) {
+          $scope.readOwnedShips($scope.wallet.getAddressString(), true);
+        }
+        $timeout(tick, 6000);
+    })();
 
     //Is creating/signing tx
     $scope.loading = false;
+
+    $scope.contracts = {};
+    $scope.contracts.ships = "0xe0834579269eac6beca2882a6a21f6fb0b1d7196";
+    $scope.contracts.votes = "0x0654b24a5da81f6ed1ac568e802a9d6b21483561";
+    $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
+    $scope.contracts.constitution = '0x56db68f29203ff44a803faa2404a44ecbb7a7480';
 
     $scope.ajaxReq = ajaxReq;
     $scope.visibility = "interactView";
@@ -97,6 +114,18 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         $scope.readShipData(k[i]);
       };
     });
+    //$scope.$watch('tempOwnedShips', function(newVal, oldVal) {
+    //  console.log('tempownedships changed');
+    //  if (newVal == oldVal) {
+    //    console.log('no data change');
+    //  } else {
+    //    console.log('data change');
+    //    console.log($scope.ownedShips == newVal);
+    //    console.log(angular.equals($scope.ownedShips, newVal));
+    //    console.log($scope.ownedShips);
+    //    console.log($scope.tempOwnedShips);
+    //  }
+    //});
     $scope.$watch('rawTx', function(newVal, oldVal) {
       if (newVal == oldVal) {
         return;
@@ -192,7 +221,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
                 var bExStr = $scope.ajaxReq.type != nodes.nodeTypes.Custom ? "<a href='" + $scope.ajaxReq.blockExplorerTX.replace("[[txHash]]", resp.data) + "' target='_blank' rel='noopener'> View your transaction </a>" : '';
                 var contractAddr = $scope.tx.contractAddr != '' ? " & Contract Address <a href='" + ajaxReq.blockExplorerAddr.replace('[[address]]', $scope.tx.contractAddr) + "' target='_blank' rel='noopener'>" + $scope.tx.contractAddr + "</a>" : '';
                 $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + contractAddr);
+
                 $location.path('state');
+                $scope.rawTx = '';
             } else {
                 $scope.notifier.danger(resp.error);
             }
@@ -354,13 +385,13 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
           } else throw data.msg;
         });
     }
-    $scope.loadAddresses = function() {
-      $scope.contracts = {};
-      $scope.contracts.ships = "0xe0834579269eac6beca2882a6a21f6fb0b1d7196";
-      $scope.contracts.votes = "0x0654b24a5da81f6ed1ac568e802a9d6b21483561";
-      $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
-      $scope.contracts.constitution = '0x56db68f29203ff44a803faa2404a44ecbb7a7480';
-    }
+    //$scope.loadAddresses = function() {
+    //  $scope.contracts = {};
+    //  $scope.contracts.ships = "0xe0834579269eac6beca2882a6a21f6fb0b1d7196";
+    //  $scope.contracts.votes = "0x0654b24a5da81f6ed1ac568e802a9d6b21483561";
+    //  $scope.contracts.spark = "0x56db68f29203ff44a803faa2404a44ecbb7a7480";
+    //  $scope.contracts.constitution = '0x56db68f29203ff44a803faa2404a44ecbb7a7480';
+    //}
     ////
     //// VALIDATE: validate input data
     ////
@@ -458,11 +489,9 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       if (!secs) {
         return false
       }
-      console.log('is past ' + secs);
       return secs <= (Date.now() / 1000);
     }
     $scope.remainingSecs = function(secs) {
-      console.log('remaining ' + secs);
       return secs - (Date.now() / 1000);
     }
     $scope.secToString = function(secs) {
@@ -571,7 +600,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     };
 
-    $scope.generateShipList = function(shipListString) {
+    $scope.generateShipList = function(shipListString, cb) {
       var t = shipListString.split('\n');
       var r = {};
       for (var i = 0; i < t.length; i ++) {
@@ -579,7 +608,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
           r[t[i]] = { address: t[i], name: '~' + $scope.toShipName(t[i])};
         }
       };
-      return r;
+      if (cb) {
+        cb(r);
+      } else {
+        return r;
+      }
     };
     //
     // GET: read contract data, pass the result to callback
@@ -813,18 +846,24 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
     //
     // READ: fill fields with requested data
     //
-    $scope.readShipData = function(ship) {
+    $scope.readShipData = function(ship, cb) {
       $scope.validateShip(ship, function() {
         $scope.getShipData(ship, put);
       });
       function put(data) {
         console.log('ship data ' + data);
-        $scope.ownedShips[ship]['state'] = data[1];
-        $scope.ownedShips[ship]['locktime'] = data[2];
-        console.log($scope.ownedShips[ship]);
+        if (!cb) {
+          $scope.ownedShips[ship]['state'] = data[1];
+          $scope.ownedShips[ship]['locktime'] = data[2];
+          console.log($scope.ownedShips[ship]);
+        } else {
+          // dumb make this a flag
+          $scope.tempOwnedShips[ship]['state'] = data[1];
+          $scope.tempOwnedShips[ship]['locktime'] = data[2];
+        }
       }
     }
-    $scope.readOwnedShips = function(addr) {
+    $scope.readOwnedShips = function(addr, temp) {
       if (!addr) {
         return;
       }
@@ -833,7 +872,17 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
         for (var i in data[0]) {
           res = res + data[0][i] + "\n";
         }
-        $scope.ownedShips = $scope.generateShipList(res);
+        if (!temp) {
+          $scope.ownedShips = $scope.generateShipList(res);
+        } else {
+          $scope.generateShipList(res, function(v) {
+            $scope.tempOwnedShips = v;
+            var k = Object.keys(v);
+            for (var i = 0; i < k.length; i ++) {
+              $scope.readShipData(k[i], true);
+            };
+          })
+        }
       });
     }
     $scope.readHasPilot = function(ship) {
@@ -1125,7 +1174,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, wall
       }
     }
     $scope.doLaunch = function(ship, addr, locktime) {
-      console.log('starting with locktime ' + locktime);
       $scope.loading = true;
       var parent = ship % 256;
       if (ship > 65535) parent = ship % 65536;
