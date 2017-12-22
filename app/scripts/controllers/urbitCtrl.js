@@ -16,17 +16,32 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
 
     $scope.poolAddress = $rootScope.poolAddress;
 
-    (function tick() {
-        console.log('TICK!');
-        if (!angular.equals($scope.ownedShips, $scope.tempOwnedShips) && $scope.tempOwnedShips && $scope.ownedShips) {
-          console.log('updating!');
-          angular.copy($scope.tempOwnedShips, $scope.ownedShips);
+    $scope.polling = false;
+    // We do this to make sure that the poll has at least gone once
+    $scope.pollCount = 0;
+
+    var poll = function() {
+      // If ownedShips is differnet from poll result
+      if (!angular.equals($scope.ownedShips, $scope.tempOwnedShips) && $scope.tempOwnedShips && $scope.ownedShips) {
+        // assign
+        angular.copy($scope.tempOwnedShips, $scope.ownedShips);
+        if ($scope.pollCount > 0) {
+          // stop pollling
+          $scope.polling = false;
+          $scope.pollCount = 0;
         }
-        if ($scope.wallet) {
-          $scope.readOwnedShips($scope.wallet.getAddressString(), true);
-        }
-        $timeout(tick, 6000);
-    })();
+      }
+      // Make sure there's a wallet loaded
+      if ($scope.wallet) {
+        $scope.pollCount +=1;
+        $scope.buildOwnedShips($scope.wallet.getAddressString(), true);
+      }
+      if ($scope.polling) {
+        $timeout(poll, 6000);
+      } else {
+        return;
+      }
+    };
 
     //Is creating/signing tx
     $scope.loading = false;
@@ -104,16 +119,17 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
             }
         }
     });
-    $scope.$watch('ownedShips', function(newVal, oldVal) {
-      console.log('watch triggered');
-      if (newVal == oldVal) {
-        return;
-      }
-      var k = Object.keys(newVal);
-      for (var i = 0; i < k.length; i ++) {
-        $scope.readShipData(k[i]);
-      };
-    });
+    //$scope.$watch('ownedShips', function(newVal, oldVal) {
+    //  
+    //  console.log('watch triggered');
+    //  if (newVal == oldVal) {
+    //    return;
+    //  }
+    //  var k = Object.keys(newVal);
+    //  for (var i = 0; i < k.length; i ++) {
+    //    $scope.readShipData(k[i]);
+    //  };
+    //});
     //$scope.$watch('tempOwnedShips', function(newVal, oldVal) {
     //  console.log('tempownedships changed');
     //  if (newVal == oldVal) {
@@ -223,6 +239,8 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
                 $scope.notifier.success(globalFuncs.successMsgs[2] + "<br />" + resp.data + "<br />" + bExStr + contractAddr);
 
                 $location.path('state');
+                $scope.polling = true;
+                poll();
                 $scope.rawTx = '';
             } else {
                 $scope.notifier.danger(resp.error);
@@ -568,9 +586,48 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
         return ship;
       }
     }
-    $scope.buildOwnedShips = function() {
-      readOwnedShips();
-    };
+
+    $scope.buildOwnedShips = function(address, temp) {
+      $scope.tmp = {}
+      // zero out struct?
+      $scope.getOwnedShips(address, function(data) {
+        var x = data[0]
+        for (var i in x) {
+          if (i == x.length - 1) {
+            // transfer shiplist once built
+            $scope.buildShipData(x[i], true);
+          } else {
+            // transfer shiplist once built
+            $scope.buildShipData(x[i], false);
+          }
+        }
+      });
+      //// could probably just check for existence
+      //if (temp) {
+      //  angular.copy($scope.tmp, $scope.tempOwnedShips);
+      //} else {
+      //  angular.copy($scope.tmp, $scope.ownedShips);
+      //}
+    }
+
+    $scope.buildShipData = function(address, terminate) {
+      console.log('getting ship data for ' + address);
+      function put(data) {
+        $scope.tmp[address] = {};
+        $scope.tmp[address]['name'] = '~' + $scope.toShipName(address);
+        $scope.tmp[address]['address'] = address;
+        $scope.tmp[address]['state'] = data[1];
+        $scope.tmp[address]['locktime'] = data[2];
+        console.log($scope.tmp[address]);
+        if (terminate) {
+          console.log('terminate!');
+          console.log($scope.tmp);
+          //angular.copy($scope.tmp, $scope.tempOwnedShips);
+          $scope.tempOwnedShips = $scope.tmp;
+        }
+      }
+      $scope.getShipData(address, put)
+    }
 
     $scope.setPoolAddress = function(x) {
       $rootScope.poolAddress = x;
