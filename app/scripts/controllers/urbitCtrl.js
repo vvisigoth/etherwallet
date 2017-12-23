@@ -119,29 +119,16 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
             }
         }
     });
-    //$scope.$watch('ownedShips', function(newVal, oldVal) {
-    //  
-    //  console.log('watch triggered');
-    //  if (newVal == oldVal) {
-    //    return;
-    //  }
-    //  var k = Object.keys(newVal);
-    //  for (var i = 0; i < k.length; i ++) {
-    //    $scope.readShipData(k[i]);
-    //  };
-    //});
-    //$scope.$watch('tempOwnedShips', function(newVal, oldVal) {
-    //  console.log('tempownedships changed');
-    //  if (newVal == oldVal) {
-    //    console.log('no data change');
-    //  } else {
-    //    console.log('data change');
-    //    console.log($scope.ownedShips == newVal);
-    //    console.log(angular.equals($scope.ownedShips, newVal));
-    //    console.log($scope.ownedShips);
-    //    console.log($scope.tempOwnedShips);
-    //  }
-    //});
+    // this is for the initial load TODO clean this up
+    $scope.$watch('ownedShips', function(newVal, oldVal) {
+      if (newVal == oldVal) {
+        return;
+      }
+      var k = Object.keys(newVal);
+      for (var i = 0; i < k.length; i ++) {
+        $scope.readShipData(k[i]);
+      };
+    });
     $scope.$watch('rawTx', function(newVal, oldVal) {
       if (newVal == oldVal) {
         return;
@@ -611,7 +598,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
     }
 
     $scope.buildShipData = function(address, terminate) {
-      console.log('getting ship data for ' + address);
       function put(data) {
         $scope.tmp[address] = {};
         $scope.tmp[address]['name'] = '~' + $scope.toShipName(address);
@@ -620,9 +606,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
         $scope.tmp[address]['locktime'] = data[2];
         console.log($scope.tmp[address]);
         if (terminate) {
-          console.log('terminate!');
-          console.log($scope.tmp);
-          //angular.copy($scope.tmp, $scope.tempOwnedShips);
           $scope.tempOwnedShips = $scope.tmp;
         }
       }
@@ -903,24 +886,16 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
     //
     // READ: fill fields with requested data
     //
-    $scope.readShipData = function(ship, cb) {
+    $scope.readShipData = function(ship) {
       $scope.validateShip(ship, function() {
         $scope.getShipData(ship, put);
       });
       function put(data) {
-        console.log('ship data ' + data);
-        if (!cb) {
-          $scope.ownedShips[ship]['state'] = data[1];
-          $scope.ownedShips[ship]['locktime'] = data[2];
-          console.log($scope.ownedShips[ship]);
-        } else {
-          // dumb make this a flag
-          $scope.tempOwnedShips[ship]['state'] = data[1];
-          $scope.tempOwnedShips[ship]['locktime'] = data[2];
-        }
+        $scope.ownedShips[ship]['state'] = data[1];
+        $scope.ownedShips[ship]['locktime'] = data[2];
       }
     }
-    $scope.readOwnedShips = function(addr, temp) {
+    $scope.readOwnedShips = function(addr) {
       if (!addr) {
         return;
       }
@@ -929,17 +904,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
         for (var i in data[0]) {
           res = res + data[0][i] + "\n";
         }
-        if (!temp) {
-          $scope.ownedShips = $scope.generateShipList(res);
-        } else {
-          $scope.generateShipList(res, function(v) {
-            $scope.tempOwnedShips = v;
-            var k = Object.keys(v);
-            for (var i = 0; i < k.length; i ++) {
-              $scope.readShipData(k[i], true);
-            };
-          })
-        }
+        $scope.ownedShips = $scope.generateShipList(res);
       });
     }
     $scope.readHasPilot = function(ship) {
