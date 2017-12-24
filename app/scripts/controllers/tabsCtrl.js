@@ -153,6 +153,8 @@ var tabsCtrl = function($scope, globalService, $translate, $sce, $location, $roo
         networkHasChanged && window.setTimeout(function() {location.reload() }, 250);
         // set offline to false
         $rootScope.offline = false;
+        //$scope.$apply();
+        $scope.$broadcast('nodeChange', { curNode: $scope.curNode});
     }
     $scope.checkNodeUrl = function(nodeUrl) {
         return $scope.Validator.isValidURL(nodeUrl);

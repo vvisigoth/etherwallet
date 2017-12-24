@@ -34,7 +34,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
       // Make sure there's a wallet loaded
       if ($scope.wallet) {
         $scope.pollCount +=1;
-        $scope.buildOwnedShips($scope.wallet.getAddressString(), true);
+        $scope.buildOwnedShips($scope.wallet.getAddressString());
       }
       if ($scope.polling) {
         $timeout(poll, 6000);
@@ -82,6 +82,11 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
     }
     //$scope.selectedAbi = ajaxReq.abiList[0];
     $scope.showRaw = false;
+    $scope.$on('nodeChanged', function(e, d) {
+      if ($scope.wallet) {
+        $scope.buildOwnedShips($scope.wallet.getAddressString());
+      }
+    });
     $scope.$watch(function() {
         if (walletService.wallet == null) return null;
         return walletService.wallet.getAddressString();
@@ -574,10 +579,15 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
       }
     }
 
-    $scope.buildOwnedShips = function(address, temp) {
+    $scope.buildOwnedShips = function(address) {
       $scope.tmp = {}
       // zero out struct?
       $scope.getOwnedShips(address, function(data) {
+        // if no ships returns, just zero this out, otherwise, wait until all 
+        // ships have loaded
+        if (data[0].length < 1) {
+          $scope.ownedShips = {};
+        }
         var x = data[0]
         for (var i in x) {
           if (i == x.length - 1) {
@@ -589,12 +599,6 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
           }
         }
       });
-      //// could probably just check for existence
-      //if (temp) {
-      //  angular.copy($scope.tmp, $scope.tempOwnedShips);
-      //} else {
-      //  angular.copy($scope.tmp, $scope.ownedShips);
-      //}
     }
 
     $scope.buildShipData = function(address, terminate) {
@@ -604,9 +608,12 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
         $scope.tmp[address]['address'] = address;
         $scope.tmp[address]['state'] = data[1];
         $scope.tmp[address]['locktime'] = data[2];
-        console.log($scope.tmp[address]);
         if (terminate) {
           $scope.tempOwnedShips = $scope.tmp;
+          if (!angular.equals($scope.ownedShips, $scope.tempOwnedShips)) {
+            // assign
+            angular.copy($scope.tempOwnedShips, $scope.ownedShips);
+          }
         }
       }
       $scope.getShipData(address, put)
