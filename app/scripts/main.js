@@ -189,8 +189,8 @@ app.config(['$routeProvider', '$locationProvider',
             template: templateService.type
         })
         .when('/type/mode', {
-            template: templateService.mode,
-            controller: 'tabsCtrl'
+            template: templateService.mode
+            //controller: 'tabsCtrl'
         })
         .when('/state', {
             template: templateService.state
