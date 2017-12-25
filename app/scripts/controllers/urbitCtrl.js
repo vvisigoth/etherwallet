@@ -635,6 +635,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
     };
 
     $scope.getChildCandidate = function(address) {
+      $scope.isState = false;
       var candidate;
       if (address > -1 && address < 256) {
         candidate = ((Math.floor(Math.random() * 255) + 1) * 256 + address);
@@ -940,6 +941,7 @@ var urbitCtrl = function($scope, $sce, $routeParams, $location, $rootScope, $tim
         });
       });
       function put(data) {
+        console.log(data[0]);
         $scope.isState = data[0];
       }
     }
