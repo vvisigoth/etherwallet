@@ -20,11 +20,11 @@
 <meta property="og:title" content="My Urbit Wallet"/>
 <link rel="shortcut icon" href="images/fav/favicon.ico">
 </head>
-<body>
+<body ng-controller="tabsCtrl">
 <muw-header></muw-header>
 
 <section class="container" style="min-height: 50%" ng-controller='viewCtrl'>
-  <ng-view></ng-view>
+  <ng-view ng-controller="urbitCtrl"></ng-view>
 
   <div data-ng-repeat="alert in notifier.alerts" ng-init="titles = {success: 'Success!', 'info': 'FYI', warning: 'Warning', danger: 'Danger'}">
     <div class="alert popup alert-{{alert.type}} animated-show-hide"
